@@ -57,6 +57,7 @@ class ProfessorController {
 
     @DeleteMapping("/{indice}")
     fun deletaProfessor(@PathVariable indice: Int): ResponseEntity<Void> {
+
         if(existeProfessor(indice)){
             ListaProfessores.removeAt(indice - 1)
             return ResponseEntity.status(204).build()

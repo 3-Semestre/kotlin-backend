@@ -5,7 +5,8 @@ data class Imagem (
     // dados da imagem codificados em Base64
     val dados: ByteArray,
     // Tamanho do arquivo em bytes
-    val tamanho: Long
+    val tamanho: Long,
+    val tipo: String,
 ){
 
 }

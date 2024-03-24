@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import javax.swing.plaf.multi.MultiTableUI
+import kotlin.reflect.typeOf
 
 
 @RestController
@@ -28,11 +30,10 @@ class ProfessorController {
         cpf = "38274627225",
         nivelAcesso = NivelAcesso.REPRESENTANTE_LEGAL,
         nivelIngles = NivelIngles.B2,
-        imagem = Imagem(
-            nome = "imagem.png",
-            dados = imagemBinario,
-            tamanho = 123456)
+        imagem = imagemBinario
     ))
+
+    val listaImagemBinario: MutableList<MultipartFile> = mutableListOf()
 
     @GetMapping
     fun buscaProfessores(): ResponseEntity<List<Professor>>{
@@ -40,6 +41,16 @@ class ProfessorController {
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(200).body(listaProfessores)
+    }
+    @PostMapping("/upload-imagem")
+    fun adicionaImagemProfessor(@RequestBody imagem: MultipartFile): ResponseEntity<MultipartFile>{
+        listaImagemBinario.add(imagem)
+        println("Tamanho da imagem:" + imagem.size)
+        println("Bytes da imagem:" + imagem.bytes)
+        println("Tipo da imagem:" + imagem.contentType)
+        println("Recurso da imagem:" +imagem.resource)
+        println("Nome do arquivo:" + imagem.originalFilename)
+        return ResponseEntity.status(201).body(imagem)
     }
 
     @GetMapping("/{indice}")

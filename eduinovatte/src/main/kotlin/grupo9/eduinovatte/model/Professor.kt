@@ -4,7 +4,8 @@ data class Professor (
     val nomeCompleto: String,
     val email: String,
     val senha: String,
-    val endereco: Endereco,
-    val experiencia: Experiencia
-){
-}
+    val cpf: String,
+    val nivelAcesso: NivelAcesso,
+    val nivelIngles: NivelIngles,
+    val imagem: Imagem
+)

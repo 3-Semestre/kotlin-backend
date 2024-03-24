@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.model
 
-enum class Nivel(val descricao: String){
+enum class NivelIngles(val descricao: String){
     A1("Iniciante"),
     A2("Elementar"),
     B1("Intermediário"),

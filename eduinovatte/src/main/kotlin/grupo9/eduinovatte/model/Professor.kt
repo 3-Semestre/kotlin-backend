@@ -9,5 +9,5 @@ data class Professor (
     val cpf: String,
     val nivelAcesso: NivelAcesso,
     val nivelIngles: NivelIngles,
-    val imagem: ByteArray
+   // val imagem: ByteArray
 )

@@ -1,10 +1,12 @@
 package grupo9.eduinovatte.model
 
-enum class NivelAcesso(val descricao: String) {
-    REPRESENTANTE_LEGAL("Dono"),
-    PROFESSOR_AUXILIAR("Professores");
+import jakarta.persistence.*
 
-    override fun toString(): String {
-        return descricao
-    }
-}
+@Entity
+data class NivelAcesso(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int,
+    @Enumerated(EnumType.STRING)
+    val nome: Nivel?,
+)

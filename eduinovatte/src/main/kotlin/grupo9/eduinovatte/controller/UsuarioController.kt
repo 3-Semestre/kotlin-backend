@@ -1,9 +1,9 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.model.*
+import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
-import org.apache.coyote.Response
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,42 +20,63 @@ class UsuarioController(
     val usuarioRepository: UsuarioRepository,
     val nivelAcessoRepository: NivelAcessoRepository
 ){
-    @PostMapping("/alunos")
-    fun salvaAluno(@RequestBody novoAluno: Usuario): ResponseEntity<Usuario>{
-        val nivelAcesso = buscaPorNivelAcesso(novoAluno.nivelAcesso.id)
-        if(nivelAcesso.nome !== Nivel.ALUNO) return ResponseEntity.status(401).build()
+    @PostMapping("/aluno/autenticar")
+    fun autenticarAluno(@RequestBody novoAluno: Usuario): ResponseEntity<Usuario>{
+        val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
+        if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
         val usuarioSalvo = usuarioRepository.save(novoAluno)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/professor/autenticar")
+    fun autenticarProfessor(@RequestBody novoProfessor: Usuario): ResponseEntity<Usuario>{
+
+        val nivelAcesso = buscaNivelAcesso(novoProfessor.nivelAcesso.id)
+        if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+        val usuarioSalvo = usuarioRepository.save(novoProfessor)
+        return ResponseEntity.status(201).body(usuarioSalvo)
+    }
+
+    @PostMapping("/aluno")
+    fun salvaAluno(@RequestBody novoAluno: Usuario): ResponseEntity<Usuario>{
+        val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
+        if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+        val usuarioSalvo = usuarioRepository.save(novoAluno)
+        return ResponseEntity.status(201).body(usuarioSalvo)
+    }
+
+    @PutMapping("/aluno/{id}")
     fun editaAluno(
-        @PathVariable id: Int,@RequestBody novoAluno: Usuario):
+        @PathVariable id: Int,@RequestBody novoUsuario: Usuario):
             ResponseEntity<Usuario> {
-        val nivelAcesso = buscaPorNivelAcesso(novoAluno.nivelAcesso.id)
-        if(nivelAcesso.nome !== Nivel.ALUNO) return ResponseEntity.status(401).build()
         if (usuarioRepository.existsById(id)) {
-            novoAluno.id = id
-            usuarioRepository.save(novoAluno)
-            return ResponseEntity.status(200).body(novoAluno)
+            val usuarioAntigo = usuarioRepository.findById(id).get()
+            val nivelAcessoUsuarioAntigo = buscaNivelAcesso(usuarioAntigo.nivelAcesso.id)
+            val nivelAcessoNovoUsuario = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
+            if(nivelAcessoNovoUsuario.nome !== NivelAcessoNome.ALUNO || nivelAcessoUsuarioAntigo.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+            novoUsuario.id = id
+            usuarioRepository.save(novoUsuario)
+            return ResponseEntity.status(200).body(novoUsuario)
         }
         return ResponseEntity.status(404).build()
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/aluno/{id}")
     fun deletaAluno(@PathVariable id: Int):ResponseEntity<Void> {
-        val nivelAcesso = buscaPorNivelAcesso(id)
-        if(nivelAcesso.nome !== Nivel.ALUNO) return ResponseEntity.status(401).build()
+
         if (usuarioRepository.existsById(id)) {
+            val usuario = usuarioRepository.findById(id).get()
+            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
+            if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
             usuarioRepository.deleteById(id)
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(404).build()
     }
 
-    @GetMapping("/professor")
+    @GetMapping("/aluno")
     fun buscaAlunos(): ResponseEntity<List<Usuario>>{
-        val listaAlunos = usuarioRepository.findByNivelAcessoId(1)
+        val listaAlunos = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.ALUNO)
         if(listaAlunos.isEmpty()){
             return ResponseEntity.status(204).build()
         }
@@ -64,46 +85,60 @@ class UsuarioController(
     @PostMapping("/professor")
     fun salvaProfessor(@RequestBody novoProfessor: Usuario): ResponseEntity<Usuario>{
 
-        val nivelAcesso = buscaPorNivelAcesso(novoProfessor.nivelAcesso.id)
-        if(nivelAcesso.nome !== Nivel.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+        val nivelAcesso = buscaNivelAcesso(novoProfessor.nivelAcesso.id)
+        if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
         val usuarioSalvo = usuarioRepository.save(novoProfessor)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
     @GetMapping("/professor")
     fun buscaProfessores(): ResponseEntity<List<Usuario>>{
-        val listaProfessores = usuarioRepository.findByNivelAcessoId(2)
+        val listaProfessores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.PROFESSOR_AUXILIAR)
         if(listaProfessores.isEmpty()){
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(200).body(listaProfessores)
     }
 
-    @PutMapping("/{id}")
-    fun put(
-        @PathVariable id: Int,@RequestBody novoProfessor: Usuario):
+    @PutMapping("/professor/{id}")
+    fun editaProfessor(
+        @PathVariable id: Int,@RequestBody novoUsuario: Usuario):
             ResponseEntity<Usuario> {
-        val nivelAcesso = buscaPorNivelAcesso(novoProfessor.nivelAcesso.id)
-        if(nivelAcesso.nome !== Nivel.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+
         if (usuarioRepository.existsById(id)) {
-            novoProfessor.id = id
-            usuarioRepository.save(novoProfessor)
-            return ResponseEntity.status(200).body(novoProfessor)
+            val usuarioAntigo = usuarioRepository.findById(id).get()
+            val nivelAcessoUsuarioAntigo = buscaNivelAcesso(usuarioAntigo.nivelAcesso.id)
+            val nivelAcessoNovoUsuario = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
+            if(nivelAcessoNovoUsuario.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR || nivelAcessoUsuarioAntigo.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+            novoUsuario.id = id
+            usuarioRepository.save(novoUsuario)
+            return ResponseEntity.status(200).body(novoUsuario)
         }
         return ResponseEntity.status(404).build()
     }
 
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Int):ResponseEntity<Void> {
-        val nivelAcesso = buscaPorNivelAcesso(id)
-        if(nivelAcesso.nome !== Nivel.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+    @DeleteMapping("/professor/{id}")
+    fun deletaProfessor(@PathVariable id: Int):ResponseEntity<Void> {
+
         if (usuarioRepository.existsById(id)) {
+            val usuario = usuarioRepository.findById(id).get()
+            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
+            if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
             usuarioRepository.deleteById(id)
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(404).build()
     }
 
-    fun buscaPorNivelAcesso(id:Int): NivelAcesso{
+    @GetMapping("/representante-legal")
+    fun buscaRepresentanteLegal(): ResponseEntity<List<Usuario>>{
+        val listaProfessores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.REPRESENTANTE_LEGAL)
+        if(listaProfessores.isEmpty()){
+            return ResponseEntity.status(204).build()
+        }
+        return ResponseEntity.status(200).body(listaProfessores)
+    }
+
+    fun buscaNivelAcesso(id:Int): NivelAcesso{
         return nivelAcessoRepository.findById(id).get()
     }
 }

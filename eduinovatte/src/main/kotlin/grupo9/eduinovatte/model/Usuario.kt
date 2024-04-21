@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size
 data class Usuario (
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id:Int?,
+    var id:Int,
     val nomeCompleto: String,
     @field:Size(min = 11)
     val cpf: String,

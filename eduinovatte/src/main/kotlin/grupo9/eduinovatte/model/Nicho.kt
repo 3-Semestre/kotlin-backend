@@ -1,15 +1,13 @@
 package grupo9.eduinovatte.model
 
-enum class Nicho(val descricao: String){
-    Infantil("Inglês para crianças de 10 a 20 anos"),
-    Business("Inglês com contexto corporativo"),
-    Tecnico("Inglês com contexto técnico (ex: aviação, jurídico, médico)"),
-    TestesInternacionais("Inglês para exames internacionais"),
-    Iniciante("Inglês para iniciantes"),
-    Intermediario("Inglês para intermediarios"),
-    Avancado("Inglês para avançados");
+import grupo9.eduinovatte.model.enums.NichoNome
+import jakarta.persistence.*
 
-    override fun toString(): String {
-        return descricao
-    }
-}
+@Entity
+data class Nicho (
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int,
+    @Enumerated(EnumType.STRING)
+    val nome: NichoNome?
+)

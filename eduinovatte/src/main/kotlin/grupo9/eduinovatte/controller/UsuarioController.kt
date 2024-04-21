@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.dto.LoginForm
 import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,11 +23,31 @@ class UsuarioController(
     val nivelAcessoRepository: NivelAcessoRepository
 ){
     @PostMapping("/aluno/autenticar")
-    fun autenticarAluno(@RequestBody novoAluno: Usuario): ResponseEntity<Usuario>{
-        val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
-        if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
-        val usuarioSalvo = usuarioRepository.save(novoAluno)
-        return ResponseEntity.status(201).body(usuarioSalvo)
+    fun autenticarAluno(@RequestBody loginForm: LoginForm): ResponseEntity<Usuario>{
+        try {
+            val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
+            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
+            if(nivelAcesso.nome == NivelAcessoNome.ALUNO){
+                usuarioRepository.autenticarAluno(usuario.id)
+                val novoUsuario = usuarioRepository.findById(usuario.id).get()
+                return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
+            }
+            return ResponseEntity.status(401).build()
+        } catch (e: EmptyResultDataAccessException) {
+            return ResponseEntity.status(403).build()
+        }
+    }
+
+    @PostMapping("/aluno/desautenticar/{id}")
+    fun desautenticarAluno(@PathVariable id: Int): ResponseEntity<Void>{
+        if (usuarioRepository.existsById(id)) {
+            val usuarioDesautentifcado = usuarioRepository.findById(id).get()
+            val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
+            if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+            usuarioRepository.desautenticarAluno(id)
+            return ResponseEntity.status(200).build()
+        }
+        return ResponseEntity.status(404).build()
     }
 
     @PostMapping("/professor/autenticar")

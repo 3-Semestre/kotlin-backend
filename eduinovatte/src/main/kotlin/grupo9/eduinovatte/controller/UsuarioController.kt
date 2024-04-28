@@ -5,6 +5,7 @@ import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
+import jakarta.validation.Valid
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -60,7 +61,7 @@ class UsuarioController(
     }
 
     @PostMapping("/aluno")
-    fun salvaAluno(@RequestBody novoAluno: Usuario): ResponseEntity<Usuario>{
+    fun salvaAluno(@RequestBody @Valid novoAluno: Usuario): ResponseEntity<Usuario>{
         val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
         if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
         val usuarioSalvo = usuarioRepository.save(novoAluno)
@@ -105,7 +106,7 @@ class UsuarioController(
         return ResponseEntity.status(200).body(listaAlunos)
     }
     @PostMapping("/professor")
-    fun salvaProfessor(@RequestBody novoProfessor: Usuario): ResponseEntity<Usuario>{
+    fun salvaProfessor(@RequestBody @Valid novoProfessor: Usuario): ResponseEntity<Usuario>{
 
         val nivelAcesso = buscaNivelAcesso(novoProfessor.nivelAcesso.id)
         if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
@@ -123,7 +124,7 @@ class UsuarioController(
 
     @PutMapping("/professor/{id}")
     fun editaProfessor(
-        @PathVariable id: Int,@RequestBody novoUsuario: Usuario):
+        @PathVariable id: Int,@RequestBody @Valid novoUsuario: Usuario):
             ResponseEntity<Usuario> {
 
         if (usuarioRepository.existsById(id)) {

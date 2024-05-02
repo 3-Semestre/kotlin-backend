@@ -14,10 +14,11 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     @Transactional
     @Modifying
     @Query("update Usuario u set u.autenticado = true where u.id = :id")
-    fun autenticarAluno(id: Int): Int
+    fun autenticar(id: Int): Int
 
     @Transactional
     @Modifying
     @Query("update Usuario u set u.autenticado = false where u.id = :id")
-    fun desautenticarAluno(id: Int): Int
+    fun desautenticar(id: Int): Int
+
 }

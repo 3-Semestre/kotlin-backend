@@ -10,4 +10,4 @@ data class NivelIngles (
     val id: Int,
     @Enumerated(EnumType.STRING)
     val nome: NivelInglesNome?
-)
+)   

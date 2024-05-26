@@ -1,14 +1,19 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.dto.LoginForm
+import grupo9.eduinovatte.application.dto.request.LoginForm
+import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
+import grupo9.eduinovatte.model.enums.SituacaoNome
 import grupo9.eduinovatte.service.NivelAcessoRepository
+import grupo9.eduinovatte.service.SituacaoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,91 +29,10 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
     val usuarioRepository: UsuarioRepository,
-    val nivelAcessoRepository: NivelAcessoRepository
+    val nivelAcessoRepository: NivelAcessoRepository,
+    val situacaoRepository: SituacaoRepository,
+    val usuarioService: UsuarioService
 ){
-//    @PostMapping("/aluno/autenticar")
-//    fun autenticarAluno(@RequestBody loginForm: LoginForm): ResponseEntity<Usuario>{
-//        try {
-//            val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-//            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-//            if(nivelAcesso.nome == NivelAcessoNome.ALUNO){
-//                usuarioRepository.autenticar(usuario.id)
-//                val novoUsuario = usuarioRepository.findById(usuario.id).get()
-//                return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
-//            }
-//            return ResponseEntity.status(401).build()
-//        } catch (e: EmptyResultDataAccessException) {
-//            return ResponseEntity.status(403).build()
-//        }
-//    }
-//
-//    @PostMapping("/aluno/desautenticar/{id}")
-//    fun desautenticarAluno(@PathVariable id: Int): ResponseEntity<Void>{
-//        if (usuarioRepository.existsById(id)) {
-//            val usuarioDesautentifcado = usuarioRepository.findById(id).get()
-//            val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
-//            if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
-//            usuarioRepository.desautenticar(id)
-//            return ResponseEntity.status(200).build()
-//        }
-//        return ResponseEntity.status(404).build()
-//    }
-//
-//    @PostMapping("/professor/autenticar")
-//    fun autenticarProfessor(@RequestBody loginForm: LoginForm): ResponseEntity<Usuario>{
-//        try {
-//            val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-//            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-//            if(nivelAcesso.nome == NivelAcessoNome.PROFESSOR_AUXILIAR){
-//                usuarioRepository.autenticar(usuario.id)
-//                val novoUsuario = usuarioRepository.findById(usuario.id).get()
-//                return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
-//            }
-//            return ResponseEntity.status(401).build()
-//        } catch (e: EmptyResultDataAccessException) {
-//            return ResponseEntity.status(403).build()
-//        }
-//    }
-//
-//    @PostMapping("/professor/desautenticar/{id}")
-//    fun desautenticarProfessor(@PathVariable id: Int): ResponseEntity<Void>{
-//        if (usuarioRepository.existsById(id)) {
-//            val usuarioDesautentifcado = usuarioRepository.findById(id).get()
-//            val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
-//            if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
-//            usuarioRepository.desautenticar(id)
-//            return ResponseEntity.status(200).build()
-//        }
-//        return ResponseEntity.status(404).build()
-//    }
-//
-//    @PostMapping("/representante-legal/autenticar")
-//    fun autenticarRepresentante(@RequestBody loginForm: LoginForm): ResponseEntity<Usuario>{
-//        try {
-//            val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-//            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-//            if(nivelAcesso.nome == NivelAcessoNome.REPRESENTANTE_LEGAL){
-//                usuarioRepository.autenticar(usuario.id)
-//                val novoUsuario = usuarioRepository.findById(usuario.id).get()
-//                return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
-//            }
-//            return ResponseEntity.status(401).build()
-//        } catch (e: EmptyResultDataAccessException) {
-//            return ResponseEntity.status(403).build()
-//        }
-//    }
-//
-//    @PostMapping("/representante-legal/desautenticar/{id}")
-//    fun desautenticarRepresentante(@PathVariable id: Int): ResponseEntity<Void>{
-//        if (usuarioRepository.existsById(id)) {
-//            val usuarioDesautentifcado = usuarioRepository.findById(id).get()
-//            val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
-//            if(nivelAcesso.nome !== NivelAcessoNome.REPRESENTANTE_LEGAL) return ResponseEntity.status(401).build()
-//            usuarioRepository.desautenticar(id)
-//            return ResponseEntity.status(200).build()
-//        }
-//        return ResponseEntity.status(404).build()
-//    }
 
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
     @ApiResponses(value = [
@@ -124,6 +48,12 @@ class UsuarioController(
         try {
             val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
             val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
+            val situacao = buscaSituacao(usuario.situacao?.id)
+
+            if(situacao?.nome == SituacaoNome.INATIVO) {
+                usuarioRepository.desautenticar(usuario.id)
+                return ResponseEntity.status(401).build()
+            }
 
             val tipoAcesso = when (tipo) {
                 "aluno" -> NivelAcessoNome.ALUNO
@@ -134,7 +64,7 @@ class UsuarioController(
 
             if(nivelAcesso.nome == tipoAcesso){
                 usuarioRepository.autenticar(usuario.id)
-                val novoUsuario = usuarioRepository.findById(usuario.id).get()
+                val novoUsuario = usuarioRepository.findById(usuario.id!!).get()
                 return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
             }
             return ResponseEntity.status(401).build()
@@ -181,6 +111,10 @@ class UsuarioController(
     fun salvaAluno(@RequestBody @Valid novoAluno: Usuario): ResponseEntity<Usuario>{
         val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
         if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+        val usuarioExistente = usuarioRepository.findByCpf(novoAluno.cpf)
+        if (usuarioExistente != null) {
+            return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
+        }
         val usuarioSalvo = usuarioRepository.save(novoAluno)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
@@ -249,23 +183,25 @@ class UsuarioController(
 
         val nivelAcesso = buscaNivelAcesso(novoProfessor.nivelAcesso.id)
         if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
+        val usuarioExistente = usuarioRepository.findByCpf(novoProfessor.cpf)
+        if (usuarioExistente != null) {
+            return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
+        }
         val usuarioSalvo = usuarioRepository.save(novoProfessor)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
+
     @Operation(summary = "Busque os professores", description = "Busque todos os professores.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Professores buscados com sucesso"),
         ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
     ])
     @GetMapping("/professor")
-    fun buscaProfessores(): ResponseEntity<List<Usuario>>{
-        val listaProfessores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.PROFESSOR_AUXILIAR)
-        if(listaProfessores.isEmpty()){
-            return ResponseEntity.status(204).build()
-        }
+    fun buscaProfessores(): ResponseEntity<List<UsuarioResponse>>{
+        val listaProfessores = usuarioService.buscaProfessores()
+
         return ResponseEntity.status(200).body(listaProfessores)
     }
-
 
     @Operation(summary = "Edite um professor", description = "Edite um professor com as informações dele no corpo e o id no parâmetro.")
     @ApiResponses(value = [
@@ -323,7 +259,29 @@ class UsuarioController(
         return ResponseEntity.status(200).body(listaProfessores)
     }
 
+    @Operation(summary = "Desative um usuário", description = "Desative um usuário pelo ID.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Usuario desativado"),
+        ApiResponse(responseCode = "404", description = "Usuario não existe")
+    ])
+    @PutMapping("/desativar/{id}")
+    fun desativaAluno(
+        @PathVariable id: Int):
+            ResponseEntity<Int> {
+
+        if (usuarioRepository.existsById(id)) {
+            val retorno = usuarioRepository.desativar(id)
+            return ResponseEntity.status(200).body(retorno)
+        }
+        return ResponseEntity.status(404).build()
+    }
+
     fun buscaNivelAcesso(id:Int): NivelAcesso{
         return nivelAcessoRepository.findById(id).get()
+    }
+
+    fun buscaSituacao(id:Int?): Situacao?{
+        if(id !== null) return situacaoRepository.findById(id).get()
+        return null
     }
 }

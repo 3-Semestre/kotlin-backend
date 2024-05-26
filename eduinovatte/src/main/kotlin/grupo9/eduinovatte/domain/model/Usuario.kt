@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.model
 
+import grupo9.eduinovatte.model.enums.SituacaoNome
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Size
@@ -9,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF
 data class Usuario (
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id:Int,
+    var id:Int? = null,
     val nomeCompleto: String,
     @field:CPF
     val cpf: String,
@@ -17,9 +18,11 @@ data class Usuario (
     val telefone: String?,
     val autenticado: Boolean? = false,
     @field:Email
-    val email: String?,
+    val email: String,
     val senha: String?,
+    val profissao :String?,
     @field:ManyToOne
-    @JoinColumn(name = "fk_nivel_acesso")
-    val nivelAcesso: NivelAcesso
+    val nivelAcesso: NivelAcesso,
+    @field:ManyToOne
+    val situacao: Situacao? = Situacao(id = 2, SituacaoNome.ATIVO)
 )

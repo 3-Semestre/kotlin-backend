@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.dto
+package grupo9.eduinovatte.application.dto.request
 
 import jakarta.validation.constraints.Email
 

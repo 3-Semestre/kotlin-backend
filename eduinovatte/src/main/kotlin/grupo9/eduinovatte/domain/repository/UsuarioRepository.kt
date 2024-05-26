@@ -10,15 +10,22 @@ import org.springframework.data.jpa.repository.Query
 interface UsuarioRepository: JpaRepository<Usuario, Int> {
     fun findByNivelAcessoNome(nome: NivelAcessoNome): List<Usuario>
 
+    fun findByCpf(cpf: String): Usuario?
+
     fun findByEmailOrCpfAndSenha(email: String?, cpf: String?, senha: String?): Usuario
     @Transactional
     @Modifying
     @Query("update Usuario u set u.autenticado = true where u.id = :id")
-    fun autenticar(id: Int): Int
+    fun autenticar(id: Int?): Int
 
     @Transactional
     @Modifying
     @Query("update Usuario u set u.autenticado = false where u.id = :id")
-    fun desautenticar(id: Int): Int
+    fun desautenticar(id: Int?): Int
+
+    @Transactional
+    @Modifying
+    @Query("update Usuario u set u.situacao.id = 2 where u.id = :id")
+    fun desativar(id: Int?): Int
 
 }

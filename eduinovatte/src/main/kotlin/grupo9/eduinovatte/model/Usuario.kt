@@ -20,5 +20,6 @@ data class Usuario (
     val email: String?,
     val senha: String?,
     @field:ManyToOne
+    @JoinColumn(name = "fk_nivel_acesso")
     val nivelAcesso: NivelAcesso
 )

@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.application.integration.ViaCepClient
 import grupo9.eduinovatte.model.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -12,11 +13,13 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class UsuarioService (
     val usuarioRepository: UsuarioRepository,
+    val viaCepClient: ViaCepClient
 ){
     fun buscaProfessores(): List<UsuarioResponse>{
         val professores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.PROFESSOR_AUXILIAR)
         validarLista(professores)
         val professoresResponse = retornaListaUsuario(professores)
+
         return professoresResponse
     }
 

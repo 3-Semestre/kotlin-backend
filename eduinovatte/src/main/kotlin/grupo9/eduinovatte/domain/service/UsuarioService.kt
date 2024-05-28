@@ -13,10 +13,10 @@ import org.springframework.web.server.ResponseStatusException
 class UsuarioService (
     val usuarioRepository: UsuarioRepository,
 ){
-    fun buscaProfessores(): List<UsuarioResponse>{
-        val professores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.PROFESSOR_AUXILIAR)
-        validarLista(professores)
-        val professoresResponse = retornaListaUsuario(professores)
+    fun buscaProfessores(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse>{
+        val usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)
+        validarLista(usuarios)
+        val professoresResponse = retornaListaUsuario(usuarios)
         return professoresResponse
     }
 

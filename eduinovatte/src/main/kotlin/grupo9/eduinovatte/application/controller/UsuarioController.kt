@@ -55,12 +55,7 @@ class UsuarioController(
                 return ResponseEntity.status(401).build()
             }
 
-            val tipoAcesso = when (tipo) {
-                "aluno" -> NivelAcessoNome.ALUNO
-                "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR
-                "representante-legal" -> NivelAcessoNome.REPRESENTANTE_LEGAL
-                else -> null
-            }
+            val tipoAcesso = verificaNivelAcesso(tipo)
 
             if(nivelAcesso.nome == tipoAcesso){
                 usuarioRepository.autenticar(usuario.id)
@@ -87,13 +82,7 @@ class UsuarioController(
         if (usuarioRepository.existsById(id)) {
             val usuarioDesautentifcado = usuarioRepository.findById(id).get()
             val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
-
-            val tipoAcesso = when (tipo) {
-                "aluno" -> NivelAcessoNome.ALUNO
-                "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR
-                "representante-legal" -> NivelAcessoNome.REPRESENTANTE_LEGAL
-                else -> null
-            }
+            val tipoAcesso = verificaNivelAcesso(tipo)
 
             if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
             usuarioRepository.desautenticar(id)
@@ -102,20 +91,36 @@ class UsuarioController(
         return ResponseEntity.status(404).build()
     }
 
+    @Operation(summary = "Busque os usuários", description = "Busque todos os professores.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Professores buscados com sucesso"),
+        ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
+    ])
+    @GetMapping("/{tipo}")
+    fun buscaUsuarios(@PathVariable tipo: String): ResponseEntity<List<UsuarioResponse>>{
+        val tipoAcesso = verificaNivelAcesso(tipo)
+        val listaProfessores = usuarioService.buscaProfessores(tipoAcesso)
+
+        return ResponseEntity.status(200).body(listaProfessores)
+    }
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
     ])
-    @PostMapping("/aluno")
-    fun salvaAluno(@RequestBody @Valid novoAluno: Usuario): ResponseEntity<Usuario>{
-        val nivelAcesso = buscaNivelAcesso(novoAluno.nivelAcesso.id)
-        if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
-        val usuarioExistente = usuarioRepository.findByCpf(novoAluno.cpf)
+    @PostMapping("/{tipo}/teste")
+    fun salvaUsuario(
+        @PathVariable tipo: String,
+        @RequestBody @Valid novoUsuario: Usuario
+    ): ResponseEntity<Usuario>{
+        val tipoAcesso = verificaNivelAcesso(tipo)
+        val nivelAcesso = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
+        if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
+        val usuarioExistente = usuarioRepository.findByCpf(novoUsuario.cpf)
         if (usuarioExistente != null) {
             return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
         }
-        val usuarioSalvo = usuarioRepository.save(novoAluno)
+        val usuarioSalvo = usuarioRepository.save(novoUsuario)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
 
@@ -125,15 +130,18 @@ class UsuarioController(
         ApiResponse(responseCode = "404", description = "Aluno não existe"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no parâmetro ou corpo da requisição")
     ])
-    @PutMapping("/aluno/{id}")
-    fun editaAluno(
-        @PathVariable id: Int,@RequestBody novoUsuario: Usuario):
+    @PutMapping("/{tipo}}/{id}")
+    fun editaUsuario(
+        @PathVariable tipo:String,
+        @PathVariable id: Int,
+        @RequestBody novoUsuario: Usuario):
             ResponseEntity<Usuario> {
+        val tipoAcesso = verificaNivelAcesso(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
             val nivelAcessoUsuarioAntigo = buscaNivelAcesso(usuarioAntigo.nivelAcesso.id)
             val nivelAcessoNovoUsuario = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
-            if(nivelAcessoNovoUsuario.nome !== NivelAcessoNome.ALUNO || nivelAcessoUsuarioAntigo.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+            if(nivelAcessoNovoUsuario.nome !== tipoAcesso || nivelAcessoUsuarioAntigo.nome !== tipoAcesso) return ResponseEntity.status(401).build()
             novoUsuario.id = id
             usuarioRepository.save(novoUsuario)
             return ResponseEntity.status(200).body(novoUsuario)
@@ -141,109 +149,21 @@ class UsuarioController(
         return ResponseEntity.status(404).build()
     }
 
-    @Operation(summary = "Delete um aluno", description = "Delete um aluno com base no id dele.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso"),
-        ApiResponse(responseCode = "401", description = "Erro de nível de acesso no parâmetro da requisição"),
-        ApiResponse(responseCode = "404", description = "Aluno não encontrado")
-    ])
-    @DeleteMapping("/aluno/{id}")
-    fun deletaAluno(@PathVariable id: Int):ResponseEntity<Void> {
-
+    @DeleteMapping("/{tipo}}/{id}")
+    fun deletaUsuario(
+        @PathVariable tipo:String,
+        @PathVariable id: Int):ResponseEntity<Void> {
+        val tipoAcesso = verificaNivelAcesso(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuario = usuarioRepository.findById(id).get()
             val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-            if(nivelAcesso.nome !== NivelAcessoNome.ALUNO) return ResponseEntity.status(401).build()
+            if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
             usuarioRepository.deleteById(id)
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(404).build()
     }
 
-    @Operation(summary = "Busque os alunos", description = "Busque todos os alunos.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Alunos buscados com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum aluno encontrado")
-    ])
-    @GetMapping("/aluno")
-    fun buscaAlunos(): ResponseEntity<List<Usuario>>{
-        val listaAlunos = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.ALUNO)
-        if(listaAlunos.isEmpty()){
-            return ResponseEntity.status(204).build()
-        }
-        return ResponseEntity.status(200).body(listaAlunos)
-    }
-    @Operation(summary = "Salve um professor", description = "Salve um professor com as informações dele.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "201", description = "Professor criado com sucesso"),
-        ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
-    ])
-    @PostMapping("/professor")
-    fun salvaProfessor(@RequestBody @Valid novoProfessor: Usuario): ResponseEntity<Usuario>{
-
-        val nivelAcesso = buscaNivelAcesso(novoProfessor.nivelAcesso.id)
-        if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
-        val usuarioExistente = usuarioRepository.findByCpf(novoProfessor.cpf)
-        if (usuarioExistente != null) {
-            return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
-        }
-        val usuarioSalvo = usuarioRepository.save(novoProfessor)
-        return ResponseEntity.status(201).body(usuarioSalvo)
-    }
-
-    @Operation(summary = "Busque os professores", description = "Busque todos os professores.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Professores buscados com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
-    ])
-    @GetMapping("/professor")
-    fun buscaProfessores(): ResponseEntity<List<UsuarioResponse>>{
-        val listaProfessores = usuarioService.buscaProfessores()
-
-        return ResponseEntity.status(200).body(listaProfessores)
-    }
-
-    @Operation(summary = "Edite um professor", description = "Edite um professor com as informações dele no corpo e o id no parâmetro.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Professor editado"),
-        ApiResponse(responseCode = "404", description = "Professor não existe"),
-        ApiResponse(responseCode = "401", description = "Erro no nível de acesso no parâmetro ou corpo da requisição")
-    ])
-    @PutMapping("/professor/{id}")
-    fun editaProfessor(
-        @PathVariable id: Int,@RequestBody @Valid novoUsuario: Usuario):
-            ResponseEntity<Usuario> {
-
-        if (usuarioRepository.existsById(id)) {
-            val usuarioAntigo = usuarioRepository.findById(id).get()
-            val nivelAcessoUsuarioAntigo = buscaNivelAcesso(usuarioAntigo.nivelAcesso.id)
-            val nivelAcessoNovoUsuario = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
-            if(nivelAcessoNovoUsuario.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR || nivelAcessoUsuarioAntigo.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
-            novoUsuario.id = id
-            usuarioRepository.save(novoUsuario)
-            return ResponseEntity.status(200).body(novoUsuario)
-        }
-        return ResponseEntity.status(404).build()
-    }
-
-    @Operation(summary = "Delete um professor", description = "Delete um professor com base no id dele.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "204", description = "Professor deletado com sucesso"),
-        ApiResponse(responseCode = "401", description = "Erro de nível de acesso no parâmetro da requisição"),
-        ApiResponse(responseCode = "404", description = "Professor não encontrado")
-    ])
-    @DeleteMapping("/professor/{id}")
-    fun deletaProfessor(@PathVariable id: Int):ResponseEntity<Void> {
-
-        if (usuarioRepository.existsById(id)) {
-            val usuario = usuarioRepository.findById(id).get()
-            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-            if(nivelAcesso.nome !== NivelAcessoNome.PROFESSOR_AUXILIAR) return ResponseEntity.status(401).build()
-            usuarioRepository.deleteById(id)
-            return ResponseEntity.status(204).build()
-        }
-        return ResponseEntity.status(404).build()
-    }
 
     @Operation(summary = "Busque o/os representante legais", description = "Busque todos representante legais.")
     @ApiResponses(value = [
@@ -283,5 +203,15 @@ class UsuarioController(
     fun buscaSituacao(id:Int?): Situacao?{
         if(id !== null) return situacaoRepository.findById(id).get()
         return null
+    }
+
+    fun verificaNivelAcesso(tipo: String): NivelAcessoNome?{
+         val tipoAcesso = when (tipo) {
+            "aluno" -> NivelAcessoNome.ALUNO
+            "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR
+            "representante-legal" -> NivelAcessoNome.REPRESENTANTE_LEGAL
+            else -> null
+        }
+        return tipoAcesso
     }
 }

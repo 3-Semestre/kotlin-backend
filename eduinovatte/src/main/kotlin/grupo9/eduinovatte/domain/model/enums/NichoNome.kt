@@ -5,9 +5,7 @@ enum class NichoNome(val descricao: String){
     BUSINESS("Inglês com contexto corporativo"),
     TECNICO("Inglês com contexto técnico (ex: aviação, jurídico, médico)"),
     TESTES_INTERNACIONAIS("Inglês para exames internacionais"),
-    INICIANTE("Inglês para iniciantes"),
-    INTERMEDIARIO("Inglês para intermediarios"),
-    AVANCADO("Inglês para avançados");
+    MORADORES_EXTERIOR("Inglês para estrangeiros");
 
     override fun toString(): String {
         return descricao

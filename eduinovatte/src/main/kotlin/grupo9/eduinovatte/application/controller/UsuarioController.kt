@@ -5,15 +5,11 @@ import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.model.enums.SituacaoNome
-import grupo9.eduinovatte.service.NivelAcessoRepository
-import grupo9.eduinovatte.service.SituacaoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -29,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
     val usuarioRepository: UsuarioRepository,
-    val nivelAcessoRepository: NivelAcessoRepository,
-    val situacaoRepository: SituacaoRepository,
     val usuarioService: UsuarioService
 ){
 
@@ -44,25 +38,16 @@ class UsuarioController(
     fun autenticarUsuario(
         @PathVariable tipo: String,
         @RequestBody loginForm: LoginForm
-    ): ResponseEntity<Usuario>{
+    ): ResponseEntity<UsuarioResponse>{
         try {
             val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-            val situacao = buscaSituacao(usuario.situacao?.id)
+            val tipoAcesso = retornaNivelAcessoNome(tipo)
+            usuarioService.validaSituacao(usuario.situacao?.id)
+            usuarioService.validaNivelAcesso(usuario.nivelAcesso.id, tipoAcesso)
 
-            if(situacao?.nome == SituacaoNome.INATIVO) {
-                usuarioRepository.desautenticar(usuario.id)
-                return ResponseEntity.status(401).build()
-            }
+            val novoUsuario = usuarioService.autenticar(usuario.id!!)
+            return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
 
-            val tipoAcesso = verificaNivelAcesso(tipo)
-
-            if(nivelAcesso.nome == tipoAcesso){
-                usuarioRepository.autenticar(usuario.id)
-                val novoUsuario = usuarioRepository.findById(usuario.id!!).get()
-                return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
-            }
-            return ResponseEntity.status(401).build()
         } catch (e: EmptyResultDataAccessException) {
             return ResponseEntity.status(403).build()
         }
@@ -80,12 +65,11 @@ class UsuarioController(
         @PathVariable id: Int
     ): ResponseEntity<Void>{
         if (usuarioRepository.existsById(id)) {
-            val usuarioDesautentifcado = usuarioRepository.findById(id).get()
-            val nivelAcesso = buscaNivelAcesso(usuarioDesautentifcado.nivelAcesso.id)
-            val tipoAcesso = verificaNivelAcesso(tipo)
+            val usuarioDesautenticado = usuarioRepository.findById(id).get()
+            val tipoAcesso = retornaNivelAcessoNome(tipo)
+            usuarioService.validaNivelAcesso(usuarioDesautenticado.id, tipoAcesso)
 
-            if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
-            usuarioRepository.desautenticar(id)
+            usuarioService.desautenticar(usuarioDesautenticado.id!!)
             return ResponseEntity.status(200).build()
         }
         return ResponseEntity.status(404).build()
@@ -98,8 +82,8 @@ class UsuarioController(
     ])
     @GetMapping("/{tipo}")
     fun buscaUsuarios(@PathVariable tipo: String): ResponseEntity<List<UsuarioResponse>>{
-        val tipoAcesso = verificaNivelAcesso(tipo)
-        val listaProfessores = usuarioService.buscaProfessores(tipoAcesso)
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        val listaProfessores = usuarioService.buscaUsuarios(tipoAcesso)
 
         return ResponseEntity.status(200).body(listaProfessores)
     }
@@ -108,19 +92,15 @@ class UsuarioController(
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
     ])
-    @PostMapping("/{tipo}/teste")
+    @PostMapping("/{tipo}")
     fun salvaUsuario(
         @PathVariable tipo: String,
         @RequestBody @Valid novoUsuario: Usuario
-    ): ResponseEntity<Usuario>{
-        val tipoAcesso = verificaNivelAcesso(tipo)
-        val nivelAcesso = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
-        if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
-        val usuarioExistente = usuarioRepository.findByCpf(novoUsuario.cpf)
-        if (usuarioExistente != null) {
-            return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
-        }
-        val usuarioSalvo = usuarioRepository.save(novoUsuario)
+    ): ResponseEntity<UsuarioResponse>{
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        usuarioService.validaNivelAcesso(novoUsuario.id, tipoAcesso)
+
+        val usuarioSalvo = usuarioService.salvaUsuario(novoUsuario)
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
 
@@ -130,54 +110,40 @@ class UsuarioController(
         ApiResponse(responseCode = "404", description = "Aluno não existe"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no parâmetro ou corpo da requisição")
     ])
-    @PutMapping("/{tipo}}/{id}")
+    @PutMapping("/{tipo}/{id}")
     fun editaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int,
         @RequestBody novoUsuario: Usuario):
-            ResponseEntity<Usuario> {
-        val tipoAcesso = verificaNivelAcesso(tipo)
+            ResponseEntity<UsuarioResponse> {
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
-            val nivelAcessoUsuarioAntigo = buscaNivelAcesso(usuarioAntigo.nivelAcesso.id)
-            val nivelAcessoNovoUsuario = buscaNivelAcesso(novoUsuario.nivelAcesso.id)
-            if(nivelAcessoNovoUsuario.nome !== tipoAcesso || nivelAcessoUsuarioAntigo.nome !== tipoAcesso) return ResponseEntity.status(401).build()
+            usuarioService.validaNivelAcesso(usuarioAntigo.nivelAcesso.id, tipoAcesso)
+            usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso.id, tipoAcesso)
+
             novoUsuario.id = id
-            usuarioRepository.save(novoUsuario)
-            return ResponseEntity.status(200).body(novoUsuario)
+            val usuarioEditado = usuarioService.editaUsuario(novoUsuario)
+            return ResponseEntity.status(200).body(usuarioEditado)
         }
         return ResponseEntity.status(404).build()
     }
 
-    @DeleteMapping("/{tipo}}/{id}")
+    @DeleteMapping("/{tipo}/{id}")
     fun deletaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int):ResponseEntity<Void> {
-        val tipoAcesso = verificaNivelAcesso(tipo)
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuario = usuarioRepository.findById(id).get()
-            val nivelAcesso = buscaNivelAcesso(usuario.nivelAcesso.id)
-            if(nivelAcesso.nome !== tipoAcesso) return ResponseEntity.status(401).build()
-            usuarioRepository.deleteById(id)
+            usuarioService.validaNivelAcesso(usuario.nivelAcesso.id, tipoAcesso)
+
+            usuarioService.deletaUsuario(id)
             return ResponseEntity.status(204).build()
         }
         return ResponseEntity.status(404).build()
     }
 
-
-    @Operation(summary = "Busque o/os representante legais", description = "Busque todos representante legais.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "204", description = "Nenhum representante legal encontrado"),
-        ApiResponse(responseCode = "200", description = "Representante legal buscado")
-    ])
-    @GetMapping("/representante-legal")
-    fun buscaRepresentanteLegal(): ResponseEntity<List<Usuario>>{
-        val listaProfessores = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.REPRESENTANTE_LEGAL)
-        if(listaProfessores.isEmpty()){
-            return ResponseEntity.status(204).build()
-        }
-        return ResponseEntity.status(200).body(listaProfessores)
-    }
 
     @Operation(summary = "Desative um usuário", description = "Desative um usuário pelo ID.")
     @ApiResponses(value = [
@@ -190,22 +156,13 @@ class UsuarioController(
             ResponseEntity<Int> {
 
         if (usuarioRepository.existsById(id)) {
-            val retorno = usuarioRepository.desativar(id)
+            val retorno = usuarioService.desativaUsuario(id)
             return ResponseEntity.status(200).body(retorno)
         }
         return ResponseEntity.status(404).build()
     }
 
-    fun buscaNivelAcesso(id:Int): NivelAcesso{
-        return nivelAcessoRepository.findById(id).get()
-    }
-
-    fun buscaSituacao(id:Int?): Situacao?{
-        if(id !== null) return situacaoRepository.findById(id).get()
-        return null
-    }
-
-    fun verificaNivelAcesso(tipo: String): NivelAcessoNome?{
+    fun retornaNivelAcessoNome(tipo: String): NivelAcessoNome?{
          val tipoAcesso = when (tipo) {
             "aluno" -> NivelAcessoNome.ALUNO
             "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR

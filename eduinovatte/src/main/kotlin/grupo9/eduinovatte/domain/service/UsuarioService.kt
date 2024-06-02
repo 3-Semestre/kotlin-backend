@@ -6,8 +6,6 @@ import grupo9.eduinovatte.model.Situacao
 import grupo9.eduinovatte.model.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.model.enums.SituacaoNome
-import grupo9.eduinovatte.service.NivelAcessoRepository
-import grupo9.eduinovatte.service.SituacaoRepository
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
@@ -16,8 +14,8 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class UsuarioService (
     val usuarioRepository: UsuarioRepository,
-    val nivelAcessoRepository: NivelAcessoRepository,
-    val situacaoRepository: SituacaoRepository
+    val nivelAcessoService: NivelAcessoService,
+    val situacaoService: SituacaoService
 ){
     fun autenticar(id: Int): UsuarioResponse{
         usuarioRepository.autenticar(id)
@@ -80,14 +78,13 @@ class UsuarioService (
 
 
     fun retornaListaUsuario(usuarios: List<Usuario>): List<UsuarioResponse>{
-        val dtos = usuarios.map{
-            UsuarioResponse(id = it.id, nomeCompleto = it.nomeCompleto, cpf = it.cpf, telefone = it.telefone, autenticado = it.autenticado, email = it.email, profissao = it.profissao, nivelAcesso = it.nivelAcesso, situacao = it.situacao)
+         val dtos = usuarios.map{
+            UsuarioResponse.from(it)
         }
         return dtos
     }
-
     fun retornaUsuario(usuario: Usuario): UsuarioResponse{
-        val dto = UsuarioResponse(id = usuario.id, nomeCompleto = usuario.nomeCompleto, cpf = usuario.cpf, telefone = usuario.telefone, autenticado = usuario.autenticado, email = usuario.email, profissao = usuario.profissao, nivelAcesso = usuario.nivelAcesso, situacao = usuario.situacao)
+        val dto = UsuarioResponse.from(usuario)
 
         return dto
     }
@@ -99,11 +96,11 @@ class UsuarioService (
     }
 
     fun buscaNivelAcesso(id:Int): NivelAcesso {
-        return nivelAcessoRepository.findById(id).get()
+        return nivelAcessoService.buscaPorId(id)
     }
 
     fun buscaSituacao(id:Int?): Situacao?{
-        if(id !== null) return situacaoRepository.findById(id).get()
+        if(id !== null) return situacaoService.buscaPorId(id)
         return null
     }
 

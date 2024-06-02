@@ -98,7 +98,7 @@ class UsuarioController(
         @RequestBody @Valid novoUsuario: Usuario
     ): ResponseEntity<UsuarioResponse>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
-        usuarioService.validaNivelAcesso(novoUsuario.id, tipoAcesso)
+        usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso.id, tipoAcesso)
 
         val usuarioSalvo = usuarioService.salvaUsuario(novoUsuario)
         return ResponseEntity.status(201).body(usuarioSalvo)
@@ -119,7 +119,9 @@ class UsuarioController(
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
-            usuarioService.validaNivelAcesso(usuarioAntigo.nivelAcesso.id, tipoAcesso)
+
+            if(usuarioAntigo.nivelAcesso.id !== novoUsuario.nivelAcesso.id) return ResponseEntity.status(401).build()
+
             usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso.id, tipoAcesso)
 
             novoUsuario.id = id

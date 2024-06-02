@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.domain.service.NivelAcessoService
 import grupo9.eduinovatte.model.NivelAcesso
-import grupo9.eduinovatte.service.NivelAcessoRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/niveis-acessos")
 class NivelAcessoController (
-    val nivelAcessoRepository: NivelAcessoRepository
+    val nivelAcessoService: NivelAcessoService
 ){
     @Operation(summary = "Busque os níveis de acesso", description = "Busque todos os níveis de acesso do sistema.")
     @ApiResponses(value = [
@@ -22,7 +22,7 @@ class NivelAcessoController (
     ])
     @GetMapping
     fun buscaNiveisAcesso(): ResponseEntity<List<NivelAcesso>> {
-        val niveis = nivelAcessoRepository.findAll()
+        val niveis = nivelAcessoService.buscaNiveisAcesso()
         if(niveis.isEmpty()) return ResponseEntity.status(204).build()
         return ResponseEntity.status(200).body(niveis)
     }

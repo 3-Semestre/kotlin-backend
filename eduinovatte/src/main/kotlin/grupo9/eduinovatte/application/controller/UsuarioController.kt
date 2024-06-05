@@ -2,13 +2,14 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.domain.repository.NivelInglesRepository
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.*
+import grupo9.eduinovatte.model.enums.NichoNome
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
+import grupo9.eduinovatte.model.enums.NivelInglesNome
 import grupo9.eduinovatte.model.enums.SituacaoNome
-import grupo9.eduinovatte.service.NivelAcessoRepository
-import grupo9.eduinovatte.service.SituacaoRepository
-import grupo9.eduinovatte.service.UsuarioRepository
+import grupo9.eduinovatte.service.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -31,7 +32,10 @@ class UsuarioController(
     val usuarioRepository: UsuarioRepository,
     val nivelAcessoRepository: NivelAcessoRepository,
     val situacaoRepository: SituacaoRepository,
-    val usuarioService: UsuarioService
+    val usuarioService: UsuarioService,
+    val usuarioNichoRepository: UsuarioNichoRepository,
+    val nichoRepository: NichoRepository,
+    val nivelInglesRepository: NivelInglesRepository
 ){
 
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
@@ -188,6 +192,7 @@ class UsuarioController(
             return ResponseEntity.status(409).body(usuarioExistente) // Status 409 Conflict
         }
         val usuarioSalvo = usuarioRepository.save(novoProfessor)
+
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
 

@@ -2,6 +2,7 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.model.UsuarioNicho
 import grupo9.eduinovatte.model.enums.NichoNome
+import grupo9.eduinovatte.service.UsuarioNichoRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -11,17 +12,23 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/usuario-nicho")
-class UsuarioNichoController () {
+class UsuarioNichoController(
+    val usuarioNichoRepository: UsuarioNichoRepository
+) {
 
-//    @GetMapping("/nicho/{nichoNome}")
-//    fun buscarUsuarioNicho(@PathVariable nichoNome: NichoNome)
-//            : ResponseEntity<List<UsuarioNicho>> {
-//        val nicho = NichoNome.valueOf(nichoNome.name)
-//
-//         val usuarios = usuarioNichoRepository.findByNichoContains(nicho)
-//        if (usuarios.isEmpty()) return ResponseEntity.status(204).build()
-//        return ResponseEntity.status(200).body(nicho)
-//
-//    }
+    @GetMapping("/nicho/{nichoNome}")
+    fun buscarUsuarioNicho(@PathVariable nichoNome: String): ResponseEntity<List<UsuarioNicho>> {
+        val nichoEnum = try {
+            NichoNome.valueOf(nichoNome.toUpperCase())
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.status(400).build() // Retorna erro 400 se o enum não for encontrado
+        }
 
+        val usuarios = usuarioNichoRepository.findByNichoNome(nichoEnum)
+        return if (usuarios.isEmpty()) {
+            ResponseEntity.status(204).build()
+        } else {
+            ResponseEntity.status(200).body(usuarios)
+        }
+    }
 }

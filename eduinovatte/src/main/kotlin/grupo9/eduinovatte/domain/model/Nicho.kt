@@ -9,5 +9,5 @@ data class Nicho (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
     @Enumerated(EnumType.STRING)
-    val nome: NichoNome?
+    val nome: NichoNome
 )

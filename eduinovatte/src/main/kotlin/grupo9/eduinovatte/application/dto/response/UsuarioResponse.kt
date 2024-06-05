@@ -2,13 +2,7 @@ package grupo9.eduinovatte.application.dto.response
 
 import grupo9.eduinovatte.model.NivelAcesso
 import grupo9.eduinovatte.model.Situacao
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.Size
-import org.hibernate.validator.constraints.br.CPF
+import grupo9.eduinovatte.model.Usuario
 
 data class UsuarioResponse (
     var id:Int? = null,
@@ -20,4 +14,20 @@ data class UsuarioResponse (
     val profissao :String?,
     val nivelAcesso: NivelAcesso,
     val situacao: Situacao?
-)
+){
+    companion object {
+        fun from(usuario: Usuario): UsuarioResponse {
+            return UsuarioResponse(
+                id = usuario.id,
+                nomeCompleto = usuario.nomeCompleto,
+                cpf = usuario.cpf,
+                telefone = usuario.telefone,
+                autenticado = usuario.autenticado,
+                email = usuario.email,
+                profissao = usuario.profissao,
+                nivelAcesso = usuario.nivelAcesso,
+                situacao = usuario.situacao
+            )
+        }
+    }
+}

@@ -1,11 +1,7 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.model.Nicho
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.model.Situacao
-import grupo9.eduinovatte.service.NichoRepository
-import grupo9.eduinovatte.service.NivelAcessoRepository
-import grupo9.eduinovatte.service.SituacaoRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -17,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/situacao")
 class SituacaoController (
-    val situacaoRepository: SituacaoRepository
+    val situacaoService: SituacaoService
 ){
     @Operation(summary = "Busque as situações", description = "Busque todos as possíveis situações dos professores e alunos.")
     @ApiResponses(value = [
@@ -26,7 +22,7 @@ class SituacaoController (
     ])
     @GetMapping
     fun buscaSituacao(): ResponseEntity<List<Situacao>> {
-        val situacoes = situacaoRepository.findAll()
+        val situacoes = situacaoService.buscaSituacoes()
         if(situacoes.isEmpty()) return ResponseEntity.status(204).build()
         return ResponseEntity.status(200).body(situacoes)
     }

@@ -13,7 +13,4 @@ data class UsuarioNicho (
 
     @ManyToOne
     val nicho: Nicho,
-
-    @ManyToOne
-    val nivelIngles: NivelIngles
 )

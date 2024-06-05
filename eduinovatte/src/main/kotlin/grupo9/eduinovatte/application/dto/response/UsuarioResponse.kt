@@ -19,13 +19,13 @@ data class UsuarioResponse (
         fun from(usuario: Usuario): UsuarioResponse {
             return UsuarioResponse(
                 id = usuario.id,
-                nomeCompleto = usuario.nomeCompleto,
-                cpf = usuario.cpf,
+                nomeCompleto = usuario.nomeCompleto!!,
+                cpf = usuario.cpf!!,
                 telefone = usuario.telefone,
                 autenticado = usuario.autenticado,
-                email = usuario.email,
+                email = usuario.email!!,
                 profissao = usuario.profissao,
-                nivelAcesso = usuario.nivelAcesso,
+                nivelAcesso = usuario.nivelAcesso!!,
                 situacao = usuario.situacao
             )
         }

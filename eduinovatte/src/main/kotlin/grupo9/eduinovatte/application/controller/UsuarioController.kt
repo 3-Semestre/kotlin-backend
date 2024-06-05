@@ -43,7 +43,7 @@ class UsuarioController(
             val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
             val tipoAcesso = retornaNivelAcessoNome(tipo)
             usuarioService.validaSituacao(usuario.situacao?.id)
-            usuarioService.validaNivelAcesso(usuario.nivelAcesso.id, tipoAcesso)
+            usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             val novoUsuario = usuarioService.autenticar(usuario.id!!)
             return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
@@ -98,7 +98,7 @@ class UsuarioController(
         @RequestBody @Valid novoUsuario: Usuario
     ): ResponseEntity<UsuarioResponse>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
-        usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso.id, tipoAcesso)
+        usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
 
         val usuarioSalvo = usuarioService.salvaUsuario(novoUsuario)
         return ResponseEntity.status(201).body(usuarioSalvo)
@@ -120,9 +120,9 @@ class UsuarioController(
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
 
-            if(usuarioAntigo.nivelAcesso.id !== novoUsuario.nivelAcesso.id) return ResponseEntity.status(401).build()
+            if(usuarioAntigo.nivelAcesso!!.id !== novoUsuario.nivelAcesso!!.id) return ResponseEntity.status(401).build()
 
-            usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso.id, tipoAcesso)
+            usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
 
             novoUsuario.id = id
             val usuarioEditado = usuarioService.editaUsuario(novoUsuario)
@@ -138,7 +138,7 @@ class UsuarioController(
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuario = usuarioRepository.findById(id).get()
-            usuarioService.validaNivelAcesso(usuario.nivelAcesso.id, tipoAcesso)
+            usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             usuarioService.deletaUsuario(id)
             return ResponseEntity.status(204).build()

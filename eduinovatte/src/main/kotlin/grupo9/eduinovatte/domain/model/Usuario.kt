@@ -2,10 +2,9 @@ package grupo9.eduinovatte.model
 
 import grupo9.eduinovatte.model.enums.SituacaoNome
 import jakarta.persistence.*
-import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Size
+import jakarta.validation.constraints.*
 import org.hibernate.validator.constraints.br.CPF
+import java.time.LocalDate
 
 @Entity
 data class Usuario (
@@ -20,6 +19,10 @@ data class Usuario (
     @field:Size(min = 11)
     @field:NotNull
     val telefone: String?,
+    @field:Past
+    @field:NotBlank
+    val dataNascimento: LocalDate?,
+    val dataCadastro: LocalDate? = LocalDate.now(),
     val autenticado: Boolean? = false,
     @field:Email
     @field:NotNull

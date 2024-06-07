@@ -12,5 +12,5 @@ data class UsuarioNicho (
     val usuario: Usuario,
 
     @ManyToOne
-    val nicho: Nicho,
+    val nicho: Nicho
 )

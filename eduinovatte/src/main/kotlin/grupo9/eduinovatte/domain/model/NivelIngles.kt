@@ -9,7 +9,5 @@ data class NivelIngles (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
     @Enumerated(EnumType.STRING)
-    val nome: NivelInglesNome?,
-    @ManyToOne
-    val usuario: Usuario,
+    val nome: NivelInglesNome?
 )   

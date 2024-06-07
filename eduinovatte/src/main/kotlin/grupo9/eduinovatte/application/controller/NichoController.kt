@@ -2,15 +2,15 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.model.Nicho
 import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.model.enums.NichoNome
 import grupo9.eduinovatte.service.NichoRepository
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/nichos")
@@ -28,4 +28,5 @@ class NichoController (
         if(nichos.isEmpty()) return ResponseEntity.status(204).build()
         return ResponseEntity.status(200).body(nichos)
     }
+
 }

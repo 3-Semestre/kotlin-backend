@@ -7,10 +7,10 @@ data class UsuarioNicho (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
-    @field:ManyToOne
+
+    @ManyToOne
     val usuario: Usuario,
-    @field:ManyToOne
-    val nicho: Nicho,
-    @field:ManyToOne
-    val nivelIngles: NivelIngles
+
+    @ManyToOne
+    val nicho: Nicho
 )

@@ -1,6 +1,8 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.controller.HorarioProfessorService
+import grupo9.eduinovatte.model.HorarioProfessor
 import grupo9.eduinovatte.model.NivelAcesso
 import grupo9.eduinovatte.model.Situacao
 import grupo9.eduinovatte.model.UsuarioBuilder
@@ -20,6 +22,7 @@ class UsuarioServiceTest {
     lateinit var usuarioRepository: UsuarioRepository
     lateinit var nivelAcessoService: NivelAcessoService
     lateinit var situacaoService: SituacaoService
+    lateinit var horarioProfessorService: HorarioProfessorService
     lateinit var service: UsuarioService
 
     @BeforeEach
@@ -27,7 +30,8 @@ class UsuarioServiceTest {
         usuarioRepository = mock(UsuarioRepository::class.java)
         nivelAcessoService = mock(NivelAcessoService::class.java)
         situacaoService = mock(SituacaoService::class.java)
-        service = UsuarioService(usuarioRepository, nivelAcessoService, situacaoService)
+        horarioProfessorService = mock(HorarioProfessorService::class.java)
+        service = UsuarioService(usuarioRepository, nivelAcessoService, situacaoService, horarioProfessorService)
     }
     @Test
     fun `return user when authenticate`(){

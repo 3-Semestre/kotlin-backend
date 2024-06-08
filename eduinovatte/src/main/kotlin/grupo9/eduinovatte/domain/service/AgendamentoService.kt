@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.response.UsuarioNomeSemDetalhesResponse
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.model.Agendamento
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
+import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
 
 import org.springframework.stereotype.Service
@@ -12,7 +14,8 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class AgendamentoService(
     val agendamentoRepository: AgendamentoRepository,
-    val historicoAgendamentoService: HistoricoAgendamentoService
+    val andamentoService: AndamentoService,
+    val usuarioRepository: UsuarioRepository
 ){
     fun validaNivelAcesso(novoAgendamento: Agendamento) {
         val professor = novoAgendamento.professor!!
@@ -36,17 +39,18 @@ class AgendamentoService(
         return agendamentoRepository.findById(id).get()
     }
 
+    fun buscaAgendamentosUsuario(usuario: UsuarioNomeSemDetalhesResponse): List<Agendamento> {
+        val cpf = usuario.cpf!!
+        val user = usuarioRepository.findByCpf(cpf)
+
+        return agendamentoRepository.findAgendamentosByUserId(user!!.id!!)
+
+    }
+
+
     fun salvarAgendamento(novoAgendamento: Agendamento) : AgendamentoCadastro{
-        val agendamentoExistente = agendamentoRepository.findById(novoAgendamento.id!!)
-
-        if (agendamentoExistente != null) {
-            throw ResponseStatusException(HttpStatusCode.valueOf(409)) // Status 409 Conflict
-        }
-
-        validaNivelAcesso(novoAgendamento)
-
         val agendamento = agendamentoRepository.save(novoAgendamento)
-        historicoAgendamentoService.salvarHistorico(agendamento)
+        andamentoService.salvarHistorico(agendamento)
 
         val agendamentoResponse = retornaAgendamento(agendamento)
 

@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.model
 
-import grupo9.eduinovatte.domain.model.HistoricoAgendamento
+import grupo9.eduinovatte.domain.model.Andamento
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalTime
@@ -26,5 +26,5 @@ data class Agendamento (
     var aluno: Usuario?,
 
     @OneToMany(mappedBy = "agendamento")
-    var historico: List<HistoricoAgendamento>?
+    var historico: List<Andamento>?
 )

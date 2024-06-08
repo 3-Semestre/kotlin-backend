@@ -10,7 +10,7 @@ data class AgendamentoListagemResponse (
     var data: LocalDate? = null,
     var horarioInicio: LocalTime? = null,
     var horarioFim: LocalTime? = null,
-    @JsonIgnore var historico: List<HistoricoAgendamentoResponse>? = null,
+    @JsonIgnore var historico: List<AndamentoResponse>? = null,
     var professor: UsuarioNomeSemDetalhesResponse? = null,
     var aluno: UsuarioNomeSemDetalhesResponse? = null
 ){

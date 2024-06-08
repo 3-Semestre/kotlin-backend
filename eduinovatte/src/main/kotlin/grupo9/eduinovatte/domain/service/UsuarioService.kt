@@ -10,6 +10,7 @@ import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @Service
 class UsuarioService (
@@ -56,6 +57,7 @@ class UsuarioService (
         if (usuarioExistente != null) {
             throw ResponseStatusException(HttpStatusCode.valueOf(409)) // Status 409 Conflict
         }
+
         val usuarios = usuarioRepository.save(novoUsuario)
         val usuarioResponse = retornaUsuario(usuarios)
         return usuarioResponse

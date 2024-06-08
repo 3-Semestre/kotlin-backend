@@ -2,6 +2,7 @@ package grupo9.eduinovatte.application.controller
 
 import grupo9.eduinovatte.domain.model.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.service.UsuarioNivelInglesService
+import grupo9.eduinovatte.model.UsuarioNicho
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -41,6 +42,22 @@ class UsuarioNivelInglesController (
             ResponseEntity.status(204).build()
         } else {
             ResponseEntity.status(200).body(usuarioNivelIngles)
+        }
+    }
+
+    @Operation(summary = "Busque os usuariosnichos", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
+        ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
+    ])
+    @GetMapping()
+    fun buscarNivelIngles(): ResponseEntity<List<UsuarioNivelIngles>> {
+        val niveisIngles = usuarioNivelInglesService.buscaNiveisIngles()
+
+        return if (niveisIngles.isEmpty()) {
+            ResponseEntity.status(204).build()
+        } else {
+            ResponseEntity.status(200).body(niveisIngles)
         }
     }
 

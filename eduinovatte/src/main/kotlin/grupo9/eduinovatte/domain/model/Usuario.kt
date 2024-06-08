@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import grupo9.eduinovatte.model.enums.SituacaoNome
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
@@ -20,8 +21,9 @@ data class Usuario (
     @field:NotNull
     val telefone: String?,
     @field:Past
-    @field:NotBlank
-    val dataNascimento: LocalDate?,
+    @field:NotNull
+    @field:JsonFormat(pattern = "yyyy-MM-dd")
+    var dataNascimento: LocalDate?,
     val dataCadastro: LocalDate? = LocalDate.now(),
     val autenticado: Boolean? = false,
     @field:Email

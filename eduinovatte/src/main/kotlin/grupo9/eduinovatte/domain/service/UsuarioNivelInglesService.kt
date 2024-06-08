@@ -21,6 +21,12 @@ class UsuarioNivelInglesService (
         return usuarioNivelIngles
     }
 
+    fun buscaNiveisIngles(): List<UsuarioNivelIngles> {
+        val usuarioNivelIngles = usuarioNivelInglesRepository.findAll()
+
+        return usuarioNivelIngles
+    }
+
     fun buscaPorIdUsuario(id: Int): List<UsuarioNivelIngles> {
         val usuarioNivelIngles = usuarioNivelInglesRepository.findByUsuarioId(id)
 

@@ -29,6 +29,22 @@ class UsuarioNichoController(
         return ResponseEntity.status(201).body(usuarioNicho)
     }
 
+    @Operation(summary = "Busque os usuariosnichos", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
+        ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
+    ])
+    @GetMapping()
+    fun buscarUsuarioNicho(): ResponseEntity<List<UsuarioNicho>> {
+        val usuarioNichos = usuarioNichoService.buscaUsuariosNichos()
+
+        return if (usuarioNichos.isEmpty()) {
+            ResponseEntity.status(204).build()
+        } else {
+            ResponseEntity.status(200).body(usuarioNichos)
+        }
+    }
+
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),

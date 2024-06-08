@@ -33,6 +33,12 @@ class UsuarioNichoService(
         return usuarioNichos
     }
 
+    fun buscaUsuariosNichos(): List<UsuarioNicho> {
+        val usuarioNichos = usuarioNichoRepository.findAll()
+
+        return usuarioNichos
+    }
+
     fun buscaPorIdUsuario(id: Int): List<UsuarioNicho> {
         val usuarioNichos = usuarioNichoRepository.findByUsuarioId(id)
 

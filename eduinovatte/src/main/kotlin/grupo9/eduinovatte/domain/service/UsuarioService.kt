@@ -1,6 +1,8 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.controller.HorarioProfessorService
+import grupo9.eduinovatte.model.HorarioProfessor
 import grupo9.eduinovatte.model.NivelAcesso
 import grupo9.eduinovatte.model.Situacao
 import grupo9.eduinovatte.model.Usuario
@@ -16,7 +18,8 @@ import java.time.LocalDate
 class UsuarioService (
     val usuarioRepository: UsuarioRepository,
     val nivelAcessoService: NivelAcessoService,
-    val situacaoService: SituacaoService
+    val situacaoService: SituacaoService,
+    val horarioProfessorService: HorarioProfessorService
 ){
     fun autenticar(id: Int): UsuarioResponse{
         usuarioRepository.autenticar(id)
@@ -59,6 +62,7 @@ class UsuarioService (
         }
 
         val usuarios = usuarioRepository.save(novoUsuario)
+        horarioProfessorService.salvar(HorarioProfessor(usuario = novoUsuario))
         val usuarioResponse = retornaUsuario(usuarios)
         return usuarioResponse
     }

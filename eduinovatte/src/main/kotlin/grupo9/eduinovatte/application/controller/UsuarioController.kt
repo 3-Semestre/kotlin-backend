@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -92,6 +93,7 @@ class UsuarioController(
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
     ])
+    @CrossOrigin
     @PostMapping("/{tipo}")
     fun salvaUsuario(
         @PathVariable tipo: String,

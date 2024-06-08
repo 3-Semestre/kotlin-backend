@@ -1,6 +1,5 @@
 package grupo9.eduinovatte.service
 
-import grupo9.eduinovatte.application.dto.response.UsuarioNomeSemDetalhesResponse
 import grupo9.eduinovatte.model.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import jakarta.transaction.Transactional
@@ -28,4 +27,5 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     @Modifying
     @Query("update Usuario u set u.situacao.id = 2 where u.id = :id")
     fun desativar(id: Int?): Int
+
 }

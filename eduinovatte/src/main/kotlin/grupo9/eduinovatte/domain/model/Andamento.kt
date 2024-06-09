@@ -4,7 +4,7 @@ import grupo9.eduinovatte.model.Agendamento
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
-@Entity
+@Entity(name = "historico_agendamento")
 data class Andamento (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

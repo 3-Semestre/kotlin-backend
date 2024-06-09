@@ -13,10 +13,8 @@ data class Andamento (
     var dataAtualizacao: LocalDateTime? = null,
 
     @ManyToOne
-    @JoinColumn(name = "fk_status")
     var status: Status? = null,
 
     @ManyToOne
-    @JoinColumn(name = "fk_agendamento")
     var agendamento: Agendamento? = null
 )

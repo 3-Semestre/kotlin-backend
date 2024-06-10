@@ -1,7 +1,10 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.application.dto.response.*
+import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.service.UsuarioService
+import grupo9.eduinovatte.model.Agendamento
 import grupo9.eduinovatte.model.Usuario
 import grupo9.eduinovatte.model.UsuarioNicho
 import io.swagger.v3.oas.annotations.Operation
@@ -17,14 +20,9 @@ import java.time.LocalDate
 @RequestMapping("/dashboard")
 class DashboardController(
     val usuarioService: UsuarioService,
-    val usuarioController: UsuarioController
+    val usuarioController: UsuarioController,
+    val agendamentoService: AgendamentoService
 ) {
-
-    @Operation(summary = "Busque os alunos novos pela data inferida", description = "Busque os usuários novos do último mês.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum usuario")
-    ])
     @GetMapping("/{tipo}/{dataCorte}")
     fun buscaUsuariosNovoPelaDataCorte(
         @PathVariable tipo: String,
@@ -36,12 +34,6 @@ class DashboardController(
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
-
-    @Operation(summary = "Busque os alunos novos no ultimo vez", description = "Busque os usuários novos do último mês.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum usuario")
-    ])
     @GetMapping("/{tipo}/mes")
     fun buscaUsuariosNovoNoUltimoMes(
         @PathVariable tipo: String
@@ -54,11 +46,6 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-    @Operation(summary = "Busque os alunos novos no ultimo vez", description = "Busque os usuários novos do último mês.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum usuario")
-    ])
     @GetMapping("/{tipo}/ano")
     fun buscaUsuariosNovoNoUltimoAno(
         @PathVariable tipo: String
@@ -71,5 +58,124 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
+    @Operation(summary = "Busque os alunos novos no ultimo vez", description = "Busque os usuários novos do último mês.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
+        ApiResponse(responseCode = "204", description = "Nenhum usuario")
+    ])
+    @GetMapping("/ultimos-3-agendamentos-professor")
+    fun buscarProximos3AgendamentosProfessor(): ResponseEntity<List<AgendamentoAlunoProjection>>{
+        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosProfessor()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/qtd-agendamento-mes-professor")
+    fun qtdAgendamentoMes(): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.qtdAgendamentoMes()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/tempo-confirmacao")
+    fun tempoConfirmacao(): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.tempoConfirmacao()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/qtd-novos-alunos-mes")
+    fun qtdNovosAlunosMes(): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.qtdNovosAlunosMes()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/qtd-cancelamento-alunos")
+    fun qtdCancelamentoMes(): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.qtdCancelamentoMes()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/qtd-conclusao")
+    fun qtdConclusaoOuNao(): ResponseEntity<List<AgendamentoConclusaoOuNaoProjection>>{
+        val usuarioNicho = agendamentoService.qtdConclusaoOuNao()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/taxa-cancelamento")
+    fun taxaCancelamento(): ResponseEntity<Float>{
+        val usuarioNicho = agendamentoService.taxaCancelamento()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @GetMapping("/proximos-agendamentos-professor")
+    fun proximosAgendamentos(): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.proximosAgendamentos()
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+    @GetMapping("/agendamentos-passados-professor")
+    fun agendamentosPassados(): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.agendamentosPassados()
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+    @GetMapping("/todos-professores")
+    fun todosProfessores(): ResponseEntity<List<UsuarioResponse>>{
+        val proximosAgendamentos = usuarioService.listarProfessores()
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+    @GetMapping("/todos-alunos")
+    fun todosAlunos(): ResponseEntity<List<UsuarioResponse>>{
+        val proximosAgendamentos = usuarioService.todosAlunos()
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+
+    @GetMapping("/ultimos-3-agendamentos-aluno")
+    fun buscarProximos3AgendamentosAluno(): ResponseEntity<List<AgendamentoAlunoProjection>>{
+        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosAluno()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+
+    @GetMapping("/visao-mes-aluno")
+    fun visaoPorMes(): ResponseEntity<List<AgendamentoVisaoRepository>>{
+        val usuarioNicho = agendamentoService.visaoPorMesAluno()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+
+    @GetMapping("/top-3-meses-aluno")
+    fun top3MesesAluno(): ResponseEntity<List<AgendamentoVisaoRepository>>{
+        val usuarioNicho = agendamentoService.buscarTop3MesesAluno()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+
+    @GetMapping("/listagem-agendamento-aluno")
+    fun buscarListaAgendamentoAluno(): ResponseEntity<List<Andamento>>{
+        val usuarioNicho = agendamentoService.buscarListaAgendamentoAluno()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+    @GetMapping("/historico-agendamento-aluno")
+    fun listaHistoricoAgendamentoAluno(): ResponseEntity<List<AgendamentoAlunoProjection>>{
+        val usuarioNicho = agendamentoService.listaHistoricoAgendamentoAluno()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
 }
 

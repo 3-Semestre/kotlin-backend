@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.domain.service
 
+import grupo9.eduinovatte.application.dto.response.AgendamentoAlunoProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.controller.HorarioProfessorService
 import grupo9.eduinovatte.model.HorarioProfessor
@@ -102,6 +103,17 @@ class UsuarioService (
         return dto
     }
 
+    fun listarProfessores(): List<UsuarioResponse>? {
+        val professores = usuarioRepository.todosProfessores()
+
+        if(professores!!.isEmpty()){
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        val usuarioResponse = retornaListaUsuario(professores)
+        return usuarioResponse
+    }
+
     fun validarLista(lista:List<*>) {
         if (lista.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -115,6 +127,17 @@ class UsuarioService (
     fun buscaSituacao(id:Int?): Situacao?{
         if(id !== null) return situacaoService.buscaPorId(id)
         return null
+    }
+
+    fun todosAlunos(): List<UsuarioResponse>? {
+        val professores = usuarioRepository.todosAlunos()
+
+        if(professores!!.isEmpty()){
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        val usuarioResponse = retornaListaUsuario(professores)
+        return usuarioResponse
     }
 
 }

@@ -37,5 +37,9 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     @Modifying
     @Query("update Usuario u set u.situacao.id = 2 where u.id = :id")
     fun desativar(id: Int?): Int
+    @Query(value = "SELECT * FROM todos_professores;", nativeQuery = true)
+    fun todosProfessores(): List<Usuario>
+    @Query(value = "SELECT * FROM todos_alunos;", nativeQuery = true)
+    fun todosAlunos(): List<Usuario>
 
 }

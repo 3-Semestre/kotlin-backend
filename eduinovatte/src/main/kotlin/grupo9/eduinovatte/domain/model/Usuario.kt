@@ -34,5 +34,5 @@ data class Usuario (
     @field:ManyToOne
     val nivelAcesso: NivelAcesso?,
     @field:ManyToOne
-    val situacao: Situacao? = Situacao(id = 2, SituacaoNome.ATIVO)
+    val situacao: Situacao? = Situacao(id = 1, SituacaoNome.ATIVO)
 )

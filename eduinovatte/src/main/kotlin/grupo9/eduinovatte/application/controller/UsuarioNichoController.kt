@@ -21,6 +21,7 @@ class UsuarioNichoController(
         ApiResponse(responseCode = "500", description = "Usuario inválido")
     ])
     @PostMapping()
+    @CrossOrigin
     fun salvaUsuarioNicho(
         @RequestBody @Valid novoUsuarioNicho: UsuarioNicho
     ): ResponseEntity<UsuarioNicho>{
@@ -67,6 +68,7 @@ class UsuarioNichoController(
         ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
     ])
     @GetMapping("/usuario/{id}")
+    @CrossOrigin
     fun buscarUsuarioPeloId(@PathVariable id: Int): ResponseEntity<List<UsuarioNicho>> {
 
         val usuarioNichos = usuarioNichoService.buscaPorIdUsuario(id)

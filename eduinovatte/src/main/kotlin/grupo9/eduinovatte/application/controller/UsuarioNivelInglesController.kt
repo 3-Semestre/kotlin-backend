@@ -51,6 +51,7 @@ class UsuarioNivelInglesController (
         ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
     ])
     @GetMapping()
+    @CrossOrigin
     fun buscarNivelIngles(): ResponseEntity<List<UsuarioNivelIngles>> {
         val niveisIngles = usuarioNivelInglesService.buscaNiveisIngles()
 
@@ -67,6 +68,7 @@ class UsuarioNivelInglesController (
         ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
     ])
     @GetMapping("/usuario/{id}")
+    @CrossOrigin
     fun buscarUsuarioPeloId(@PathVariable id: Int): ResponseEntity<List<UsuarioNivelIngles>> {
 
         val usuarioNivelIngles = usuarioNivelInglesService.buscaPorIdUsuario(id)

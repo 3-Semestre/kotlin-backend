@@ -37,6 +37,7 @@ class HorarioAlmocoController(
         ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
     ])
     @GetMapping("/{id}")
+    @CrossOrigin
     fun buscarPorHorarioProfessor(@PathVariable id: Int): ResponseEntity<HorarioProfessor> {
         val usuarioNichos = horarioProfessorService.buscaPorUsuario(id)
 

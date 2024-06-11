@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,16 +35,19 @@ class UsuarioController(
         ApiResponse(responseCode = "403", description = "Erro no login"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso")
     ])
-    @PostMapping("/{tipo}/autenticar")
+
+ //   @PostMapping("/{tipo}/autenticar")
+    @PostMapping("/autenticar")
+    @CrossOrigin
     fun autenticarUsuario(
-        @PathVariable tipo: String,
+        // @PathVariable tipo: String,
         @RequestBody loginForm: LoginForm
     ): ResponseEntity<UsuarioResponse>{
         try {
             val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-            val tipoAcesso = retornaNivelAcessoNome(tipo)
+            // val tipoAcesso = retornaNivelAcessoNome(tipo)
             usuarioService.validaSituacao(usuario.situacao?.id)
-            usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
+            // usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             val novoUsuario = usuarioService.autenticar(usuario.id!!)
             return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
@@ -81,6 +85,7 @@ class UsuarioController(
         ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
     ])
     @GetMapping("/{tipo}")
+    @CrossOrigin
     fun buscaUsuarios(@PathVariable tipo: String): ResponseEntity<List<UsuarioResponse>>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         val listaProfessores = usuarioService.buscaUsuarios(tipoAcesso)
@@ -93,6 +98,7 @@ class UsuarioController(
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
     ])
     @PostMapping("/{tipo}")
+    @CrossOrigin
     fun salvaUsuario(
         @PathVariable tipo: String,
         @RequestBody @Valid novoUsuario: Usuario
@@ -111,6 +117,7 @@ class UsuarioController(
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no parâmetro ou corpo da requisição")
     ])
     @PutMapping("/{tipo}/{id}")
+    @CrossOrigin
     fun editaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int,
@@ -122,7 +129,7 @@ class UsuarioController(
 
             if(usuarioAntigo.nivelAcesso!!.id !== novoUsuario.nivelAcesso!!.id) return ResponseEntity.status(401).build()
 
-            usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
+            // usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
 
             novoUsuario.id = id
             val usuarioEditado = usuarioService.editaUsuario(novoUsuario)

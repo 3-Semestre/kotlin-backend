@@ -23,6 +23,7 @@ class NichoController (
         ApiResponse(responseCode = "204", description = "Nenhum nicho encontrado")
     ])
     @GetMapping
+    @CrossOrigin
     fun buscaNichos(): ResponseEntity<List<Nicho>> {
         val nichos = nichoRepository.findAll()
         if(nichos.isEmpty()) return ResponseEntity.status(204).build()

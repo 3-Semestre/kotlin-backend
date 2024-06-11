@@ -99,6 +99,7 @@ class DashboardController(
     }
 
     @GetMapping("/qtd-conclusao")
+    @CrossOrigin
     fun qtdConclusaoOuNao(): ResponseEntity<List<AgendamentoConclusaoOuNaoProjection>>{
         val usuarioNicho = agendamentoService.qtdConclusaoOuNao()
 
@@ -172,7 +173,7 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
     @GetMapping("/historico-agendamento-aluno")
-    fun listaHistoricoAgendamentoAluno(): ResponseEntity<List<AgendamentoAlunoProjection>>{
+    fun listaHistoricoAgendamentoAluno(): ResponseEntity<List<Andamento>>{
         val usuarioNicho = agendamentoService.listaHistoricoAgendamentoAluno()
 
         return ResponseEntity.status(200).body(usuarioNicho)

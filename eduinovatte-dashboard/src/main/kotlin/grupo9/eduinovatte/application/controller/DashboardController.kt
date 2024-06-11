@@ -63,6 +63,7 @@ class DashboardController(
         ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
         ApiResponse(responseCode = "204", description = "Nenhum usuario")
     ])
+    @CrossOrigin
     @GetMapping("/ultimos-3-agendamentos-professor")
     fun buscarProximos3AgendamentosProfessor(): ResponseEntity<List<AgendamentoAlunoProjection>>{
         val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosProfessor()
@@ -70,6 +71,7 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
+    @CrossOrigin
     @GetMapping("/qtd-agendamento-mes-professor")
     fun qtdAgendamentoMes(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.qtdAgendamentoMes()
@@ -77,6 +79,7 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
+    @CrossOrigin
     @GetMapping("/tempo-confirmacao")
     fun tempoConfirmacao(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.tempoConfirmacao()
@@ -84,13 +87,14 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
+    @CrossOrigin
     @GetMapping("/qtd-novos-alunos-mes")
     fun qtdNovosAlunosMes(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.qtdNovosAlunosMes()
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
-
+    @CrossOrigin
     @GetMapping("/qtd-cancelamento-alunos")
     fun qtdCancelamentoMes(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.qtdCancelamentoMes()
@@ -111,7 +115,7 @@ class DashboardController(
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
-
+    @CrossOrigin
     @GetMapping("/proximos-agendamentos-professor")
     fun proximosAgendamentos(): ResponseEntity<List<AgendamentoProximosProjection>>{
         val proximosAgendamentos = agendamentoService.proximosAgendamentos()
@@ -148,7 +152,7 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-
+    @CrossOrigin
     @GetMapping("/visao-mes-aluno")
     fun visaoPorMes(): ResponseEntity<List<AgendamentoVisaoRepository>>{
         val usuarioNicho = agendamentoService.visaoPorMesAluno()
@@ -156,7 +160,7 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-
+    @CrossOrigin
     @GetMapping("/top-3-meses-aluno")
     fun top3MesesAluno(): ResponseEntity<List<AgendamentoVisaoRepository>>{
         val usuarioNicho = agendamentoService.buscarTop3MesesAluno()
@@ -164,15 +168,16 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-
+    @CrossOrigin
     @GetMapping("/listagem-agendamento-aluno")
     fun buscarListaAgendamentoAluno(): ResponseEntity<List<Andamento>>{
         val usuarioNicho = agendamentoService.buscarListaAgendamentoAluno()
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
+    @CrossOrigin
     @GetMapping("/historico-agendamento-aluno")
-    fun listaHistoricoAgendamentoAluno(): ResponseEntity<List<AgendamentoAlunoProjection>>{
+    fun listaHistoricoAgendamentoAluno(): ResponseEntity<List<Andamento>>{
         val usuarioNicho = agendamentoService.listaHistoricoAgendamentoAluno()
 
         return ResponseEntity.status(200).body(usuarioNicho)

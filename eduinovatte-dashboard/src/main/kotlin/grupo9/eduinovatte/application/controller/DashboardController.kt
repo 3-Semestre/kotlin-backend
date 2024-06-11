@@ -4,13 +4,9 @@ import grupo9.eduinovatte.application.dto.response.*
 import grupo9.eduinovatte.domain.model.Andamento
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.service.UsuarioService
-import grupo9.eduinovatte.model.Agendamento
-import grupo9.eduinovatte.model.Usuario
-import grupo9.eduinovatte.model.UsuarioNicho
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate

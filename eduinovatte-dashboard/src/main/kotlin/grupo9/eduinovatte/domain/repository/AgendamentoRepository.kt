@@ -5,7 +5,6 @@ import grupo9.eduinovatte.domain.model.Andamento
 import grupo9.eduinovatte.model.Agendamento
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.stereotype.Repository
 
 interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query("SELECT a FROM Agendamento a JOIN FETCH a.historico WHERE a.professor.id = :userId OR a.aluno.id = :userId")
@@ -39,7 +38,7 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun todos_alunos(): List<AgendamentoAlunoProjection>?
     @Query(value = "SELECT * FROM proximos_tres_agendamento_A;", nativeQuery = true)
     fun buscarUltimos3AgendamentosAluno(): List<AgendamentoAlunoProjection>?
-    @Query(value = "SELECT * FROM qtd_agendamento_mes;", nativeQuery = true)
+    @Query(value = "SELECT * FROM visao_por_mes;", nativeQuery = true)
     fun buscarVisaoPorMesAluno(): List<AgendamentoVisaoRepository>?
     @Query(value = "SELECT * FROM top_tres_meses;", nativeQuery = true)
     fun buscarTop3MesesAluno(): List<AgendamentoVisaoRepository>?

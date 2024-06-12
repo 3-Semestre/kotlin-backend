@@ -64,7 +64,7 @@ class UsuarioControllerTest {
         val responseEntity = controller.autenticarUsuario(loginForm)
 
 
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
+        assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
 
         Assertions.assertNull(responseEntity.body)
     }
@@ -83,7 +83,7 @@ class UsuarioControllerTest {
             controller.autenticarUsuario(loginForm)
         }
 
-        Assertions.assertEquals(401, exception.statusCode.value())
+        assertEquals(401, exception.statusCode.value())
     }
     @Test
     fun `Return all users when buscaUsuarios method`(){

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 class UsuarioNivelInglesController (
     val usuarioNivelInglesService: UsuarioNivelInglesService
 ) {
+    @CrossOrigin
     @Operation(summary = "Salve um usuario nivel ingles", description = "Salve um nivel ingles com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
@@ -29,6 +30,7 @@ class UsuarioNivelInglesController (
         return ResponseEntity.status(201).body(usuarioNivelIngles)
     }
 
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o nivel ingles", description = "Busque todos os usuarios com filtro nivel ingles dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -45,6 +47,7 @@ class UsuarioNivelInglesController (
         }
     }
 
+    @CrossOrigin
     @Operation(summary = "Busque os usuariosnichos", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -61,6 +64,7 @@ class UsuarioNivelInglesController (
         }
     }
 
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nivel ingles dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -77,6 +81,7 @@ class UsuarioNivelInglesController (
         }
     }
 
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nivel ingles dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),

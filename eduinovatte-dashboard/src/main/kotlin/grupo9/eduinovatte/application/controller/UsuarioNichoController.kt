@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 class UsuarioNichoController(
     val usuarioNichoService: UsuarioNichoService
 ) {
-
+    @CrossOrigin
     @Operation(summary = "Salve um usuario nicho", description = "Salve um usuario nicho com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
@@ -28,7 +28,7 @@ class UsuarioNichoController(
 
         return ResponseEntity.status(201).body(usuarioNicho)
     }
-
+    @CrossOrigin
     @Operation(summary = "Busque os usuariosnichos", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -44,7 +44,7 @@ class UsuarioNichoController(
             ResponseEntity.status(200).body(usuarioNichos)
         }
     }
-
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -60,7 +60,7 @@ class UsuarioNichoController(
             ResponseEntity.status(200).body(usuarioNichos)
         }
     }
-
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
@@ -76,7 +76,7 @@ class UsuarioNichoController(
             ResponseEntity.status(200).body(usuarioNichos)
         }
     }
-
+    @CrossOrigin
     @Operation(summary = "Busque os usuario com o filtro", description = "Busque todos os usuarios com filtro nicho dos professores e alunos.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),

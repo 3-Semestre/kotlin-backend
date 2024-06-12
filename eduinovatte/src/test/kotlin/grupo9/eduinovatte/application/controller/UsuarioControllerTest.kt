@@ -45,7 +45,7 @@ class UsuarioControllerTest {
         `when`(usuarioService.validaSituacao(anyInt())).then{}
         `when`(usuarioService.validaNivelAcesso(anyInt(), eq(NivelAcessoNome.ALUNO))).then{}
 
-        val response = controller.autenticarUsuario("aluno", loginForm)
+        val response = controller.autenticarUsuario(loginForm)
 
         assert(response.statusCode.value() == 201)
     }
@@ -61,7 +61,7 @@ class UsuarioControllerTest {
         )
 
 
-        val responseEntity = controller.autenticarUsuario("aluno", loginForm)
+        val responseEntity = controller.autenticarUsuario(loginForm)
 
 
         Assertions.assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
@@ -80,7 +80,7 @@ class UsuarioControllerTest {
 
 
         val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
-            controller.autenticarUsuario("aluno", loginForm)
+            controller.autenticarUsuario(loginForm)
         }
 
         Assertions.assertEquals(401, exception.statusCode.value())

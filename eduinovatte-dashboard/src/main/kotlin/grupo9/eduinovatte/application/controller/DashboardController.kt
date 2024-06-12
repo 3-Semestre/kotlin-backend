@@ -2,6 +2,7 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.response.*
 import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.repository.AgendamentoCancelamentoPorMesProjection
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.service.UsuarioService
 import io.swagger.v3.oas.annotations.Operation
@@ -179,5 +180,14 @@ class DashboardController(
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
+
+
+    @GetMapping("/taxa-cancelamento-mes")
+    fun taxaCancelamentoPorMes(): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{
+        val usuarioNicho = agendamentoService.taxaCancelamentoPorMes()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
 }
 

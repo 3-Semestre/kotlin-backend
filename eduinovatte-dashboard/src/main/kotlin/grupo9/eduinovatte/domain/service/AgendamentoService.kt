@@ -3,6 +3,7 @@ package grupo9.eduinovatte.domain.service
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.response.*
 import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.repository.AgendamentoCancelamentoPorMesProjection
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.model.Agendamento
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
@@ -17,7 +18,7 @@ class AgendamentoService(
     val agendamentoRepository: AgendamentoRepository,
     val andamentoService: AndamentoService,
     val usuarioRepository: UsuarioRepository
-){
+) {
     fun validaNivelAcesso(novoAgendamento: Agendamento) {
         val professor = novoAgendamento.professor!!
         val aluno = novoAgendamento.aluno!!
@@ -26,17 +27,17 @@ class AgendamentoService(
         }
     }
 
-    fun retornaAgendamento(agendamento: Agendamento): AgendamentoCadastro{
+    fun retornaAgendamento(agendamento: Agendamento): AgendamentoCadastro {
         val dto = AgendamentoCadastro.from(agendamento)
 
         return dto
     }
 
-    fun buscaAgendamentos(): List<Agendamento>{
+    fun buscaAgendamentos(): List<Agendamento> {
         return agendamentoRepository.findAll()
     }
 
-    fun buscaAgendamentoPorId(id: Int): Agendamento{
+    fun buscaAgendamentoPorId(id: Int): Agendamento {
         return agendamentoRepository.findById(id).get()
     }
 
@@ -49,7 +50,7 @@ class AgendamentoService(
     }
 
 
-    fun salvarAgendamento(novoAgendamento: Agendamento) : AgendamentoCadastro{
+    fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro {
         val agendamento = agendamentoRepository.save(novoAgendamento)
         andamentoService.salvarHistorico(agendamento)
 
@@ -61,7 +62,7 @@ class AgendamentoService(
     fun buscarUltimos3AgendamentosProfessor(): List<AgendamentoAlunoProjection>? {
         val agendamento = agendamentoRepository.buscarUltimos3AgendamentosProfessor()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -111,10 +112,17 @@ class AgendamentoService(
         return cancelamento
     }
 
+        fun taxaCancelamentoPorMes(): List<AgendamentoCancelamentoPorMesProjection> {
+            val cancelamento = agendamentoRepository.taxaCancelamentoProfessorPorMes()
+                ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
+
+            return cancelamento;
+        }
+
     fun proximosAgendamentos(): List<AgendamentoProximosProjection>? {
         val agendamento = agendamentoRepository.proximosAgendamentosProfessor()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -124,7 +132,7 @@ class AgendamentoService(
     fun agendamentosPassados(): List<AgendamentoProximosProjection>? {
         val agendamento = agendamentoRepository.agendamentosPassadosProfessor()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -134,7 +142,7 @@ class AgendamentoService(
     fun buscarUltimos3AgendamentosAluno(): List<AgendamentoAlunoProjection>? {
         val agendamento = agendamentoRepository.buscarUltimos3AgendamentosAluno()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -144,7 +152,7 @@ class AgendamentoService(
     fun visaoPorMesAluno(): List<AgendamentoVisaoRepository>? {
         val agendamento = agendamentoRepository.buscarVisaoPorMesAluno()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -155,7 +163,7 @@ class AgendamentoService(
     fun buscarTop3MesesAluno(): List<AgendamentoVisaoRepository>? {
         val agendamento = agendamentoRepository.buscarTop3MesesAluno()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -165,7 +173,7 @@ class AgendamentoService(
     fun buscarListaAgendamentoAluno(): List<Andamento>? {
         val agendamento = agendamentoRepository.buscarListaAgendamentoAluno()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -175,7 +183,7 @@ class AgendamentoService(
     fun listaHistoricoAgendamentoAluno(): List<Andamento>? {
         val agendamento = agendamentoRepository.listaHistoricoAgendamentoAluno()
 
-        if(agendamento!!.isEmpty()){
+        if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 

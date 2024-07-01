@@ -62,9 +62,18 @@ class UsuarioControllerTest {
 
         val response = controller.autenticarUsuario(loginForm)
 
+<<<<<<< HEAD
         Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
 
         Assertions.assertNull(response.body)
+=======
+        val responseEntity = controller.autenticarUsuario(loginForm)
+
+
+        assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
+
+        Assertions.assertNull(responseEntity.body)
+>>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
     }
 
     @Test
@@ -78,10 +87,14 @@ class UsuarioControllerTest {
 
 
         val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
+<<<<<<< HEAD
             val response = controller.autenticarUsuario(loginForm)
+=======
+            controller.autenticarUsuario(loginForm)
+>>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
         }
 
-        Assertions.assertEquals(401, exception.statusCode.value())
+        assertEquals(401, exception.statusCode.value())
     }
     @Test
     fun `Return all users when buscaUsuarios method`(){

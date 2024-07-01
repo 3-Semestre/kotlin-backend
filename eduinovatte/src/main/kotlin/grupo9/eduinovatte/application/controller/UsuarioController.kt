@@ -139,13 +139,14 @@ class UsuarioController(
     }
 
     @DeleteMapping("/{tipo}/{id}")
+    @CrossOrigin
     fun deletaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int):ResponseEntity<Void> {
-        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        //val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
-            val usuario = usuarioRepository.findById(id).get()
-            usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
+            //val usuario = usuarioRepository.findById(id).get()
+            //usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             usuarioService.deletaUsuario(id)
             return ResponseEntity.status(204).build()

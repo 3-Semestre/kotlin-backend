@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query
 interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query("SELECT a FROM Agendamento a JOIN FETCH a.historico WHERE a.professor.id = :userId OR a.aluno.id = :userId")
     fun findAgendamentosByUserId(userId: Int): List<Agendamento>
-    @Query(value = "SELECT * FROM proximos_tres_agendamento_P;", nativeQuery = true)
+    @Query(value = "SELECT * FROM proximos_tres_agendamento_P order by data desc;", nativeQuery = true)
     fun buscarUltimos3AgendamentosProfessor(): List<AgendamentoAlunoProjection>?
 
     @Query(value = "SELECT * FROM qtd_agendamento_mes;", nativeQuery = true)

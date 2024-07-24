@@ -185,14 +185,8 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-
-<<<<<<< HEAD
-    @GetMapping("/taxa-cancelamento-mes")
-    @CrossOrigin
-=======
     @CrossOrigin
     @GetMapping("/taxa-cancelamento-mes")
->>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
     fun taxaCancelamentoPorMes(): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{
         val usuarioNicho = agendamentoService.taxaCancelamentoPorMes()
 

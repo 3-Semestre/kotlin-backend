@@ -1,7 +1,9 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.LoginForm
+import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
@@ -181,4 +183,23 @@ class UsuarioController(
         }
         return tipoAcesso
     }
+    
+    @Operation(summary = "Busque um usuários pelo id", description = "Busque todos os dados do perfil de um usuario pelo id.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Professores buscados com sucesso"),
+        ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
+    ])
+    @CrossOrigin
+    @GetMapping("/perfil/{tipo}/{id}")
+    fun exibirPerfil(@PathVariable tipo: String, @PathVariable id: Int): ResponseEntity<Any> {
+        val perfil = when (tipo) {
+            "aluno" -> usuarioService.exibirPerfilAluno(id)
+            "professor" -> usuarioService.exibirPerfil(id)
+            "representante-legal" -> usuarioService.exibirPerfil(id)
+            else -> return ResponseEntity.status(401).build()
+        }
+
+        return ResponseEntity.status(200).body(perfil)
+    }
+
 }

@@ -25,7 +25,7 @@ class AgendamentoController (
         val dto = historico.map {
             mapper.map(it, AgendamentoListagemResponse::class.java)
         }
-//teste
+
         return dto
     }
 

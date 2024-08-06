@@ -17,6 +17,8 @@ data class Agendamento (
 
     var horarioFim: LocalTime?,
 
+    var assunto: String,
+
     @ManyToOne
     @JoinColumn(name = "fk_professor")
     var professor: Usuario?,

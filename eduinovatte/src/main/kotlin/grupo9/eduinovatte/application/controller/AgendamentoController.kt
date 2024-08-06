@@ -2,11 +2,8 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
-import grupo9.eduinovatte.application.dto.response.UsuarioNomeSemDetalhesResponse
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.model.Agendamento
-import grupo9.eduinovatte.model.Usuario
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -34,9 +31,10 @@ class AgendamentoController (
         ApiResponse(responseCode = "200", description = "Agendamentos encontrados"),
         ApiResponse(responseCode = "204", description = "Nenhum agendamento encontrado")
     ])
-    @GetMapping
-    fun buscaHistoricoAgendamentoPorUsuario(@RequestBody usuario: UsuarioNomeSemDetalhesResponse): ResponseEntity<List<AgendamentoListagemResponse>> {
-        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(usuario)
+    @CrossOrigin
+    @GetMapping("/{id}")
+    fun buscaHistoricoAgendamentoPorUsuario(@PathVariable id: Int): ResponseEntity<List<AgendamentoListagemResponse>> {
+        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(id)
 
         if(listaDeHistorico.isEmpty()) {
             return ResponseEntity.status(204).build()

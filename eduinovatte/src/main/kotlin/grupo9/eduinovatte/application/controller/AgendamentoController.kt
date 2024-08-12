@@ -17,7 +17,7 @@ class AgendamentoController (
     val agendamentoService: AgendamentoService,
     val mapper: ModelMapper = ModelMapper()
 ){
-    fun retornaAgendamentos(historico: List<Agendamento>): List<AgendamentoListagemResponse> {
+    fun retornaAgendamentos(historico: List<Agendamento?>): List<AgendamentoListagemResponse> {
 
         val dto = historico.map {
             mapper.map(it, AgendamentoListagemResponse::class.java)
@@ -26,15 +26,15 @@ class AgendamentoController (
         return dto
     }
 
-    @Operation(summary = "Busque todos os agendamentos", description = "Busque todos os agendamentos de um usuario.")
+    @Operation(summary = "Busque todos os agendamentos", description = "Busque todos os agendamentos de um aluno.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Agendamentos encontrados"),
         ApiResponse(responseCode = "204", description = "Nenhum agendamento encontrado")
     ])
     @CrossOrigin
-    @GetMapping("/{id}")
-    fun buscaHistoricoAgendamentoPorUsuario(@PathVariable id: Int): ResponseEntity<List<AgendamentoListagemResponse>> {
-        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(id)
+    @GetMapping("/{tipo}/{id}")
+    fun buscaHistoricoAgendamentoPorUsuario(@PathVariable tipo: Int ,@PathVariable id: Int): ResponseEntity<List<AgendamentoListagemResponse>> {
+        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(tipo, id)
 
         if(listaDeHistorico.isEmpty()) {
             return ResponseEntity.status(204).build()
@@ -44,6 +44,8 @@ class AgendamentoController (
 
         return ResponseEntity.status(200).body(listaAgendamentos)
     }
+
+
 
     @Operation(summary = "Salve um agendamentos", description = "Salve um novo agendamentos no sistema.")
     @ApiResponses(value = [

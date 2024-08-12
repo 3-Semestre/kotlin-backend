@@ -7,6 +7,7 @@ import grupo9.eduinovatte.model.Agendamento
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -39,10 +40,17 @@ class AgendamentoService(
         return agendamentoRepository.findById(id).get()
     }
 
-    fun buscaAgendamentosUsuario(id: Int): List<Agendamento> {
+    fun buscaAgendamentosUsuario(tipo: Int ,id: Int): List<Agendamento?> {
+        val agendamentos = when (tipo) {
+            3 -> agendamentoRepository.findAgendamentosByFkAluno(id)
+            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
+            1 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
+            else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        }
+
         val user = usuarioRepository.findById(id)
 
-        return agendamentoRepository.findAgendamentosByUserId(user.get().id!!)
+        return agendamentos
     }
 
 

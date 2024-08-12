@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import grupo9.eduinovatte.infraestructure.security.TokenService
 
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
     val usuarioRepository: UsuarioRepository,
-    val usuarioService: UsuarioService
+    val usuarioService: UsuarioService,
+    val tokenService: TokenService
 ){
 
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
@@ -50,7 +52,8 @@ class UsuarioController(
             // usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             val novoUsuario = usuarioService.autenticar(usuario.id!!)
-            return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
+            val token: String = tokenService.generateToken(usuario)
+            return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true, token = token))
 
         } catch (e: EmptyResultDataAccessException) {
             return ResponseEntity.status(403).build()

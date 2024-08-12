@@ -185,7 +185,6 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
-
     @CrossOrigin
     @GetMapping("/taxa-cancelamento-mes")
     fun taxaCancelamentoPorMes(): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{

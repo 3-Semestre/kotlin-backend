@@ -39,12 +39,10 @@ class AgendamentoService(
         return agendamentoRepository.findById(id).get()
     }
 
-    fun buscaAgendamentosUsuario(usuario: UsuarioNomeSemDetalhesResponse): List<Agendamento> {
-        val cpf = usuario.cpf!!
-        val user = usuarioRepository.findByCpf(cpf)
+    fun buscaAgendamentosUsuario(id: Int): List<Agendamento> {
+        val user = usuarioRepository.findById(id)
 
-        return agendamentoRepository.findAgendamentosByUserId(user!!.id!!)
-
+        return agendamentoRepository.findAgendamentosByUserId(user.get().id!!)
     }
 
 

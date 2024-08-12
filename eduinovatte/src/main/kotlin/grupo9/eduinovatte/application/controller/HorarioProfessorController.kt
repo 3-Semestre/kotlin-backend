@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/horario-professor")
-class HorarioAlmocoController(
+class HorarioProfessorController(
     val horarioProfessorService: HorarioProfessorService
 ) {
 

@@ -16,7 +16,8 @@ data class UsuarioResponse (
     val email: String,
     val profissao :String?,
     val nivelAcesso: NivelAcesso,
-    val situacao: Situacao?
+    val situacao: Situacao?,
+    val token: String?
 ){
     companion object {
         fun from(usuario: Usuario): UsuarioResponse {
@@ -32,6 +33,7 @@ data class UsuarioResponse (
                 situacao = usuario.situacao,
                 dataNasc = usuario.dataNascimento,
                 dataCadastro = usuario.dataCadastro,
+                token = null
             )
         }
     }

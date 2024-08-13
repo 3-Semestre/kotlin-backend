@@ -29,6 +29,7 @@ class UsuarioController(
     val usuarioService: UsuarioService
 ){
 
+
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Autenticação com sucesso"),
@@ -56,7 +57,7 @@ class UsuarioController(
             return ResponseEntity.status(403).build()
         }
     }
-
+    @CrossOrigin
     @Operation(summary = "Desautentique o usuário", description = "Desautentique o usuário com base no tipo dele (aluno, professor ou representante legal)")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Desautenticação feita com sucesso"),
@@ -137,7 +138,7 @@ class UsuarioController(
         }
         return ResponseEntity.status(404).build()
     }
-
+    @CrossOrigin
     @DeleteMapping("/{tipo}/{id}")
     fun deletaUsuario(
         @PathVariable tipo:String,
@@ -153,7 +154,7 @@ class UsuarioController(
         return ResponseEntity.status(404).build()
     }
 
-
+    @CrossOrigin
     @Operation(summary = "Desative um usuário", description = "Desative um usuário pelo ID.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Usuario desativado"),

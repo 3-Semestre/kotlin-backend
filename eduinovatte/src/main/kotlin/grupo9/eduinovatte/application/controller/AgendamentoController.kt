@@ -2,11 +2,8 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
-import grupo9.eduinovatte.application.dto.response.UsuarioNomeSemDetalhesResponse
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.model.Agendamento
-import grupo9.eduinovatte.model.Usuario
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -20,23 +17,24 @@ class AgendamentoController (
     val agendamentoService: AgendamentoService,
     val mapper: ModelMapper = ModelMapper()
 ){
-    fun retornaAgendamentos(historico: List<Agendamento>): List<AgendamentoListagemResponse> {
+    fun retornaAgendamentos(historico: List<Agendamento?>): List<AgendamentoListagemResponse> {
 
         val dto = historico.map {
             mapper.map(it, AgendamentoListagemResponse::class.java)
         }
-//teste
+
         return dto
     }
 
-    @Operation(summary = "Busque todos os agendamentos", description = "Busque todos os agendamentos de um usuario.")
+    @Operation(summary = "Busque todos os agendamentos", description = "Busque todos os agendamentos de um aluno.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Agendamentos encontrados"),
         ApiResponse(responseCode = "204", description = "Nenhum agendamento encontrado")
     ])
-    @GetMapping
-    fun buscaHistoricoAgendamentoPorUsuario(@RequestBody usuario: UsuarioNomeSemDetalhesResponse): ResponseEntity<List<AgendamentoListagemResponse>> {
-        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(usuario)
+    @CrossOrigin
+    @GetMapping("/{tipo}/{id}")
+    fun buscaHistoricoAgendamentoPorUsuario(@PathVariable tipo: Int ,@PathVariable id: Int): ResponseEntity<List<AgendamentoListagemResponse>> {
+        val listaDeHistorico = agendamentoService.buscaAgendamentosUsuario(tipo, id)
 
         if(listaDeHistorico.isEmpty()) {
             return ResponseEntity.status(204).build()
@@ -46,6 +44,8 @@ class AgendamentoController (
 
         return ResponseEntity.status(200).body(listaAgendamentos)
     }
+
+
 
     @Operation(summary = "Salve um agendamentos", description = "Salve um novo agendamentos no sistema.")
     @ApiResponses(value = [

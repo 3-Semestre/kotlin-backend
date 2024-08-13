@@ -1,7 +1,9 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.LoginForm
+import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
+import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
@@ -21,12 +23,14 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import grupo9.eduinovatte.infraestructure.security.TokenService
 
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
     val usuarioRepository: UsuarioRepository,
-    val usuarioService: UsuarioService
+    val usuarioService: UsuarioService,
+    val tokenService: TokenService
 ){
 
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
@@ -50,7 +54,8 @@ class UsuarioController(
             // usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             val novoUsuario = usuarioService.autenticar(usuario.id!!)
-            return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true))
+            val token: String = tokenService.generateToken(usuario)
+            return ResponseEntity.status(201).body(novoUsuario.copy(autenticado = true, token = token))
 
         } catch (e: EmptyResultDataAccessException) {
             return ResponseEntity.status(403).build()
@@ -139,13 +144,14 @@ class UsuarioController(
     }
 
     @DeleteMapping("/{tipo}/{id}")
+    @CrossOrigin
     fun deletaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int):ResponseEntity<Void> {
-        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        //val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
-            val usuario = usuarioRepository.findById(id).get()
-            usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
+            //val usuario = usuarioRepository.findById(id).get()
+            //usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
 
             usuarioService.deletaUsuario(id)
             return ResponseEntity.status(204).build()
@@ -180,4 +186,24 @@ class UsuarioController(
         }
         return tipoAcesso
     }
+    
+    @Operation(summary = "Busque um usuários pelo id", description = "Busque todos os dados do perfil de um usuario pelo id.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Professores buscados com sucesso"),
+        ApiResponse(responseCode = "204", description = "Nenhum professor encontrado")
+    ])
+    @CrossOrigin
+    @GetMapping("/perfil/{tipo}/{id}")
+    fun exibirPerfil(@PathVariable tipo: String, @PathVariable id: Int): ResponseEntity<Any> {
+        val perfil = when (tipo) {
+            "aluno" -> usuarioService.exibirPerfilAluno(id)
+            "professor" -> usuarioService.exibirPerfil(id)
+            "professor_auxiliar" -> usuarioService.exibirPerfil(id)
+            "representante_legal" -> usuarioService.exibirPerfil(id)
+            else -> return ResponseEntity.status(401).build()
+        }
+
+        return ResponseEntity.status(200).body(perfil)
+    }
+
 }

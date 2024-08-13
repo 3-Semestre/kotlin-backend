@@ -66,4 +66,7 @@ interface DashboardGateway {
     @GetMapping("/dashboard/historico-agendamento-aluno")
     fun listaHistoricoAgendamentoAluno(): List<Andamento>
 
+    @GetMapping("/dashboard/agendamentos-passados-aluno")
+    fun listaAulasRealizadasAluno(): List<AgendamentoProximosProjection>
+
 }

@@ -240,6 +240,19 @@ class DashboardController (
             }
         }
 
+    @CrossOrigin
+    @GetMapping("/agendamentos-passados-aluno")
+    fun buscarAulasRealizadasAluno(): ResponseEntity<List<AgendamentoProximosProjection>?> {
+        return try {
+            val lista = dashboardGateway.listaAulasRealizadasAluno()
+            ResponseEntity.status(HttpStatus.OK).body(lista)
+        } catch (e: FeignException) {
+            ResponseEntity.status(e.status()).build()
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
+        }
+    }
+
     @ExceptionHandler(FeignException::class)
     fun handleFeignException(e: FeignException): ResponseEntity<List<UsuarioResponse>?> {
         return when (e.status()) {

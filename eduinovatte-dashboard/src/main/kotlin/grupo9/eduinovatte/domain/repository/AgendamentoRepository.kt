@@ -34,6 +34,9 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
 
     @Query(value = "SELECT * FROM agendamentos_passados;", nativeQuery = true)
     fun agendamentosPassadosProfessor(): List<AgendamentoProximosProjection>?
+
+    @Query(value = "SELECT * FROM agendamentos_passados_aluno;", nativeQuery = true)
+    fun agendamentosPassadosAluno(): List<AgendamentoProximosProjection>?
     @Query(value = "SELECT * FROM todos_professores;", nativeQuery = true)
     fun todosProfessores(): List<AgendamentoAlunoProjection>?
     @Query(value = "SELECT * FROM todos_alunos;", nativeQuery = true)

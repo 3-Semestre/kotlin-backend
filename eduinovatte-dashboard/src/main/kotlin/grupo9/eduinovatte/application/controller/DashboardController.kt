@@ -5,9 +5,6 @@ import grupo9.eduinovatte.domain.model.Andamento
 import grupo9.eduinovatte.domain.repository.AgendamentoCancelamentoPorMesProjection
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.service.UsuarioService
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -53,19 +50,6 @@ class DashboardController(
         if(tipoAcesso == null) return ResponseEntity.status(403).build()
         val dataCorte = LocalDate.now().minusYears(1)
         val usuarioNicho = usuarioService.buscaUsuariosNovos(tipoAcesso, dataCorte)
-
-        return ResponseEntity.status(200).body(usuarioNicho)
-    }
-
-    @Operation(summary = "Busque os alunos novos no ultimo vez", description = "Busque os usuários novos do último mês.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Retornado com sucesso"),
-        ApiResponse(responseCode = "204", description = "Nenhum usuario")
-    ])
-    @CrossOrigin
-    @GetMapping("/ultimos-3-agendamentos-professor")
-    fun buscarProximos3AgendamentosProfessor(): ResponseEntity<List<AgendamentoAlunoProjection>>{
-        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosProfessor()
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
@@ -126,6 +110,14 @@ class DashboardController(
     @GetMapping("/agendamentos-passados-professor")
     fun agendamentosPassados(): ResponseEntity<List<AgendamentoProximosProjection>>{
         val proximosAgendamentos = agendamentoService.agendamentosPassados()
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+    @CrossOrigin
+    @GetMapping("/agendamentos-passados-aluno")
+    fun agendamentosPassadosAluno(): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.agendamentosPassadosAluno()
 
         return ResponseEntity.status(200).body(proximosAgendamentos)
     }

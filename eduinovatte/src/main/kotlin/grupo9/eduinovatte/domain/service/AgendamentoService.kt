@@ -48,8 +48,6 @@ class AgendamentoService(
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 
-        val user = usuarioRepository.findById(id)
-
         return agendamentos
     }
 

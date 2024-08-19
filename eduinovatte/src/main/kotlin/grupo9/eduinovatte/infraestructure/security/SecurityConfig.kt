@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 
 @Configuration
@@ -20,6 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig{
     @Autowired
     private val userDetailsService: CustomUserDetailsService? = null
+
+    private val URLS_PERMITIDAS = arrayOf(
+        AntPathRequestMatcher("/usuarios/autenticar"),
+        AntPathRequestMatcher("/usuarios/*")
+    )
+
 
     @Autowired
     var securityFilter: SecurityFilter? = null
@@ -31,7 +38,7 @@ class SecurityConfig{
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
+                    .requestMatchers(*URLS_PERMITIDAS).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)

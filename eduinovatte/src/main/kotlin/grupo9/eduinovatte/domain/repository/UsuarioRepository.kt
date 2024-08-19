@@ -10,11 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.*
 
 interface UsuarioRepository: JpaRepository<Usuario, Int> {
     fun findByNivelAcessoNome(nome: NivelAcessoNome?): List<Usuario>
 
-    fun findByCpf(cpf: String): Usuario
+    fun findByCpf(cpf: String): Optional<Usuario>
 
     @Query("SELECT u FROM Usuario u WHERE (u.email = :email OR u.cpf = :cpf) AND u.senha = :senha")
     fun findByEmailOrCpfAndSenha(email: String?, cpf: String?, senha: String?): Usuario

@@ -97,6 +97,7 @@ class UsuarioController(
 
         return ResponseEntity.status(200).body(listaProfessores)
     }
+
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
@@ -132,7 +133,7 @@ class UsuarioController(
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
 
-            if(usuarioAntigo.nivelAcesso!!.id !== novoUsuario.nivelAcesso!!.id) return ResponseEntity.status(401).build()
+            if(usuarioAntigo.nivelAcesso!!.id != novoUsuario.nivelAcesso!!.id) return ResponseEntity.status(401).build()
 
             // usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
 

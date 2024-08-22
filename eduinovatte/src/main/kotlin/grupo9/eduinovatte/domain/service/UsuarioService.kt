@@ -62,7 +62,7 @@ class UsuarioService(
 
     fun salvaUsuario(novoUsuario: Usuario): UsuarioResponse {
         val usuarioExistente = usuarioRepository.findByCpf(novoUsuario.cpf!!)
-        if (usuarioExistente != null) {
+        if (usuarioExistente.isPresent) {
             throw ResponseStatusException(HttpStatusCode.valueOf(409)) // Status 409 Conflict
         }
 

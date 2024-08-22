@@ -32,7 +32,7 @@ class SecurityFilter : OncePerRequestFilter() {
         val login = tokenService!!.validateToken(token)
 
         if (login != null) {
-            val user: Usuario = userRepository!!.findByCpf(login)
+            val user: Usuario = userRepository!!.findByCpf(login).get()
             val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
             val authentication = UsernamePasswordAuthenticationToken(user, null, authorities)
             SecurityContextHolder.getContext().authentication = authentication

@@ -16,7 +16,7 @@ class CustomUserDetailsService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(cpf: String): UserDetails {
-        val user: Usuario = repository!!.findByCpf(cpf)
+        val user: Usuario = repository!!.findByCpf(cpf).get()
         return User(user.cpf, user.senha, ArrayList())
     }
 }

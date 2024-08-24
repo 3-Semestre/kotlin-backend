@@ -35,5 +35,4 @@ class UsuarioNivelInglesService (
     fun deleta(id: Int) {
         usuarioNivelInglesRepository.deleteById(id)
     }
-
 }

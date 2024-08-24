@@ -86,7 +86,6 @@ class UsuarioNivelInglesController (
     ])
     @DeleteMapping("/{id}")
     fun deleta(@PathVariable id: Int): ResponseEntity<List<UsuarioNivelIngles>> {
-
         val usuarios = usuarioNivelInglesService.deleta(id)
         return ResponseEntity.status(204).build()
     }

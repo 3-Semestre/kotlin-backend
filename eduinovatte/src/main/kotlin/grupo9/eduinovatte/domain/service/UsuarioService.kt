@@ -67,7 +67,6 @@ class UsuarioService(
         }
 
         val usuarios = usuarioRepository.save(novoUsuario)
-        horarioProfessorService.salvar(HorarioProfessor(usuario = novoUsuario))
         val usuarioResponse = retornaUsuario(usuarios)
         return usuarioResponse
     }

@@ -139,6 +139,16 @@ class AgendamentoService(
         return agendamento
     }
 
+    fun agendamentosPassadosAluno(): List<AgendamentoProximosProjection>? {
+        val agendamento = agendamentoRepository.agendamentosPassadosAluno()
+
+        if (agendamento!!.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
     fun buscarUltimos3AgendamentosAluno(): List<AgendamentoAlunoProjection>? {
         val agendamento = agendamentoRepository.buscarUltimos3AgendamentosAluno()
 

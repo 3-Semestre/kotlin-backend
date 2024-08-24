@@ -97,6 +97,7 @@ class UsuarioController(
 
         return ResponseEntity.status(200).body(listaProfessores)
     }
+
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),

@@ -119,7 +119,7 @@ class UsuarioService(
     fun exibirPerfil(id: Int): UsuarioPerfilViewProjection? {
         val perfil = usuarioRepository.exibirPerfil(id);
         if (perfil != null) {
-            if (perfil.getNivel_acesso_id().toInt() == 3) {
+            if (perfil.getNivel_acesso_id().toInt() == 1) {
                 throw ResponseStatusException(HttpStatus.FORBIDDEN )
             }
         }
@@ -130,7 +130,7 @@ class UsuarioService(
     fun exibirPerfilAluno(id: Int): UsuarioPerfilAlunoViewProjection? {
         val perfil = usuarioRepository.exibirPerfilAluno(id);
         if (perfil != null) {
-            if (perfil.getNivel_acesso_id().toInt() != 3) {
+            if (perfil.getNivel_acesso_id().toInt() != 1) {
                 throw ResponseStatusException(HttpStatus.FORBIDDEN )
             }
         }

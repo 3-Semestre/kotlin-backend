@@ -42,9 +42,9 @@ class AgendamentoService(
 
     fun buscaAgendamentosUsuario(tipo: Int ,id: Int): List<Agendamento?> {
         val agendamentos = when (tipo) {
-            3 -> agendamentoRepository.findAgendamentosByFkAluno(id)
+            1 -> agendamentoRepository.findAgendamentosByFkAluno(id)
             2 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
-            1 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
+            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 

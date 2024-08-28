@@ -23,6 +23,10 @@ class SecurityConfig{
 
     @Autowired
     var securityFilter: SecurityFilter? = null
+
+    @Autowired
+    private val autenticacaoJwtEntryPoint: AutenticacaoJwtEntryPoint? = null
+
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -33,6 +37,11 @@ class SecurityConfig{
                 it
                     .requestMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
                     .anyRequest().authenticated()
+            }.exceptionHandling { handling ->
+                handling.authenticationEntryPoint(autenticacaoJwtEntryPoint)
+            }
+            .sessionManagement { management ->
+                management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

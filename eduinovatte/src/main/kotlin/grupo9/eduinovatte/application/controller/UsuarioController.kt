@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import grupo9.eduinovatte.infraestructure.security.TokenService
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/usuarios")
@@ -93,9 +95,13 @@ class UsuarioController(
     @CrossOrigin
     fun buscaUsuarios(@PathVariable tipo: String): ResponseEntity<List<UsuarioResponse>>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
-        val listaProfessores = usuarioService.buscaUsuarios(tipoAcesso)
+        val listaUsuarios = usuarioService.buscaUsuarios(tipoAcesso)
 
-        return ResponseEntity.status(200).body(listaProfessores)
+        if (listaUsuarios.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity.status(200).body(listaUsuarios)
     }
 
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")

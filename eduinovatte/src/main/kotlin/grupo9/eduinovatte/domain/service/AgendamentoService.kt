@@ -1,63 +1,19 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
-import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.domain.model.entity.Agendamento
-import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.service.UsuarioRepository
-import org.springframework.http.HttpStatusCode
 
-import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
+interface AgendamentoService {
 
-@Service
-class AgendamentoService(
-    val agendamentoRepository: AgendamentoRepository,
-    val andamentoService: AndamentoService,
-    val usuarioRepository: UsuarioRepository
-){
-    fun validaNivelAcesso(novoAgendamento: Agendamento) {
-        val professor = novoAgendamento.professor!!
-        val aluno = novoAgendamento.aluno!!
-        if ((professor.nivelAcesso!!.nome == NivelAcessoNome.ALUNO) || (aluno.nivelAcesso!!.nome != NivelAcessoNome.ALUNO)) {
-            throw ResponseStatusException(HttpStatusCode.valueOf(400))
-        }
-    }
+    fun validaNivelAcesso(novoAgendamento: Agendamento)
 
-    fun retornaAgendamento(agendamento: Agendamento): AgendamentoCadastro{
-        val dto = AgendamentoCadastro.from(agendamento)
+    fun retornaAgendamento(agendamento: Agendamento): AgendamentoCadastro
 
-        return dto
-    }
+    fun buscaAgendamentos(): List<Agendamento>
 
-    fun buscaAgendamentos(): List<Agendamento>{
-        return agendamentoRepository.findAll()
-    }
+    fun buscaAgendamentoPorId(id: Int): Agendamento
 
-    fun buscaAgendamentoPorId(id: Int): Agendamento {
-        return agendamentoRepository.findById(id).get()
-    }
+    fun buscaAgendamentosUsuario(tipo: Int, id: Int): List<Agendamento?>
 
-    fun buscaAgendamentosUsuario(tipo: Int ,id: Int): List<Agendamento?> {
-        val agendamentos = when (tipo) {
-            1 -> agendamentoRepository.findAgendamentosByFkAluno(id)
-            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
-            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
-            else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
-        }
-
-        val user = usuarioRepository.findById(id)
-
-        return agendamentos
-    }
-
-
-    fun salvarAgendamento(novoAgendamento: Agendamento) : AgendamentoCadastro{
-        val agendamento = agendamentoRepository.save(novoAgendamento)
-        andamentoService.salvarHistorico(agendamento)
-
-        val agendamentoResponse = retornaAgendamento(agendamento)
-
-        return agendamentoResponse
-    }
+    fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro
 }

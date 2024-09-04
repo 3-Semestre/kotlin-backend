@@ -7,7 +7,6 @@ import java.time.LocalDate
 
 
 class Aluno (
-    id:Int? = null,
     nomeCompleto: String?,
     cpf: String?,
     telefone: String?,
@@ -19,4 +18,4 @@ class Aluno (
     profissao :String?,
     nivelAcesso: NivelAcesso?,
     situacao: Situacao? = Situacao(id = 1, SituacaoNome.ATIVO)
-): Usuario(id, nomeCompleto, cpf, telefone, dataNascimento, dataCadastro, autenticado, email, senha, profissao, nivelAcesso)
+): AbstractUsuario(nomeCompleto, cpf, telefone, dataNascimento, dataCadastro, autenticado, email, senha, profissao, nivelAcesso)

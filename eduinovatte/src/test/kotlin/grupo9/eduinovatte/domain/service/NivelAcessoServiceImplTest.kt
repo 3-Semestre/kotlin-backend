@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import com.example.demo.builder.NivelAcessoBuilder
+import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -10,14 +11,14 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import java.util.*
 
-class NivelAcessoServiceTest {
+class NivelAcessoServiceImplTest {
     lateinit var nivelAcessoRepository: NivelAcessoRepository
-    lateinit var service: NivelAcessoService
+    lateinit var service: NivelAcessoServiceImpl
 
     @BeforeEach
     fun iniciar() {
         nivelAcessoRepository = Mockito.mock(NivelAcessoRepository::class.java)
-        service = NivelAcessoService(nivelAcessoRepository)
+        service = NivelAcessoServiceImpl(nivelAcessoRepository)
     }
 
     @Test

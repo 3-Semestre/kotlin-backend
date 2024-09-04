@@ -3,7 +3,7 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.dto.request.AlterarStatus
 import grupo9.eduinovatte.application.dto.response.AndamentoHistoricoResponse
 import grupo9.eduinovatte.domain.model.entity.Andamento
-import grupo9.eduinovatte.domain.service.AndamentoService
+import grupo9.eduinovatte.domain.service.impl.AndamentoServiceImpl
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/historico-agendamento")
 class AndamentoController (
-    val andamentoService: AndamentoService,
+    val andamentoService: AndamentoServiceImpl,
     val mapper: ModelMapper = ModelMapper()
 ){
     fun retornaHistorico(historico: List<Andamento>): List<AndamentoHistoricoResponse> {

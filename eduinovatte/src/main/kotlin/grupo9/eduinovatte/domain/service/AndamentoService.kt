@@ -1,11 +1,11 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AlterarStatus
-import grupo9.eduinovatte.domain.model.Andamento
-import grupo9.eduinovatte.domain.model.Status
+import grupo9.eduinovatte.domain.model.entity.Andamento
+import grupo9.eduinovatte.domain.model.entity.Status
 import grupo9.eduinovatte.domain.model.enums.StatusNome
 import grupo9.eduinovatte.domain.repository.AndamentoRepository
-import grupo9.eduinovatte.model.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Agendamento
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -31,11 +31,11 @@ class AndamentoService(
         }
     }
 
-    fun buscaHistoricoPorId(id: Int): Andamento{
+    fun buscaHistoricoPorId(id: Int): Andamento {
         return andamentoRepository.findById(id).get()
     }
 
-    fun salvarHistorico(agendamento: Agendamento) : Andamento{
+    fun salvarHistorico(agendamento: Agendamento) : Andamento {
         val novoHistorico = Andamento()
         novoHistorico.dataAtualizacao = LocalDateTime.now()
         novoHistorico.agendamento = agendamento;

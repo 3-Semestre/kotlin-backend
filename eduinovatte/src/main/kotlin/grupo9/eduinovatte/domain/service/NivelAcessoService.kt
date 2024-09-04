@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import org.springframework.stereotype.Service
 
@@ -12,7 +12,7 @@ class NivelAcessoService(
         return nivelAcessoRepository.findAll()
     }
 
-    fun buscaPorId(id: Int): NivelAcesso{
+    fun buscaPorId(id: Int): NivelAcesso {
         return nivelAcessoRepository.findById(id).get()
     }
 }

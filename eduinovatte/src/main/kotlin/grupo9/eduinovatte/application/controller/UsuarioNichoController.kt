@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses

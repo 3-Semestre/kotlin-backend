@@ -1,9 +1,7 @@
 package com.example.demo.builder
 
-import grupo9.eduinovatte.model.Nicho
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.Nicho
 import grupo9.eduinovatte.model.enums.NichoNome
-import grupo9.eduinovatte.model.enums.NivelAcessoNome
 
 class NichoBuilder {
     private var id: Int = 1
@@ -22,7 +20,7 @@ class NichoBuilder {
     fun withId(id: Int) = apply { this.id = id }
     fun withNome(nome: NichoNome?) = apply { this.nome = nome }
 
-    fun build():Nicho{
+    fun build(): Nicho {
         return Nicho(id = id,nome = nome)
     }
 

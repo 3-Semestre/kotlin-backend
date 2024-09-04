@@ -1,7 +1,5 @@
-package grupo9.eduinovatte.domain.model
+package grupo9.eduinovatte.domain.model.entity
 
-import grupo9.eduinovatte.model.NivelIngles
-import grupo9.eduinovatte.model.Usuario
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType

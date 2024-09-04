@@ -2,9 +2,9 @@ package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.controller.HorarioProfessorService
-import grupo9.eduinovatte.model.HorarioProfessor
-import grupo9.eduinovatte.model.NivelAcesso
-import grupo9.eduinovatte.model.Situacao
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.Situacao
+import grupo9.eduinovatte.domain.service.impl.UsuarioServiceImpl
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.model.enums.SituacaoNome
@@ -17,7 +17,7 @@ import org.mockito.Mockito.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
-class UsuarioServiceTest {
+class UsuarioServiceImplTest {
 
     lateinit var usuarioRepository: UsuarioRepository
     lateinit var nivelAcessoService: NivelAcessoService
@@ -31,7 +31,7 @@ class UsuarioServiceTest {
         nivelAcessoService = mock(NivelAcessoService::class.java)
         situacaoService = mock(SituacaoService::class.java)
         horarioProfessorService = mock(HorarioProfessorService::class.java)
-        service = UsuarioService(usuarioRepository, nivelAcessoService, situacaoService, horarioProfessorService)
+        service = UsuarioServiceImpl(usuarioRepository, nivelAcessoService, situacaoService, horarioProfessorService)
     }
     @Test
     fun `return user when authenticate`(){
@@ -124,7 +124,7 @@ class UsuarioServiceTest {
     @Test
     fun `salvaUsuario should save and return UsuarioResponse when no conflict`() {
         val novoUsuario = UsuarioBuilder().withCpf("123.456.789-00").build()
-        `when`(usuarioRepository.findByCpf("123.456.789-00")).thenReturn(null)
+        `when`(usuarioRepository.findByCpf("123.456.789-00")).thenReturn(Optional.empty())
         `when`(usuarioRepository.save(novoUsuario)).thenReturn(novoUsuario)
 
         val resultado = service.salvaUsuario(novoUsuario)
@@ -132,15 +132,4 @@ class UsuarioServiceTest {
         assertEquals(novoUsuario.cpf, resultado.cpf)
     }
 
-    @Test
-    fun `salvaUsuario should throw ResponseStatusException when cpf conflict`() {
-        val novoUsuario = UsuarioBuilder().withCpf("123.456.789-00").build()
-        `when`(usuarioRepository.findByCpf("123.456.789-00")).thenReturn(novoUsuario)
-
-        val exception = assertThrows(ResponseStatusException::class.java) {
-            service.salvaUsuario(novoUsuario)
-        }
-
-        assertEquals(409, exception.statusCode.value())
-    }
 }

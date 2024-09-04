@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.domain.model.Status
+import grupo9.eduinovatte.domain.model.entity.Status
 import grupo9.eduinovatte.domain.repository.StatusRepository
 
 import org.springframework.stereotype.Service
@@ -13,7 +13,7 @@ class StatusService(
         return statusRepository.findAll()
     }
 
-    fun buscaStatusPorId(id: Int): Status{
+    fun buscaStatusPorId(id: Int): Status {
         return statusRepository.findById(id).get()
     }
 }

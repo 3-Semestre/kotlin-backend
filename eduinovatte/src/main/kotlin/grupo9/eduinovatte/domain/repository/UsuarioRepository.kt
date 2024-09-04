@@ -1,20 +1,20 @@
 package grupo9.eduinovatte.service
 
-import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.*
 
 interface UsuarioRepository: JpaRepository<Usuario, Int> {
     fun findByNivelAcessoNome(nome: NivelAcessoNome?): List<Usuario>
 
-    fun findByCpf(cpf: String): Usuario
+    fun findByCpf(cpf: String): Optional<Usuario>
 
     @Query("SELECT u FROM Usuario u WHERE (u.email = :email OR u.cpf = :cpf) AND u.senha = :senha")
     fun findByEmailOrCpfAndSenha(email: String?, cpf: String?, senha: String?): Usuario

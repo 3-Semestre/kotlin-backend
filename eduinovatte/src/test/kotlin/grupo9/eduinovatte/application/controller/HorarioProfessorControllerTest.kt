@@ -1,8 +1,6 @@
 package grupo9.eduinovatte.controller
 
 import com.example.demo.builder.HorarioProfessorBuilder
-import grupo9.eduinovatte.model.HorarioProfessor
-import org.hibernate.validator.internal.util.Contracts.assertTrue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,7 +17,7 @@ class HorarioAlmocoControllerTest {
     lateinit var horarioProfessorService: HorarioProfessorService
 
     @InjectMocks
-    lateinit var controller: HorarioAlmocoController
+    lateinit var controller: HorarioProfessorController
 
     @Test
     fun `test salvar`() {

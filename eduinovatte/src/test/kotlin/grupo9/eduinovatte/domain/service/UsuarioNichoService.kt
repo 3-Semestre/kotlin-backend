@@ -2,7 +2,7 @@ package grupo9.eduinovatte.controller
 
 import com.example.demo.builder.NichoBuilder
 import grupo9.eduinovatte.model.UsuarioBuilder
-import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import grupo9.eduinovatte.service.UsuarioNichoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull

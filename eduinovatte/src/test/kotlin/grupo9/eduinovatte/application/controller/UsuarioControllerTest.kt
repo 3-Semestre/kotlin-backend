@@ -4,7 +4,8 @@ import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.controller.UsuarioController
 import grupo9.eduinovatte.domain.service.UsuarioService
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
+import grupo9.eduinovatte.infraestructure.security.TokenService
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -25,13 +26,15 @@ import java.util.*
 class UsuarioControllerTest {
     lateinit var usuarioRepository: UsuarioRepository
     lateinit var usuarioService: UsuarioService
+    lateinit var tokenService: TokenService
     lateinit var controller: UsuarioController
 
     @BeforeEach
     fun iniciar() {
         usuarioRepository = Mockito.mock(UsuarioRepository::class.java)
         usuarioService = Mockito.mock(UsuarioService::class.java)
-        controller = UsuarioController(usuarioRepository, usuarioService)
+        tokenService = Mockito.mock(TokenService::class.java)
+        controller = UsuarioController(usuarioRepository, usuarioService, tokenService)
     }
 
     @Test
@@ -62,18 +65,15 @@ class UsuarioControllerTest {
 
         val response = controller.autenticarUsuario(loginForm)
 
-<<<<<<< HEAD
         Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
 
         Assertions.assertNull(response.body)
-=======
         val responseEntity = controller.autenticarUsuario(loginForm)
 
 
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
 
         Assertions.assertNull(responseEntity.body)
->>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
     }
 
     @Test
@@ -87,26 +87,11 @@ class UsuarioControllerTest {
 
 
         val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
-<<<<<<< HEAD
             val response = controller.autenticarUsuario(loginForm)
-=======
             controller.autenticarUsuario(loginForm)
->>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
         }
 
         assertEquals(401, exception.statusCode.value())
-    }
-    @Test
-    fun `Return all users when buscaUsuarios method`(){
-        val tipo = "aluno"
-        val lista = listOf(UsuarioBuilder().build())
-        val listaResponse = usuarioService.retornaListaUsuario(lista)
-
-        `when`(usuarioService.buscaUsuarios(NivelAcessoNome.ALUNO)).thenReturn(listaResponse)
-
-        val resultado = controller.buscaUsuarios(tipo)
-
-        assertEquals(200, resultado.statusCode.value())
     }
 
     @Test

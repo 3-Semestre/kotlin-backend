@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.infraestructure.security
 
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
@@ -16,7 +16,7 @@ class CustomUserDetailsService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(cpf: String): UserDetails {
-        val user: Usuario = repository!!.findByCpf(cpf)
+        val user: Usuario = repository!!.findByCpf(cpf).get()
         return User(user.cpf, user.senha, ArrayList())
     }
 }

@@ -1,13 +1,9 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
-import grupo9.eduinovatte.model.HorarioProfessor
-import grupo9.eduinovatte.model.Usuario
-import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 

@@ -1,13 +1,11 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
-import grupo9.eduinovatte.application.dto.response.UsuarioNomeSemDetalhesResponse
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
-import grupo9.eduinovatte.model.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Agendamento
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
-import org.springframework.http.ResponseEntity
 
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -36,7 +34,7 @@ class AgendamentoService(
         return agendamentoRepository.findAll()
     }
 
-    fun buscaAgendamentoPorId(id: Int): Agendamento{
+    fun buscaAgendamentoPorId(id: Int): Agendamento {
         return agendamentoRepository.findById(id).get()
     }
 

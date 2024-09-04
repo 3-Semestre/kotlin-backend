@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.application.dto.request
 
-import grupo9.eduinovatte.model.Agendamento
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import java.time.LocalDate
 import java.time.LocalTime
 

@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.domain.repository
 
-import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.model.entity.Andamento
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

@@ -36,6 +36,7 @@ class SecurityConfig{
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
             }.exceptionHandling { handling ->
                 handling.authenticationEntryPoint(autenticacaoJwtEntryPoint)

@@ -1,11 +1,9 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.LoginForm
-import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.domain.service.UsuarioService
-import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -133,7 +131,8 @@ class UsuarioController(
     fun editaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int,
-        @RequestBody novoUsuario: Usuario):
+        @RequestBody novoUsuario: Usuario
+    ):
             ResponseEntity<UsuarioResponse> {
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {

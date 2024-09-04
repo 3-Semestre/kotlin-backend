@@ -1,6 +1,6 @@
 package com.example.demo.builder
 
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 
 class NivelAcessoBuilder {
@@ -20,7 +20,7 @@ class NivelAcessoBuilder {
     fun withId(id: Int) = apply { this.id = id }
     fun withNome(nome: NivelAcessoNome?) = apply { this.nome = nome }
 
-    fun build():NivelAcesso{
+    fun build(): NivelAcesso {
         return NivelAcesso(id = id,nome = nome)
     }
 

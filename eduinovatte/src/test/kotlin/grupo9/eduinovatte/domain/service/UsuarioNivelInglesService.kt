@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import com.example.demo.builder.NivelInglesBuilder
-import grupo9.eduinovatte.domain.model.UsuarioNivelIngles
+import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.repository.UsuarioNivelInglesRepository
 import grupo9.eduinovatte.model.UsuarioBuilder
 import org.hibernate.validator.internal.util.Contracts.assertNotNull

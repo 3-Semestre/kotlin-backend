@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.domain.integration
 
 import grupo9.eduinovatte.application.dto.response.*
-import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.model.entity.Andamento
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

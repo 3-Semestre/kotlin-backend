@@ -2,10 +2,8 @@ package grupo9.eduinovatte.application.controller
 
 import feign.FeignException
 import grupo9.eduinovatte.application.dto.response.*
-import grupo9.eduinovatte.controller.UsuarioController
 import grupo9.eduinovatte.domain.integration.DashboardGateway
-import grupo9.eduinovatte.domain.model.Andamento
-import grupo9.eduinovatte.domain.service.UsuarioService
+import grupo9.eduinovatte.domain.model.entity.Andamento
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

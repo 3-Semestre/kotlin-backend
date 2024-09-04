@@ -2,7 +2,7 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AlterarStatus
 import grupo9.eduinovatte.application.dto.response.AndamentoHistoricoResponse
-import grupo9.eduinovatte.domain.model.Andamento
+import grupo9.eduinovatte.domain.model.entity.Andamento
 import grupo9.eduinovatte.domain.service.AndamentoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse

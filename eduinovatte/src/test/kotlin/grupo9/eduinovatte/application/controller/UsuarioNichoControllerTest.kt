@@ -1,19 +1,14 @@
 package grupo9.eduinovatte.application.controller
 
 import com.example.demo.builder.NichoBuilder
-import grupo9.eduinovatte.controller.UsuarioController
 import grupo9.eduinovatte.controller.UsuarioNichoController
 import grupo9.eduinovatte.controller.UsuarioNichoService
-import grupo9.eduinovatte.domain.service.UsuarioNivelInglesService
-import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.UsuarioBuilder
-import grupo9.eduinovatte.model.UsuarioNicho
-import grupo9.eduinovatte.service.UsuarioRepository
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito
 import org.mockito.Mockito.doNothing

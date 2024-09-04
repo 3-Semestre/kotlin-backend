@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.application.controller
 
 import com.example.demo.builder.NivelInglesBuilder
-import grupo9.eduinovatte.domain.model.UsuarioNivelIngles
+import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.service.UsuarioNivelInglesService
 import grupo9.eduinovatte.model.UsuarioBuilder
 import org.junit.jupiter.api.Assertions.assertEquals

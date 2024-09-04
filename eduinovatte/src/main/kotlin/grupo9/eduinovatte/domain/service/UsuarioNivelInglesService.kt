@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.domain.model.UsuarioNivelIngles
+import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.repository.UsuarioNivelInglesRepository
 import org.springframework.stereotype.Service
 

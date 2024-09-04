@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.controller
 
 import com.example.demo.builder.HorarioProfessorBuilder
+import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

@@ -1,41 +1,16 @@
-package grupo9.eduinovatte.controller
+package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
-import grupo9.eduinovatte.service.UsuarioNichoRepository
-import org.springframework.stereotype.Service
 
+interface UsuarioNichoService {
 
-@Service
-class UsuarioNichoService(
-    val usuarioNichoRepository: UsuarioNichoRepository
-) {
+    fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho
 
-    fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho {
-        val usuarioNicho = usuarioNichoRepository.save(novoUsuarioNicho)
+    fun buscaPorNicho(id: Int): List<UsuarioNicho>
 
-        return usuarioNicho
-    }
+    fun buscaUsuariosNichos(): List<UsuarioNicho>
 
-    fun buscaPorNicho(id: Int): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findByNichoId(id)
+    fun buscaPorIdUsuario(id: Int): List<UsuarioNicho>
 
-        return usuarioNichos
-    }
-
-    fun buscaUsuariosNichos(): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findAll()
-
-        return usuarioNichos
-    }
-
-    fun buscaPorIdUsuario(id: Int): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findByUsuarioId(id)
-
-        return usuarioNichos
-    }
-    fun deleta(id: Int) {
-        usuarioNichoRepository.deleteById(id)
-    }
-
+    fun deleta(id: Int)
 }
-

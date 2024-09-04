@@ -2,7 +2,7 @@ package grupo9.eduinovatte.application.controller
 
 import com.example.demo.builder.NivelAcessoBuilder
 import grupo9.eduinovatte.controller.NivelAcessoController
-import grupo9.eduinovatte.domain.service.NivelAcessoService
+import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,12 +10,12 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 class NivelAcessoControllerTest {
-    lateinit var nivelAcessoService: NivelAcessoService
+    lateinit var nivelAcessoService: NivelAcessoServiceImpl
     lateinit var controller: NivelAcessoController
 
     @BeforeEach
     fun iniciar() {
-        nivelAcessoService = Mockito.mock(NivelAcessoService::class.java)
+        nivelAcessoService = Mockito.mock(NivelAcessoServiceImpl::class.java)
         controller = NivelAcessoController(nivelAcessoService)
     }
 

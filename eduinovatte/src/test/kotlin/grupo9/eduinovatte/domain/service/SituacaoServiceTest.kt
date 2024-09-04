@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import com.example.demo.builder.SituacaoBuilder
+import grupo9.eduinovatte.domain.service.impl.SituacaoServiceImpl
 import grupo9.eduinovatte.service.SituacaoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -12,12 +13,12 @@ import java.util.*
 
 class SituacaoServiceTest {
     lateinit var situacaoRepository: SituacaoRepository
-    lateinit var service: SituacaoService
+    lateinit var service: SituacaoServiceImpl
 
     @BeforeEach
     fun iniciar() {
         situacaoRepository = Mockito.mock(SituacaoRepository::class.java)
-        service = SituacaoService(situacaoRepository)
+        service = SituacaoServiceImpl(situacaoRepository)
     }
 
     @Test

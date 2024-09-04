@@ -2,6 +2,7 @@ package grupo9.eduinovatte.controller
 
 import com.example.demo.builder.HorarioProfessorBuilder
 import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
+import grupo9.eduinovatte.domain.service.impl.HorarioProfessorServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,12 +17,12 @@ import org.springframework.web.server.ResponseStatusException
 class HorarioProfessorServiceTest {
 
     lateinit var horarioProfessorRepository: HorarioProfessorRepository
-    lateinit var service: HorarioProfessorService
+    lateinit var service: HorarioProfessorServiceImpl
 
     @BeforeEach
     fun iniciar() {
         horarioProfessorRepository = Mockito.mock(HorarioProfessorRepository::class.java)
-        service = HorarioProfessorService(horarioProfessorRepository)
+        service = HorarioProfessorServiceImpl(horarioProfessorRepository)
     }
 
     @Test

@@ -1,14 +1,13 @@
 package grupo9.eduinovatte.domain.service.impl
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.controller.HorarioProfessorService
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.Situacao
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.service.NivelAcessoService
+import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
@@ -22,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class UsuarioServiceImpl(
     val usuarioRepository: UsuarioRepository,
-    val nivelAcessoService: NivelAcessoService,
+    val nivelAcessoService: NivelAcessoServiceImpl,
     val situacaoService: SituacaoService,
     val horarioProfessorService: HorarioProfessorService
 ): UsuarioService {

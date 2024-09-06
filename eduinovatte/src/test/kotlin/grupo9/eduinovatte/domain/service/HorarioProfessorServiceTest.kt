@@ -54,7 +54,7 @@ class HorarioProfessorServiceTest {
         try {
             service.edita(horarioProfessor)
         } catch (ex: ResponseStatusException) {
-            assertEquals(HttpStatus.NO_CONTENT, ex.statusCode)
+            assertEquals(HttpStatus.NOT_FOUND, ex.statusCode)
         }
     }
 

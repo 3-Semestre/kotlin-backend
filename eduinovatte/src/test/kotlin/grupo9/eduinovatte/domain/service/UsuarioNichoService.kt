@@ -83,12 +83,4 @@ class UsuarioNichoServiceImplTest {
         verify(usuarioNichoRepository, times(1)).findByUsuarioId(1)
     }
 
-    @Test
-    fun `deleta deve chamar repositorio para deletar usuario nicho`() {
-        doNothing().`when`(usuarioNichoRepository).deleteById(1)
-
-        usuarioNichoService.deleta(1)
-
-        verify(usuarioNichoRepository, times(1)).deleteById(1)
-    }
 }

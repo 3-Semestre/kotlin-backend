@@ -61,45 +61,6 @@ class UsuarioServiceImplTest {
         assertEquals(usuarioResponseEsperado, resultado)
     }
 
-    @Test
-    fun `validaSituacao should throw ResponseStatusException when situacao is INATIVO`() {
-        val situacao = Situacao(id = 1, nome = SituacaoNome.INATIVO)
-        `when`(situacaoService.buscaPorId(1)).thenReturn(situacao)
-
-        val exception = assertThrows(ResponseStatusException::class.java) {
-            service.validaSituacao(1)
-        }
-
-        assertEquals(401, exception.statusCode.value())
-    }
-
-    @Test
-    fun `validaSituacao should not throw when situacao is not INATIVO`() {
-        val situacao = Situacao(id = 1, nome = SituacaoNome.ATIVO)
-        `when`(situacaoService.buscaPorId(1)).thenReturn(situacao)
-
-        service.validaSituacao(1)
-    }
-
-    @Test
-    fun `validaNivelAcesso should throw ResponseStatusException when nivelAcesso is not expected`() {
-        val nivelAcesso = NivelAcesso(id = 1, nome = NivelAcessoNome.ALUNO)
-        `when`(nivelAcessoService.buscaPorId(anyInt())).thenReturn(nivelAcesso)
-
-        val exception = assertThrows(ResponseStatusException::class.java) {
-            service.validaNivelAcesso(1, NivelAcessoNome.PROFESSOR_AUXILIAR)
-        }
-
-        assertEquals(401, exception.statusCode.value())
-    }
-
-    @Test
-    fun `validaNivelAcesso should not throw when nivelAcesso is expected`() {
-        val nivelAcesso = NivelAcesso(id = 1, nome = NivelAcessoNome.PROFESSOR_AUXILIAR)
-        `when`(nivelAcessoService.buscaPorId(anyInt())).thenReturn(nivelAcesso)
-
-        service.validaNivelAcesso(1, NivelAcessoNome.PROFESSOR_AUXILIAR)
-    }
 
     @Test
     fun `buscaUsuarios should return list of UsuarioResponse when users exist`() {

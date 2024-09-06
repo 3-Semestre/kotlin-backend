@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.domain.service
 
+import grupo9.eduinovatte.domain.model.Permissao
 import grupo9.eduinovatte.domain.model.entity.Situacao
 
-interface SituacaoService {
+interface SituacaoService: Permissao {
 
+    override fun validaPermissao(id: Int, condicao: String): Boolean
     fun buscaSituacoes(): List<Situacao>
 
     fun buscaPorId(id: Int): Situacao

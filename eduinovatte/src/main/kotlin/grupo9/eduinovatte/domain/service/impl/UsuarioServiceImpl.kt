@@ -35,23 +35,6 @@ class UsuarioServiceImpl(
         return retornaUsuario(usuarioRepository.findById(id).get())
     }
 
-    override fun validaSituacao(id: Int?) {
-        val situacao = buscaSituacao(id)
-
-        if (situacao?.nome == SituacaoNome.INATIVO) {
-            throw ResponseStatusException(HttpStatusCode.valueOf(401))
-        }
-
-    }
-
-    override fun validaNivelAcesso(id: Int?, tipoAcesso: NivelAcessoNome?) {
-        val nivelAcesso = buscaNivelAcesso(id!!)
-
-        if (nivelAcesso.nome !== tipoAcesso) {
-            throw ResponseStatusException(HttpStatusCode.valueOf(401))
-        }
-
-    }
 
     override fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse> {
         val usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)

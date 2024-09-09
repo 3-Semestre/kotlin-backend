@@ -1,9 +1,8 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.domain.model.Permissao
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 
-interface NivelAcessoService: Permissao {
+interface NivelAcessoService: PermissaoService {
 
     override fun validaPermissao(id: Int, condicao: String): Boolean
     fun buscaNiveisAcesso(): List<NivelAcesso>

@@ -1,9 +1,7 @@
 package grupo9.eduinovatte.domain.service.impl
 
-import grupo9.eduinovatte.domain.model.Permissao
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.service.NivelAcessoService
-import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service

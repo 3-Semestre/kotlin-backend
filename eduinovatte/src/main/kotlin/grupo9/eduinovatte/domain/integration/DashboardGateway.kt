@@ -18,55 +18,57 @@ interface DashboardGateway {
     abstract fun buscaUsuarioNovoPorAno(@PathVariable tipo: String): List<UsuarioResponse>
 
 
-    @GetMapping("/dashboard/ultimos-3-agendamentos-professor")
-    fun buscarProximos3AgendamentosProfessor(): List<AgendamentoAlunoProjection>
+    @GetMapping("/ultimos-3-agendamentos-professor/{id}")
+    fun buscarProximos3AgendamentosProfessor(@PathVariable("id") id: Int): List<AgendamentoAlunoProjection>
 
-    @GetMapping("/dashboard/qtd-agendamento-mes-professor")
-    fun qtdAgendamentoMes(): Int
+    @GetMapping("/qtd-agendamento-mes-professor/{id}")
+    fun qtdAgendamentoMes(@PathVariable("id") id: Int): Int
 
-    @GetMapping("/dashboard/tempo-confirmacao")
+    @GetMapping("/tempo-confirmacao")
     fun tempoConfirmacao(): Int
 
-    @GetMapping("/dashboard/qtd-novos-alunos-mes")
+    @GetMapping("/qtd-novos-alunos-mes")
     fun qtdNovosAlunosMes(): Int
 
-    @GetMapping("/dashboard/qtd-cancelamento-alunos")
+    @GetMapping("/qtd-cancelamento-alunos")
     fun qtdCancelamentoMes(): Int
 
-    @GetMapping("/dashboard/qtd-conclusao")
+    @GetMapping("/qtd-conclusao")
     fun qtdConclusaoOuNao(): List<AgendamentoConclusaoOuNaoProjection>
 
-    @GetMapping("/dashboard/taxa-cancelamento")
+    @GetMapping("/taxa-cancelamento")
     fun taxaCancelamento(): Float
 
-    @GetMapping("/dashboard/proximos-agendamentos-professor")
-    fun proximosAgendamentos(): List<AgendamentoProximosProjection>
+    @GetMapping("/proximos-agendamentos-professor/{id}")
+    fun proximosAgendamentos(@PathVariable("id") id: Int): List<AgendamentoProximosProjection>
 
-    @GetMapping("/dashboard/agendamentos-passados-professor")
-    fun agendamentosPassados(): List<AgendamentoProximosProjection>
+    @GetMapping("/proximos-agendamentos-aluno/{id}")
+    fun proximosAgendamentosAluno(@PathVariable("id") id: Int): List<AgendamentoProximosProjection>
+    @GetMapping("/agendamentos-passados-professor/{id}")
+    fun agendamentosPassados(@PathVariable("id") id: Int): List<AgendamentoProximosProjection>
 
-    @GetMapping("/dashboard/todos-professores")
+    @GetMapping("/todos-professores")
     fun todosProfessores(): List<UsuarioResponse>
 
-    @GetMapping("/dashboard/todos-alunos")
+    @GetMapping("/todos-alunos")
     fun todosAlunos(): List<UsuarioResponse>
 
-    @GetMapping("/dashboard/ultimos-3-agendamentos-aluno")
-    fun buscarProximos3AgendamentosAluno(): List<AgendamentoAlunoProjection>
+    @GetMapping("/ultimos-3-agendamentos-aluno/{id}")
+    fun buscarProximos3AgendamentosAluno(@PathVariable("id") id: Int): List<AgendamentoAlunoProjection>
 
-    @GetMapping("/dashboard/visao-mes-aluno")
-    fun visaoPorMes(): List<AgendamentoVisaoRepository>
+    @GetMapping("/visao-mes-aluno/{id}")
+    fun visaoPorMes(@PathVariable("id") id: Int): List<AgendamentoVisaoRepository>
 
-    @GetMapping("/dashboard/top-3-meses-aluno")
-    fun top3MesesAluno(): List<AgendamentoVisaoRepository>
+    @GetMapping("/top-3-meses-aluno/{id}")
+    fun top3MesesAluno(@PathVariable("id") id: Int): List<AgendamentoVisaoRepository>
 
-    @GetMapping("/dashboard/listagem-agendamento-aluno")
+    @GetMapping("/listagem-agendamento-aluno")
     fun buscarListaAgendamentoAluno(): List<Andamento>
 
-    @GetMapping("/dashboard/historico-agendamento-aluno")
+    @GetMapping("/historico-agendamento-aluno")
     fun listaHistoricoAgendamentoAluno(): List<Andamento>
 
-    @GetMapping("/dashboard/agendamentos-passados-aluno")
-    fun listaAulasRealizadasAluno(): List<AgendamentoProximosProjection>
+    @GetMapping("/agendamentos-passados/{id}")
+    fun listaAulasRealizadasAluno(@PathVariable("id") id: Int): List<AgendamentoProximosProjection>
 
 }

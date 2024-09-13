@@ -171,7 +171,7 @@ class DashboardController(
     }
 
     @CrossOrigin
-    @GetMapping("/top-3-meses-aluno")
+    @GetMapping("/top-3-meses-aluno/{id}")
     fun top3MesesAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>>{
         val usuarioNicho = agendamentoService.buscarTop3MesesAluno(id)
 

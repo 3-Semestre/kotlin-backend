@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.infraestructure.security
 
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.service.UsuarioRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -32,7 +32,7 @@ class SecurityFilter : OncePerRequestFilter() {
         val login = tokenService!!.validateToken(token)
 
         if (login != null) {
-            val user: Usuario = userRepository!!.findByCpf(login).get()
+            val user: Usuario = userRepository!!.findByCpf(login).get();
             val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
             val authentication = UsernamePasswordAuthenticationToken(user, null, authorities)
             SecurityContextHolder.getContext().authentication = authentication

@@ -100,24 +100,32 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
     @CrossOrigin
-    @GetMapping("/proximos-agendamentos-professor")
-    fun proximosAgendamentos(): ResponseEntity<List<AgendamentoProximosProjection>>{
-        val proximosAgendamentos = agendamentoService.proximosAgendamentos()
-
-        return ResponseEntity.status(200).body(proximosAgendamentos)
-    }
-    @CrossOrigin
-    @GetMapping("/agendamentos-passados-professor")
-    fun agendamentosPassados(): ResponseEntity<List<AgendamentoProximosProjection>>{
-        val proximosAgendamentos = agendamentoService.agendamentosPassados()
+    @GetMapping("/proximos-agendamentos-professor/{id}")
+    fun proximosAgendamentos(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.proximosAgendamentos(id)
 
         return ResponseEntity.status(200).body(proximosAgendamentos)
     }
 
     @CrossOrigin
-    @GetMapping("/agendamentos-passados-aluno")
-    fun agendamentosPassadosAluno(): ResponseEntity<List<AgendamentoProximosProjection>>{
-        val proximosAgendamentos = agendamentoService.agendamentosPassadosAluno()
+    @GetMapping("/proximos-agendamentos-aluno/{id}")
+    fun proximosAgendamentosAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.proximosAgendamentosAluno(id)
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+    @CrossOrigin
+    @GetMapping("/agendamentos-passados-professor/{id}")
+    fun agendamentosPassados(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.agendamentosPassados(id)
+
+        return ResponseEntity.status(200).body(proximosAgendamentos)
+    }
+
+    @CrossOrigin
+    @GetMapping("/agendamentos-passados-aluno/{id}")
+    fun agendamentosPassadosAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>>{
+        val proximosAgendamentos = agendamentoService.agendamentosPassadosAluno(id)
 
         return ResponseEntity.status(200).body(proximosAgendamentos)
     }
@@ -138,26 +146,34 @@ class DashboardController(
         return ResponseEntity.status(200).body(proximosAgendamentos)
     }
 
-
-    @GetMapping("/ultimos-3-agendamentos-aluno")
-    fun buscarProximos3AgendamentosAluno(): ResponseEntity<List<AgendamentoAlunoProjection>>{
-        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosAluno()
+    @CrossOrigin
+    @GetMapping("/ultimos-3-agendamentos-aluno/{id}")
+    fun buscarProximos3AgendamentosAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoAlunoProjection>>{
+        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosAluno(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
     @CrossOrigin
-    @GetMapping("/visao-mes-aluno")
-    fun visaoPorMes(): ResponseEntity<List<AgendamentoVisaoRepository>>{
-        val usuarioNicho = agendamentoService.visaoPorMesAluno()
+    @GetMapping("/ultimos-3-agendamentos-professor/{id}")
+    fun buscarProximos3AgendamentosProfessor(@PathVariable id: Int): ResponseEntity<List<AgendamentoAlunoProjection>>{
+        val usuarioNicho = agendamentoService.buscarUltimos3AgendamentosProfessor(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
     @CrossOrigin
-    @GetMapping("/top-3-meses-aluno")
-    fun top3MesesAluno(): ResponseEntity<List<AgendamentoVisaoRepository>>{
-        val usuarioNicho = agendamentoService.buscarTop3MesesAluno()
+    @GetMapping("/visao-mes-aluno/{id}")
+    fun visaoPorMes(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>>{
+        val usuarioNicho = agendamentoService.visaoPorMesAluno(id)
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
+    @GetMapping("/top-3-meses-aluno/{id}")
+    fun top3MesesAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>>{
+        val usuarioNicho = agendamentoService.buscarTop3MesesAluno(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }

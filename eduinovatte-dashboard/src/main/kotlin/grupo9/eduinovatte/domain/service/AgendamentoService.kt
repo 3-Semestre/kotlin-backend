@@ -59,8 +59,8 @@ class AgendamentoService(
         return agendamentoResponse
     }
 
-    fun buscarUltimos3AgendamentosProfessor(): List<AgendamentoAlunoProjection>? {
-        val agendamento = agendamentoRepository.buscarUltimos3AgendamentosProfessor()
+    fun buscarUltimos3AgendamentosProfessor(id: Int): List<AgendamentoAlunoProjection>? {
+        val agendamento = agendamentoRepository.buscarUltimos3AgendamentosProfessor(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -119,8 +119,8 @@ class AgendamentoService(
             return cancelamento;
         }
 
-    fun proximosAgendamentos(): List<AgendamentoProximosProjection>? {
-        val agendamento = agendamentoRepository.proximosAgendamentosProfessor()
+    fun proximosAgendamentos(id: Int): List<AgendamentoProximosProjection>? {
+        val agendamento = agendamentoRepository.proximosAgendamentosProfessor(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -129,8 +129,8 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun agendamentosPassados(): List<AgendamentoProximosProjection>? {
-        val agendamento = agendamentoRepository.agendamentosPassadosProfessor()
+    fun proximosAgendamentosAluno(id: Int): List<AgendamentoProximosProjection>? {
+        val agendamento = agendamentoRepository.proximosAgendamentosAluno(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -139,8 +139,8 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun agendamentosPassadosAluno(): List<AgendamentoProximosProjection>? {
-        val agendamento = agendamentoRepository.agendamentosPassadosAluno()
+    fun agendamentosPassados(id: Int): List<AgendamentoProximosProjection>? {
+        val agendamento = agendamentoRepository.agendamentosPassadosProfessor(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -149,8 +149,8 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun buscarUltimos3AgendamentosAluno(): List<AgendamentoAlunoProjection>? {
-        val agendamento = agendamentoRepository.buscarUltimos3AgendamentosAluno()
+    fun agendamentosPassadosAluno(id: Int): List<AgendamentoProximosProjection>? {
+        val agendamento = agendamentoRepository.agendamentosPassadosAluno(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -159,8 +159,18 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun visaoPorMesAluno(): List<AgendamentoVisaoRepository>? {
-        val agendamento = agendamentoRepository.buscarVisaoPorMesAluno()
+    fun buscarUltimos3AgendamentosAluno(id: Int): List<AgendamentoAlunoProjection>? {
+        val agendamento = agendamentoRepository.buscarUltimos3AgendamentosAluno(id)
+
+        if (agendamento!!.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun visaoPorMesAluno(id: Int): List<AgendamentoVisaoRepository>? {
+        val agendamento = agendamentoRepository.buscarVisaoPorMesAluno(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -170,8 +180,8 @@ class AgendamentoService(
 
     }
 
-    fun buscarTop3MesesAluno(): List<AgendamentoVisaoRepository>? {
-        val agendamento = agendamentoRepository.buscarTop3MesesAluno()
+    fun buscarTop3MesesAluno(id: Int): List<AgendamentoVisaoRepository>? {
+        val agendamento = agendamentoRepository.buscarTop3MesesAluno(id)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))

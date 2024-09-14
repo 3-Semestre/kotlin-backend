@@ -3,7 +3,7 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
-import grupo9.eduinovatte.model.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Agendamento
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses

@@ -1,11 +1,11 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.LoginForm
-import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.model.entity.Usuario
+import grupo9.eduinovatte.domain.service.NivelAcessoService
+import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.domain.service.UsuarioService
-import grupo9.eduinovatte.model.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -24,13 +24,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import grupo9.eduinovatte.infraestructure.security.TokenService
+import grupo9.eduinovatte.model.enums.SituacaoNome
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
     val usuarioRepository: UsuarioRepository,
     val usuarioService: UsuarioService,
-    val tokenService: TokenService
+    val tokenService: TokenService,
+    val situacaoService: SituacaoService,
+    val nivelAcessoService: NivelAcessoService
 ){
 
     @Operation(summary = "Autentique o usuário", description = "Autentique o usuário com base no tipo dele (aluno, professor ou representante legal).")
@@ -40,18 +46,15 @@ class UsuarioController(
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso")
     ])
 
- //   @PostMapping("/{tipo}/autenticar")
     @PostMapping("/autenticar")
     @CrossOrigin
     fun autenticarUsuario(
-        // @PathVariable tipo: String,
         @RequestBody loginForm: LoginForm
     ): ResponseEntity<UsuarioResponse>{
         try {
             val usuario = usuarioRepository.findByEmailOrCpfAndSenha(loginForm.email, loginForm.cpf, loginForm.senha)
-            // val tipoAcesso = retornaNivelAcessoNome(tipo)
-            usuarioService.validaSituacao(usuario.situacao?.id)
-            // usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
+            val permissao = situacaoService.validaPermissao(usuario.situacao?.id!!, SituacaoNome.ATIVO.name)
+            if(permissao == false) throw ResponseStatusException(HttpStatusCode.valueOf(401))
 
             val novoUsuario = usuarioService.autenticar(usuario.id!!)
             val token: String = tokenService.generateToken(usuario)
@@ -76,7 +79,8 @@ class UsuarioController(
         if (usuarioRepository.existsById(id)) {
             val usuarioDesautenticado = usuarioRepository.findById(id).get()
             val tipoAcesso = retornaNivelAcessoNome(tipo)
-            usuarioService.validaNivelAcesso(usuarioDesautenticado.id, tipoAcesso)
+            val permissao = nivelAcessoService.validaPermissao(usuarioDesautenticado.id!!, tipoAcesso!!.name)
+            if(permissao == false) throw ResponseStatusException(HttpStatusCode.valueOf(401))
 
             usuarioService.desautenticar(usuarioDesautenticado.id!!)
             return ResponseEntity.status(200).build()
@@ -93,10 +97,15 @@ class UsuarioController(
     @CrossOrigin
     fun buscaUsuarios(@PathVariable tipo: String): ResponseEntity<List<UsuarioResponse>>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
-        val listaProfessores = usuarioService.buscaUsuarios(tipoAcesso)
+        val listaUsuarios = usuarioService.buscaUsuarios(tipoAcesso)
 
-        return ResponseEntity.status(200).body(listaProfessores)
+        if (listaUsuarios.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.NO_CONTENT)
+        }
+
+        return ResponseEntity.status(200).body(listaUsuarios)
     }
+
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
@@ -109,7 +118,8 @@ class UsuarioController(
         @RequestBody @Valid novoUsuario: Usuario
     ): ResponseEntity<UsuarioResponse>{
         val tipoAcesso = retornaNivelAcessoNome(tipo)
-        usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
+        val permissao = nivelAcessoService.validaPermissao(novoUsuario.nivelAcesso!!.id, tipoAcesso!!.name)
+        if(permissao == false) throw ResponseStatusException(HttpStatusCode.valueOf(401))
 
         val usuarioSalvo = usuarioService.salvaUsuario(novoUsuario)
         return ResponseEntity.status(201).body(usuarioSalvo)
@@ -126,15 +136,14 @@ class UsuarioController(
     fun editaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int,
-        @RequestBody novoUsuario: Usuario):
+        @RequestBody novoUsuario: Usuario
+    ):
             ResponseEntity<UsuarioResponse> {
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
             val usuarioAntigo = usuarioRepository.findById(id).get()
 
             if(usuarioAntigo.nivelAcesso!!.id !== novoUsuario.nivelAcesso!!.id) return ResponseEntity.status(401).build()
-
-            // usuarioService.validaNivelAcesso(novoUsuario.nivelAcesso!!.id, tipoAcesso)
 
             novoUsuario.id = id
             val usuarioEditado = usuarioService.editaUsuario(novoUsuario)
@@ -148,11 +157,7 @@ class UsuarioController(
     fun deletaUsuario(
         @PathVariable tipo:String,
         @PathVariable id: Int):ResponseEntity<Void> {
-        //val tipoAcesso = retornaNivelAcessoNome(tipo)
         if (usuarioRepository.existsById(id)) {
-            //val usuario = usuarioRepository.findById(id).get()
-            //usuarioService.validaNivelAcesso(usuario.nivelAcesso!!.id, tipoAcesso)
-
             usuarioService.deletaUsuario(id)
             return ResponseEntity.status(204).build()
         }

@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.domain.model
+package grupo9.eduinovatte.domain.model.entity
 
 import grupo9.eduinovatte.domain.model.enums.StatusNome
 import jakarta.persistence.*

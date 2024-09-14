@@ -1,5 +1,7 @@
 package grupo9.eduinovatte.model
 
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import java.time.LocalDate
 

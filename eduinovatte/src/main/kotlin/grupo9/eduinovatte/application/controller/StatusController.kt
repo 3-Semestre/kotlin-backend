@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.domain.model.Status
+import grupo9.eduinovatte.domain.model.entity.Status
 import grupo9.eduinovatte.domain.service.StatusService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse

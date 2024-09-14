@@ -1,9 +1,8 @@
 package grupo9.eduinovatte.service
 
-import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository

@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.model
+package grupo9.eduinovatte.domain.model.entity
 
 import jakarta.persistence.*
 

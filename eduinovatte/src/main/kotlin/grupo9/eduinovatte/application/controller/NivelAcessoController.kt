@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.domain.service.NivelAcessoService
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/niveis-acessos")
 class NivelAcessoController (
-    val nivelAcessoService: NivelAcessoService
+    val nivelAcessoService: NivelAcessoServiceImpl
 ){
     @Operation(summary = "Busque os níveis de acesso", description = "Busque todos os níveis de acesso do sistema.")
     @ApiResponses(value = [

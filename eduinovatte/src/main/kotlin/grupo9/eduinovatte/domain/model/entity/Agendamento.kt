@@ -1,6 +1,5 @@
-package grupo9.eduinovatte.model
+package grupo9.eduinovatte.domain.model.entity
 
-import grupo9.eduinovatte.domain.model.Andamento
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalTime

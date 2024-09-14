@@ -2,10 +2,8 @@ package grupo9.eduinovatte.application.controller
 
 import feign.FeignException
 import grupo9.eduinovatte.application.dto.response.*
-import grupo9.eduinovatte.controller.UsuarioController
 import grupo9.eduinovatte.domain.integration.DashboardGateway
-import grupo9.eduinovatte.domain.model.Andamento
-import grupo9.eduinovatte.domain.service.UsuarioService
+import grupo9.eduinovatte.domain.model.entity.Andamento
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -60,10 +58,10 @@ class DashboardController (
         }
     }
     @CrossOrigin
-    @GetMapping("/ultimos-3-agendamentos-professor")
-    fun buscarProximos3AgendamentosProfessor(): ResponseEntity<List<AgendamentoAlunoProjection>?> {
+    @GetMapping("/ultimos-3-agendamentos-professor/{id}")
+    fun buscarProximos3AgendamentosProfessor(@PathVariable id: Int): ResponseEntity<List<AgendamentoAlunoProjection>?> {
         return try {
-            val qtd = dashboardGateway.buscarProximos3AgendamentosAluno()
+            val qtd = dashboardGateway.buscarProximos3AgendamentosProfessor(id)
             ResponseEntity.status(HttpStatus.OK).body(qtd)
         } catch (e: FeignException) {
                     ResponseEntity.status(e.status()).build()
@@ -72,10 +70,10 @@ class DashboardController (
             }
         }
     @CrossOrigin
-        @GetMapping("/qtd-agendamento-mes-professor")
-        fun qtdAgendamentoMes(): ResponseEntity<Int?> {
+        @GetMapping("/qtd-agendamento-mes-professor/{id}")
+        fun qtdAgendamentoMes(@PathVariable id: Int): ResponseEntity<Int?> {
             return try {
-                val qtd = dashboardGateway.qtdAgendamentoMes()
+                val qtd = dashboardGateway.qtdAgendamentoMes(id)
                 ResponseEntity.status(HttpStatus.OK).body(qtd)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -144,10 +142,10 @@ class DashboardController (
             }
         }
     @CrossOrigin
-        @GetMapping("/proximos-agendamentos-professor")
-        fun proximosAgendamentos(): ResponseEntity<List<AgendamentoProximosProjection>?> {
+        @GetMapping("/proximos-agendamentos-professor/{id}")
+        fun proximosAgendamentos(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>?> {
             return try {
-                val agendamentos = dashboardGateway.proximosAgendamentos()
+                val agendamentos = dashboardGateway.proximosAgendamentos(id)
                 ResponseEntity.status(HttpStatus.OK).body(agendamentos)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -155,11 +153,24 @@ class DashboardController (
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
             }
         }
+
     @CrossOrigin
-        @GetMapping("/agendamentos-passados-professor")
-        fun agendamentosPassados(): ResponseEntity<List<AgendamentoProximosProjection>?> {
+    @GetMapping("/proximos-agendamentos-aluno/{id}")
+    fun proximosAgendamentosAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>?> {
+        return try {
+            val agendamentos = dashboardGateway.proximosAgendamentosAluno(id)
+            ResponseEntity.status(HttpStatus.OK).body(agendamentos)
+        } catch (e: FeignException) {
+            ResponseEntity.status(e.status()).build()
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
+        }
+    }
+    @CrossOrigin
+        @GetMapping("/agendamentos-passados-professor/{id}")
+        fun agendamentosPassados(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>?> {
             return try {
-                val agendamentos = dashboardGateway.agendamentosPassados()
+                val agendamentos = dashboardGateway.agendamentosPassados(id)
                 ResponseEntity.status(HttpStatus.OK).body(agendamentos)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -192,10 +203,10 @@ class DashboardController (
             }
         }
         @CrossOrigin
-        @GetMapping("/ultimos-3-agendamentos-aluno")
-        fun buscarProximos3AgendamentosAluno(): ResponseEntity<List<AgendamentoAlunoProjection>?> {
+        @GetMapping("/ultimos-3-agendamentos-aluno/{id}")
+        fun buscarProximos3AgendamentosAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoAlunoProjection>?> {
             return try {
-                val agendamentos = dashboardGateway.buscarProximos3AgendamentosAluno()
+                val agendamentos = dashboardGateway.buscarProximos3AgendamentosAluno(id)
                 ResponseEntity.status(HttpStatus.OK).body(agendamentos)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -204,10 +215,10 @@ class DashboardController (
             }
         }
     @CrossOrigin
-        @GetMapping("/visao-mes-aluno")
-        fun visaoPorMes(): ResponseEntity<List<AgendamentoVisaoRepository>?> {
+        @GetMapping("/visao-mes-aluno/{id}")
+        fun visaoPorMes(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>?> {
             return try {
-                val visao = dashboardGateway.visaoPorMes()
+                val visao = dashboardGateway.visaoPorMes(id)
                 ResponseEntity.status(HttpStatus.OK).body(visao)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -216,10 +227,10 @@ class DashboardController (
             }
         }
         @CrossOrigin
-        @GetMapping("/top-3-meses-aluno")
-        fun top3MesesAluno(): ResponseEntity<List<AgendamentoVisaoRepository>?> {
+        @GetMapping("/top-3-meses-aluno/{id}")
+        fun top3MesesAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>?> {
             return try {
-                val meses = dashboardGateway.top3MesesAluno()
+                val meses = dashboardGateway.top3MesesAluno(id)
                 ResponseEntity.status(HttpStatus.OK).body(meses)
             } catch (e: FeignException) {
                 ResponseEntity.status(e.status()).build()
@@ -241,10 +252,10 @@ class DashboardController (
         }
 
     @CrossOrigin
-    @GetMapping("/agendamentos-passados-aluno")
-    fun buscarAulasRealizadasAluno(): ResponseEntity<List<AgendamentoProximosProjection>?> {
+    @GetMapping("/agendamentos-passados-aluno/{id}")
+    fun buscarAulasRealizadasAluno(@PathVariable id: Int): ResponseEntity<List<AgendamentoProximosProjection>?> {
         return try {
-            val lista = dashboardGateway.listaAulasRealizadasAluno()
+            val lista = dashboardGateway.listaAulasRealizadasAluno(id)
             ResponseEntity.status(HttpStatus.OK).body(lista)
         } catch (e: FeignException) {
             ResponseEntity.status(e.status()).build()

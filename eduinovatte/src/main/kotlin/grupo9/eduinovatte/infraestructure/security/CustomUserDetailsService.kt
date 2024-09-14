@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.infraestructure.security
 
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User

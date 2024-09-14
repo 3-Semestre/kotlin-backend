@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.domain.service.impl
 
+import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
@@ -120,4 +121,11 @@ class UsuarioServiceImpl(
         return perfil;
     }
 
+    override fun filtrarAluno(filtro: FiltroForm): List<Usuario>? {
+        return usuarioRepository.filtrarUsuario(filtro.nome, filtro.cpf, filtro.nicho, filtro.nivelIngles, 1)
+    }
+
+    override fun filtrarProfessor(filtro: FiltroForm): List<Usuario>? {
+        return usuarioRepository.filtrarUsuario(filtro.nome, filtro.cpf, filtro.nicho, filtro.nivelIngles, 2)
+    }
 }

@@ -1,7 +1,10 @@
 package grupo9.eduinovatte.domain.service.impl
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
+import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.domain.service.AgendamentoService
@@ -9,6 +12,8 @@ import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Service
 class AgendamentoServiceImpl(
@@ -55,5 +60,14 @@ class AgendamentoServiceImpl(
         andamentoService.salvarHistorico(agendamento)
 
         return retornaAgendamento(agendamento)
+    }
+
+
+    override fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>? {
+        return agendamentoRepository.filtrarAluno(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
+    }
+
+    override fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>? {
+        return agendamentoRepository.filtrarProfessor(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
     }
 }

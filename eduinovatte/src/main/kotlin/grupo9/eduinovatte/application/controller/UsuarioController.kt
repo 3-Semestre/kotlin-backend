@@ -1,5 +1,7 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
+import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
@@ -209,6 +211,18 @@ class UsuarioController(
         }
 
         return ResponseEntity.status(200).body(perfil)
+    }
+    @CrossOrigin
+    @PostMapping("/filtro/{tipo}")
+    fun filtraUsuario(@PathVariable tipo: String, @RequestBody filtro: FiltroForm): ResponseEntity<List<Usuario>>{
+        val lista = when (tipo) {
+            "aluno" -> usuarioService.filtrarAluno(filtro)
+            "professor" -> usuarioService.filtrarProfessor(filtro)
+            "professor_auxiliar" -> usuarioService.filtrarProfessor(filtro)
+            else -> return ResponseEntity.status(401).build()
+        }
+
+        return ResponseEntity.status(200).body(lista)
     }
 
 }

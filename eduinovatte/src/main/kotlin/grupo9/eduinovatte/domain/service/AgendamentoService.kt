@@ -1,7 +1,10 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
+import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Usuario
 
 interface AgendamentoService {
 
@@ -16,4 +19,7 @@ interface AgendamentoService {
     fun buscaAgendamentosUsuario(tipo: Int, id: Int): List<Agendamento?>
 
     fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro
+
+    fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>?
+    fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>?
 }

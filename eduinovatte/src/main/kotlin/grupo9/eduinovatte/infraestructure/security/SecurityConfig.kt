@@ -31,7 +31,8 @@ class SecurityConfig{
         "/usuarios/autenticar",
         "/swagger-ui/**",
         "/v3/api-docs/**",
-        "/usuarios/**"
+        "/usuarios/**",
+        "agendamento/**"
     )
 
     @Bean

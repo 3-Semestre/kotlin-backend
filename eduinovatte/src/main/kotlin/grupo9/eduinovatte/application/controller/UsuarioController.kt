@@ -80,7 +80,7 @@ class UsuarioController(
             val usuarioDesautenticado = usuarioRepository.findById(id).get()
             val tipoAcesso = retornaNivelAcessoNome(tipo)
             val permissao = nivelAcessoService.validaPermissao(usuarioDesautenticado.id!!, tipoAcesso!!.name)
-            if(permissao == false) throw ResponseStatusException(HttpStatusCode.valueOf(401))
+            if(!permissao) throw ResponseStatusException(HttpStatusCode.valueOf(401))
 
             usuarioService.desautenticar(usuarioDesautenticado.id!!)
             return ResponseEntity.status(200).build()

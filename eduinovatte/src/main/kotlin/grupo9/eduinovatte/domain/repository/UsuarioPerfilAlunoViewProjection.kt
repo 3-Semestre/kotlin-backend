@@ -10,4 +10,6 @@ interface UsuarioPerfilAlunoViewProjection {
     fun getTelefone(): String;
     fun getSenha(): String;
     fun getNivel_acesso_id(): Long;
+    fun getNichos(): String;
+    fun getNiveis_Ingles(): String;
 }

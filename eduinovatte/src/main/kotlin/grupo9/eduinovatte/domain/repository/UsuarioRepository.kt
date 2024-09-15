@@ -37,10 +37,10 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     @Query("update Usuario u set u.situacao.id = 2 where u.id = :id")
     fun desativar(id: Int?): Int
 
-    @Query(value = "SELECT * FROM perfil WHERE id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM perfil_professor WHERE id = :id", nativeQuery = true)
     fun exibirPerfil(@Param("id") id: Int): UsuarioPerfilViewProjection?
 
-    @Query(value = "SELECT * FROM perfil_aluno WHERE id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM perfil WHERE id = :id", nativeQuery = true)
     fun exibirPerfilAluno(@Param("id") id: Int): UsuarioPerfilAlunoViewProjection?
 
     @Query("""

@@ -5,7 +5,6 @@ import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.model.entity.Agendamento
-import grupo9.eduinovatte.domain.model.entity.Usuario
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -17,6 +16,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @RestController
 @RequestMapping("/agendamento")
@@ -33,7 +34,7 @@ class AgendamentoController(
         return dto
     }
 
-    @Operation(summary = "Busque todos os agendamentos", description = "Busque todos os agendamentos de um aluno.")
+    @Operation(summary = "Busque agendamentos por usuario", description = "Busque todos os agendamentos de um determinado usuario.")
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Agendamentos encontrados"),
@@ -46,7 +47,7 @@ class AgendamentoController(
         @PathVariable tipo: Int,
         @PathVariable id: Int,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "7") size: Int,
         @RequestParam(defaultValue = "desc") sortDirection: String
     ): ResponseEntity<Page<AgendamentoListagemResponse>> {
         // Define a direção do sort (ascendente ou descendente)
@@ -80,6 +81,23 @@ class AgendamentoController(
 
         return ResponseEntity.status(201).body(agendamentoSalvo)
     }
+
+    @GetMapping("/{id}")
+    fun buscaAgendamentoPorId(
+        @PathVariable id: Int,
+    ): ResponseEntity<Optional<AgendamentoListagemResponse>> {
+        val agendamento = agendamentoService.buscaAgendamentoPorId(id)
+
+        return if (!agendamento.isEmpty) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        } else {
+            val dto = agendamento.map {
+                mapper.map(it, AgendamentoListagemResponse::class.java)
+            }
+            ResponseEntity.ok(dto)
+        }
+    }
+
 
     @CrossOrigin
     @PostMapping("/filtro/{tipo}/{id}")

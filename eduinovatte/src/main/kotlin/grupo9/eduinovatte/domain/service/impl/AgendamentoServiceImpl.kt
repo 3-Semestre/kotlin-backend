@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 @Service
 class AgendamentoServiceImpl(
@@ -40,8 +41,8 @@ class AgendamentoServiceImpl(
         return agendamentoRepository.findAll()
     }
 
-    override fun buscaAgendamentoPorId(id: Int): Agendamento {
-        return agendamentoRepository.findById(id).get()
+    override fun buscaAgendamentoPorId(id: Int): Optional<Agendamento> {
+        return agendamentoRepository.findById(id)
     }
 
     override fun buscaAgendamentosUsuario(tipo: Int, id: Int, pageable: Pageable): Page<Agendamento> {

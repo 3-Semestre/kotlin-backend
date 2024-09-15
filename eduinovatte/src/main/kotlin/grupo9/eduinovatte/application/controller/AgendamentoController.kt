@@ -65,8 +65,6 @@ class AgendamentoController(
         }
     }
 
-
-
     @Operation(summary = "Salve um agendamentos", description = "Salve um novo agendamentos no sistema.")
     @ApiResponses(
         value = [

@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.model.entity.Agendamento
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -77,6 +79,19 @@ class AgendamentoController(
         val agendamentoSalvo = agendamentoService.salvarAgendamento(novoAgendamento)
 
         return ResponseEntity.status(201).body(agendamentoSalvo)
+    }
+
+    @CrossOrigin
+    @PostMapping("/filtro/{tipo}/{id}")
+    fun filtroAgendamento(@PathVariable tipo: String, @RequestBody filtro: FiltroAgendamentoForm, @PathVariable id: Int): ResponseEntity<List<Agendamento>>{
+        val lista = when (tipo) {
+            "aluno" -> agendamentoService.filtrarAluno(filtro, id)
+            "professor" -> agendamentoService.filtrarProfessor(filtro, id)
+            "professor_auxiliar" -> agendamentoService.filtrarProfessor(filtro, id)
+            else -> return ResponseEntity.status(401).build()
+        }
+
+        return ResponseEntity.status(200).body(lista)
     }
 
 }

@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.domain.service
 
+import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
@@ -23,4 +24,6 @@ interface UsuarioService {
     fun buscaSituacao(id: Int?): Situacao?
     fun exibirPerfil(id: Int): UsuarioPerfilViewProjection?
     fun exibirPerfilAluno(id: Int): UsuarioPerfilAlunoViewProjection?
+    fun filtrarAluno(filtro: FiltroForm): List<Usuario>?
+    fun filtrarProfessor(filtro: FiltroForm): List<Usuario>?
 }

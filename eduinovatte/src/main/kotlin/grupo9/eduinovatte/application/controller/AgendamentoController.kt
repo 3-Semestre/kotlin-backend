@@ -63,7 +63,7 @@ class AgendamentoController (
 
     @CrossOrigin
     @PostMapping("/filtro/{tipo}/{id}")
-    fun filtroAgendamento(@PathVariable tipo: String, @RequestBody filtro: FiltroAgendamentoForm, @PathVariable id: Int): ResponseEntity<List<Agendamento>>{
+    fun filtroAgendamento(@PathVariable tipo: String, @RequestBody filtro: FiltroAgendamentoForm, @PathVariable id: Int): ResponseEntity<List<AgendamentoListagemResponse>>{
         val lista = when (tipo) {
             "aluno" -> agendamentoService.filtrarAluno(filtro, id)
             "professor" -> agendamentoService.filtrarProfessor(filtro, id)
@@ -71,7 +71,9 @@ class AgendamentoController (
             else -> return ResponseEntity.status(401).build()
         }
 
-        return ResponseEntity.status(200).body(lista)
+        var listaAgendamentos = retornaAgendamentos(lista)
+
+        return ResponseEntity.status(200).body(listaAgendamentos)
     }
 
 }

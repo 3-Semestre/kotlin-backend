@@ -10,5 +10,6 @@ data class FiltroAgendamentoForm (
     val data_inicio: LocalDate?,
     val data_fim: LocalDate?,
     val horario_inicio: LocalTime?,
-    val horario_fim: LocalTime?
+    val horario_fim: LocalTime?,
+    val assunto: String?
 )

@@ -53,10 +53,7 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
       AND (:cpf IS NULL OR u.cpf = :cpf)
       AND (:nicho IS NULL OR n.nome = :nicho)
       AND (:nivelIngles IS NULL OR ni.nome = :nivelIngles)
-      AND (
-          (:nivelAcesso <> 2 AND u.nivelAcesso.id = :nivelAcesso)
-          OR (:nivelAcesso = 2 AND u.nivelAcesso.id IN (2, 3))
-      )
+      AND (u.nivelAcesso.id = :nivelAcesso)
 """)
     fun filtrarUsuario(nome: String?, cpf: String?, nicho: NichoNome?, nivelIngles: NivelInglesNome?, nivelAcesso: Int): List<Usuario>?
 }

@@ -20,6 +20,6 @@ interface AgendamentoService {
 
     fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro
 
-    fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>?
-    fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento>?
+    fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
+    fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
 }

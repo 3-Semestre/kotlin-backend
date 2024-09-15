@@ -1,7 +1,7 @@
 package grupo9.eduinovatte.service
 
-import grupo9.eduinovatte.application.dto.request.FiltroForm
-import grupo9.eduinovatte.domain.model.entity.NivelAcesso
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.model.entity.Usuario
@@ -42,6 +42,12 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
 
     @Query(value = "SELECT * FROM perfil WHERE id = :id", nativeQuery = true)
     fun exibirPerfilAluno(@Param("id") id: Int): UsuarioPerfilAlunoViewProjection?
+
+    @Query(value = "SELECT * FROM perfil_professor", nativeQuery = true)
+    fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?>
+
+    @Query(value = "SELECT * FROM perfil", nativeQuery = true)
+    fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
 
     @Query("""
     SELECT u FROM Usuario u

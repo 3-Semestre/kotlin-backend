@@ -2,12 +2,14 @@ package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.Situacao
 import grupo9.eduinovatte.domain.model.entity.Usuario
+import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
+import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 interface UsuarioService {
     fun autenticar(id: Int): UsuarioResponse
@@ -26,4 +28,6 @@ interface UsuarioService {
     fun exibirPerfilAluno(id: Int): UsuarioPerfilAlunoViewProjection?
     fun filtrarAluno(filtro: FiltroForm): List<Usuario>?
     fun filtrarProfessor(filtro: FiltroForm): List<Usuario>?
+    fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
+    fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?>
 }

@@ -13,7 +13,6 @@ import java.time.LocalDate
 data class Usuario(
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     var id: Int? = null,
 
     @field:NotNull

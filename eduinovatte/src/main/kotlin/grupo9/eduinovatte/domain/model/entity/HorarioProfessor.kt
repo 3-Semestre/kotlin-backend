@@ -5,6 +5,8 @@ import grupo9.eduinovatte.domain.model.AbstractUsuario
 import grupo9.eduinovatte.domain.model.Professor
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.time.LocalTime
 
 @Entity
@@ -24,6 +26,7 @@ data class HorarioProfessor(
     @field:NotNull
     @field:JsonFormat(pattern = "HH:mm:ss")
     var pausaFim: LocalTime = LocalTime.of(13, 0, 0),
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @field:ManyToOne
     val usuario: Usuario
 ){

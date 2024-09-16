@@ -30,7 +30,6 @@ data class Agendamento (
     @OnDelete(action = OnDeleteAction.CASCADE)
     var aluno: Usuario?,
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "agendamento", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "agendamento")
     var historico: List<Andamento>?
 )

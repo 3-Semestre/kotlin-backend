@@ -12,6 +12,8 @@ interface AndamentoService {
 
     fun buscaHistoricoPorId(id: Int): Andamento
 
+    fun buscaHistoricoPorIdAgendamento(id: Int): List<Andamento>
+
     fun salvarHistorico(agendamento: Agendamento): Andamento
 
     fun mudarHistorico(novoHistoricoRequest: AlterarStatus): Andamento

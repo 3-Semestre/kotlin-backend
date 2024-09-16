@@ -8,5 +8,4 @@ data class AndamentoHistoricoResponse (
     var dataAtualizacao: LocalDateTime? = null,
     var status: Status? = null,
     var agendamento: AgendamentoSemStatus? = null
-
 )

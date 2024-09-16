@@ -38,6 +38,10 @@ class AndamentoServiceImpl(
         }
     }
 
+    override fun buscaHistoricoPorIdAgendamento(id: Int): List<Andamento> {
+        return andamentoRepository.findByAgendamentoIdOrderByDataAtualizacaoDesc(id)
+    }
+
     override fun salvarHistorico(agendamento: Agendamento): Andamento {
         val novoHistorico = Andamento().apply {
             dataAtualizacao = LocalDateTime.now()

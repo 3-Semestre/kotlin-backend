@@ -18,6 +18,19 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query("SELECT a FROM Agendamento a JOIN FETCH a.historico WHERE a.professor.id = :userId")
     fun findAgendamentosByFkProfessor(userId: Int, pageable: Pageable): Page<Agendamento>
 
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(1, status_list) AND NOT FIND_IN_SET(2, status_list) AND fk_aluno = :userId", nativeQuery = true)
+    fun findAgendamentosPassadosByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(3, status_list) AND NOT FIND_IN_SET(4, status_list) AND fk_aluno = :userId", nativeQuery = true)
+    fun findAgendamentosFuturoByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(1, status_list) AND NOT FIND_IN_SET(2, status_list) AND fk_professor = :userId", nativeQuery = true)
+    fun findAgendamentosPassadosByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(4, status_list) AND NOT FIND_IN_SET(3, status_list) AND fk_professor = :userId", nativeQuery = true)
+    fun findAgendamentosFuturoByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+
+
     @Query("""
     SELECT a FROM Agendamento a
     JOIN Usuario u ON a.aluno.id = :id

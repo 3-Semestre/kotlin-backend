@@ -7,6 +7,8 @@ interface AgendamentosDetalhesListagemResponse {
     fun getHorario_Fim(): String;
     fun getAssunto(): String;
     fun getFk_Professor(): Int;
+    fun getNome_Professor(): String;
     fun getFk_Aluno(): Int;
+    fun getNome_Aluno(): String;
     fun getStatus_List(): String;
 }

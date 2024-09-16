@@ -12,12 +12,13 @@ import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.model.enums.SituacaoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 @Service
 class UsuarioServiceImpl(
@@ -119,6 +120,18 @@ class UsuarioServiceImpl(
             }
         }
         return perfil;
+    }
+
+    override fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?> {
+        val professores = usuarioRepository.exibirProfessores(pageable);
+
+        return professores;
+    }
+
+    override fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?> {
+        val alunos = usuarioRepository.exibirAlunos(pageable);
+
+        return alunos;
     }
 
     override fun filtrarAluno(filtro: FiltroForm): List<Usuario>? {

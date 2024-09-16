@@ -27,6 +27,14 @@ class SecurityConfig{
     @Autowired
     private val autenticacaoJwtEntryPoint: AutenticacaoJwtEntryPoint? = null
 
+    val URL_PERMITIDAS = arrayOf(
+        "/usuarios/autenticar",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/usuarios/**",
+        "agendamento/**"
+    )
+
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -37,6 +45,7 @@ class SecurityConfig{
                 it
                     .requestMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers(*URL_PERMITIDAS).permitAll()
                     .anyRequest().authenticated()
             }.exceptionHandling { handling ->
                 handling.authenticationEntryPoint(autenticacaoJwtEntryPoint)

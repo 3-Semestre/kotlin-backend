@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import grupo9.eduinovatte.model.enums.SituacaoNome
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.validator.constraints.br.CPF
 import java.time.LocalDate
 
 @Entity
-data class Usuario (
+data class Usuario(
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id:Int? = null,
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    var id: Int? = null,
 
     @field:NotNull
     val nomeCompleto: String?,
@@ -39,11 +42,13 @@ data class Usuario (
 
     val senha: String?,
 
-    val profissao :String?,
+    val profissao: String?,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @field:ManyToOne
     val nivelAcesso: NivelAcesso?,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @field:ManyToOne
-    val situacao: Situacao? = Situacao(id = 1, SituacaoNome.ATIVO)
+    val situacao: Situacao? = Situacao(id = 1, SituacaoNome.ATIVO),
 )

@@ -1,6 +1,8 @@
 package grupo9.eduinovatte.domain.model.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -20,12 +22,15 @@ data class Agendamento (
 
     @ManyToOne
     @JoinColumn(name = "fk_professor")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     var professor: Usuario?,
 
     @ManyToOne
     @JoinColumn(name = "fk_aluno")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     var aluno: Usuario?,
 
-    @OneToMany(mappedBy = "agendamento")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "agendamento", cascade = [CascadeType.ALL], orphanRemoval = true)
     var historico: List<Andamento>?
 )

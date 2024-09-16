@@ -9,11 +9,14 @@ import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.service.UsuarioRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 @Service
 class AgendamentoServiceImpl(
@@ -38,15 +41,15 @@ class AgendamentoServiceImpl(
         return agendamentoRepository.findAll()
     }
 
-    override fun buscaAgendamentoPorId(id: Int): Agendamento {
-        return agendamentoRepository.findById(id).get()
+    override fun buscaAgendamentoPorId(id: Int): Optional<Agendamento> {
+        return agendamentoRepository.findById(id)
     }
 
-    override fun buscaAgendamentosUsuario(tipo: Int, id: Int): List<Agendamento?> {
+    override fun buscaAgendamentosUsuario(tipo: Int, id: Int, pageable: Pageable): Page<Agendamento> {
         val agendamentos = when (tipo) {
-            1 -> agendamentoRepository.findAgendamentosByFkAluno(id)
-            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
-            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id)
+            1 -> agendamentoRepository.findAgendamentosByFkAluno(id, pageable)
+            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id, pageable)
+            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id, pageable)
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 

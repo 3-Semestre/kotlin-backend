@@ -40,5 +40,5 @@ Esta API é responsável pela lógica de exibição de dashboards. Ela oferece v
 
 ### Pré-requisitos
 
-- **Java 17**: Certifique-se de ter o Amazon Corretto JDK 17 instalado.
+- **Java 17**: Amazon Corretto JDK 17.
 - **Maven**: Utilizado para gerenciar as dependências do projeto.

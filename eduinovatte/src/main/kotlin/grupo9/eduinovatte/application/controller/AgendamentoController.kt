@@ -88,7 +88,7 @@ class AgendamentoController(
     ): ResponseEntity<Optional<AgendamentoListagemResponse>> {
         val agendamento = agendamentoService.buscaAgendamentoPorId(id)
 
-        return if (!agendamento.isEmpty) {
+        return if (agendamento.isEmpty) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         } else {
             val dto = agendamento.map {

@@ -26,7 +26,6 @@ class AndamentoController (
         return dto
     }
 
-
     @Operation(summary = "Busque o historico de status de todos os agendamentos", description = "Busque o historico de status de todos os agendamentos do sistema.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Historicos de agendamentos encontrados"),
@@ -41,7 +40,7 @@ class AndamentoController (
         return ResponseEntity.status(200).body(historico)
     }
 
-    @Operation(summary = "Salve um agendamentos", description = "Salve um novo agendamentos no sistema.")
+    @Operation(summary = "Salve um historico", description = "Salve um novo historico no sistema.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
         ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
@@ -51,5 +50,19 @@ class AndamentoController (
         val agendamentoSalvo = andamentoService.mudarHistorico(novoHistorico)
 
         return ResponseEntity.status(201).body(agendamentoSalvo)
+    }
+
+    @Operation(summary = "Busque o historico de status agendamento", description = "Busque o historico de status de um agendamento pelo id.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Historico encontrados"),
+        ApiResponse(responseCode = "404", description = "Nenhum historico de agendamentos encontrado")
+    ])
+    @GetMapping("/{id}")
+    fun buscaHistoricoPorIdAgendamento(@PathVariable id: Int): ResponseEntity<List<AndamentoHistoricoResponse>> {
+        val listaDeHistorico = andamentoService.buscaHistoricoPorIdAgendamento(id)
+        if (listaDeHistorico.isEmpty()) return ResponseEntity.status(204).build()
+
+        val historico = retornaHistorico(listaDeHistorico)
+        return ResponseEntity.status(200).body(historico)
     }
 }

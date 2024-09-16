@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 class UsuarioNivelIngles (
@@ -12,9 +14,11 @@ class UsuarioNivelIngles (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     val usuario: Usuario?,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     val nivelIngles: NivelIngles
 )

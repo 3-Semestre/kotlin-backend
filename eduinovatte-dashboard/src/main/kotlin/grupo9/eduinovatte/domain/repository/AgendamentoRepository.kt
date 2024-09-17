@@ -27,7 +27,7 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun qtdConclusaoProfessor(): List<AgendamentoConclusaoOuNaoProjection>?
     @Query(value = "SELECT * FROM taxa_cancelamento;", nativeQuery = true)
     fun taxaCancelamentoProfessor(): Float?
-    @Query(value = "SELECT round(taxa_cancelamento,2) as taxa_cancelamento, mes FROM taxa_cancelamento_por_mes order by mes asc;", nativeQuery = true)
+    @Query(value = "select * from taxa_cancelamento_mensal;", nativeQuery = true)
     fun taxaCancelamentoProfessorPorMes(): List<AgendamentoCancelamentoPorMesProjection>?
     @Query(value = "CALL proximos_agendamentos(:id)", nativeQuery = true)
     fun proximosAgendamentosProfessor(id: Int): List<AgendamentoProximosProjection>?

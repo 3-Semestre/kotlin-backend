@@ -69,7 +69,7 @@ class DashboardController (
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
             }
         }
-    @CrossOrigin
+        @CrossOrigin
         @GetMapping("/qtd-agendamento-mes-professor/{id}")
         fun qtdAgendamentoMes(@PathVariable id: Int): ResponseEntity<Int?> {
             return try {

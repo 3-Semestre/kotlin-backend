@@ -1,13 +1,15 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.application.controller.UsuarioNivelInglesController
 import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.LoginForm
+import grupo9.eduinovatte.application.dto.response.UsuarioFiltroResponse
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
-import grupo9.eduinovatte.domain.service.NivelAcessoService
-import grupo9.eduinovatte.domain.service.SituacaoService
-import grupo9.eduinovatte.domain.service.UsuarioService
+import grupo9.eduinovatte.domain.service.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -34,7 +36,9 @@ class UsuarioController(
     val usuarioService: UsuarioService,
     val tokenService: TokenService,
     val situacaoService: SituacaoService,
-    val nivelAcessoService: NivelAcessoService
+    val nivelAcessoService: NivelAcessoService,
+    val usuarioNichoService: UsuarioNichoService,
+    val usuarioNivelInglesService: UsuarioNivelInglesService
 ) {
 
     @Operation(
@@ -276,7 +280,7 @@ class UsuarioController(
 
     @CrossOrigin
     @PostMapping("/filtro/{tipo}")
-    fun filtraUsuario(@PathVariable tipo: String, @RequestBody filtro: FiltroForm): ResponseEntity<List<Usuario>> {
+    fun filtraUsuario(@PathVariable tipo: String, @RequestBody filtro: FiltroForm): ResponseEntity<List<UsuarioFiltroResponse>> {
         val lista = when (tipo) {
             "aluno" -> usuarioService.filtrarAluno(filtro)
             "professor" -> usuarioService.filtrarProfessor(filtro)
@@ -284,7 +288,17 @@ class UsuarioController(
             else -> return ResponseEntity.status(401).build()
         }
 
-        return ResponseEntity.status(200).body(lista)
+        val listaRetorno: MutableList<UsuarioFiltroResponse> = mutableListOf()
+
+        lista?.forEach {
+            if(it.id != null){
+                var nicho = usuarioNichoService.buscaPorIdUsuario(it.id!!)
+                var nivelIngles = usuarioNivelInglesService.buscaPorIdUsuario(it.id!!)
+                listaRetorno.add(UsuarioFiltroResponse.from(it, nicho, nivelIngles))
+            }
+        }
+
+        return ResponseEntity.status(200).body(listaRetorno)
     }
 
 }

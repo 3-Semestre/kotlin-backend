@@ -2,16 +2,11 @@ package grupo9.eduinovatte.controller
 
 import com.example.demo.builder.HorarioProfessorBuilder
 import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
-import grupo9.eduinovatte.domain.service.SituacaoService
-import grupo9.eduinovatte.model.HorarioProfessor
-import grupo9.eduinovatte.model.Usuario
-import grupo9.eduinovatte.service.SituacaoRepository
+import grupo9.eduinovatte.domain.service.impl.HorarioProfessorServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
@@ -22,12 +17,12 @@ import org.springframework.web.server.ResponseStatusException
 class HorarioProfessorServiceTest {
 
     lateinit var horarioProfessorRepository: HorarioProfessorRepository
-    lateinit var service: HorarioProfessorService
+    lateinit var service: HorarioProfessorServiceImpl
 
     @BeforeEach
     fun iniciar() {
         horarioProfessorRepository = Mockito.mock(HorarioProfessorRepository::class.java)
-        service = HorarioProfessorService(horarioProfessorRepository)
+        service = HorarioProfessorServiceImpl(horarioProfessorRepository)
     }
 
     @Test
@@ -59,7 +54,7 @@ class HorarioProfessorServiceTest {
         try {
             service.edita(horarioProfessor)
         } catch (ex: ResponseStatusException) {
-            assertEquals(HttpStatus.NO_CONTENT, ex.statusCode)
+            assertEquals(HttpStatus.NOT_FOUND, ex.statusCode)
         }
     }
 

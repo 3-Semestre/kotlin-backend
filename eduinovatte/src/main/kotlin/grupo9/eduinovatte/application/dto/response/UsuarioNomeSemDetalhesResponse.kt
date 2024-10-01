@@ -1,6 +1,6 @@
 package grupo9.eduinovatte.application.dto.response
 
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 
 data class UsuarioNomeSemDetalhesResponse (
     var id: Int? = null,

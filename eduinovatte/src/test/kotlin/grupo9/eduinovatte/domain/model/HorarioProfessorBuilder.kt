@@ -1,7 +1,7 @@
 package com.example.demo.builder
 
-import grupo9.eduinovatte.model.HorarioProfessor
-import grupo9.eduinovatte.model.Usuario
+import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.model.UsuarioBuilder
 import java.time.LocalTime
 

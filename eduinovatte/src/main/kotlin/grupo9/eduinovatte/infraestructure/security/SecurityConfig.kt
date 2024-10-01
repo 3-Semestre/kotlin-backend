@@ -23,6 +23,19 @@ class SecurityConfig{
 
     @Autowired
     var securityFilter: SecurityFilter? = null
+
+    @Autowired
+    private val autenticacaoJwtEntryPoint: AutenticacaoJwtEntryPoint? = null
+
+    val URL_PERMITIDAS = arrayOf(
+        "/usuarios/autenticar",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/usuarios/**",
+        "agendamento/**",
+        "historico-agendamento/**"
+    )
+
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -32,7 +45,14 @@ class SecurityConfig{
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers(*URL_PERMITIDAS).permitAll()
                     .anyRequest().authenticated()
+            }.exceptionHandling { handling ->
+                handling.authenticationEntryPoint(autenticacaoJwtEntryPoint)
+            }
+            .sessionManagement { management ->
+                management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

@@ -1,6 +1,6 @@
 package com.example.demo.builder
 
-import grupo9.eduinovatte.model.NivelIngles
+import grupo9.eduinovatte.domain.model.entity.NivelIngles
 import grupo9.eduinovatte.model.enums.NivelInglesNome
 
 class NivelInglesBuilder {

@@ -4,7 +4,10 @@ import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.controller.UsuarioController
 import grupo9.eduinovatte.domain.service.UsuarioService
-import grupo9.eduinovatte.model.NivelAcesso
+import grupo9.eduinovatte.domain.model.entity.NivelAcesso
+import grupo9.eduinovatte.domain.service.NivelAcessoService
+import grupo9.eduinovatte.domain.service.SituacaoService
+import grupo9.eduinovatte.infraestructure.security.TokenService
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -12,8 +15,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.eq
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.springframework.dao.EmptyResultDataAccessException
@@ -25,13 +27,19 @@ import java.util.*
 class UsuarioControllerTest {
     lateinit var usuarioRepository: UsuarioRepository
     lateinit var usuarioService: UsuarioService
+    lateinit var tokenService: TokenService
+    lateinit var situacaoService: SituacaoService
+    lateinit var nivelAcessoService: NivelAcessoService
     lateinit var controller: UsuarioController
 
     @BeforeEach
     fun iniciar() {
         usuarioRepository = Mockito.mock(UsuarioRepository::class.java)
         usuarioService = Mockito.mock(UsuarioService::class.java)
-        controller = UsuarioController(usuarioRepository, usuarioService)
+        tokenService = Mockito.mock(TokenService::class.java)
+        situacaoService = Mockito.mock(SituacaoService::class.java)
+        nivelAcessoService = Mockito.mock(NivelAcessoService::class.java)
+        controller = UsuarioController(usuarioRepository, usuarioService, tokenService, situacaoService, nivelAcessoService)
     }
 
     @Test
@@ -42,8 +50,8 @@ class UsuarioControllerTest {
 
         `when`(usuarioRepository.findByEmailOrCpfAndSenha("email", null, "senha")).thenReturn(usuario)
         `when`(usuarioService.autenticar(usuario.id!!)).thenReturn(usuarioResponse)
-        `when`(usuarioService.validaSituacao(anyInt())).then{}
-        `when`(usuarioService.validaNivelAcesso(anyInt(), eq(NivelAcessoNome.ALUNO))).then{}
+        `when`(situacaoService.validaPermissao(anyInt(), anyString())).then{true}
+        `when`(nivelAcessoService.validaPermissao(anyInt(), anyString())).then{true}
 
         val response = controller.autenticarUsuario(loginForm)
 
@@ -62,18 +70,15 @@ class UsuarioControllerTest {
 
         val response = controller.autenticarUsuario(loginForm)
 
-<<<<<<< HEAD
         Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
 
         Assertions.assertNull(response.body)
-=======
         val responseEntity = controller.autenticarUsuario(loginForm)
 
 
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
 
         Assertions.assertNull(responseEntity.body)
->>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
     }
 
     @Test
@@ -83,30 +88,14 @@ class UsuarioControllerTest {
         val usuario = UsuarioBuilder().withEmail(loginForm.email!!).withSenha(loginForm.senha).build()
 
         `when`(usuarioRepository.findByEmailOrCpfAndSenha("email", null, "senha")).thenReturn(usuario)
-        `when`(usuarioService.validaSituacao(anyInt())).thenThrow(ResponseStatusException(HttpStatusCode.valueOf(401)))
-
+        `when`(situacaoService.validaPermissao(anyInt(), anyString())).thenThrow(ResponseStatusException(HttpStatusCode.valueOf(401)))
 
         val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
-<<<<<<< HEAD
             val response = controller.autenticarUsuario(loginForm)
-=======
             controller.autenticarUsuario(loginForm)
->>>>>>> 4fe4b7f6f470a7847da17533d6c1a50d64a33144
         }
 
         assertEquals(401, exception.statusCode.value())
-    }
-    @Test
-    fun `Return all users when buscaUsuarios method`(){
-        val tipo = "aluno"
-        val lista = listOf(UsuarioBuilder().build())
-        val listaResponse = usuarioService.retornaListaUsuario(lista)
-
-        `when`(usuarioService.buscaUsuarios(NivelAcessoNome.ALUNO)).thenReturn(listaResponse)
-
-        val resultado = controller.buscaUsuarios(tipo)
-
-        assertEquals(200, resultado.statusCode.value())
     }
 
     @Test
@@ -116,7 +105,8 @@ class UsuarioControllerTest {
         val usuarioResponse = usuarioService.retornaUsuario(UsuarioBuilder().build())
 
         `when`(usuarioService.salvaUsuario(usuario)).thenReturn(usuarioResponse)
-        `when`(usuarioService.validaNivelAcesso(anyInt(), eq(NivelAcessoNome.ALUNO))).then{}
+        `when`(nivelAcessoService.validaPermissao(anyInt(), anyString())).then{true}
+
         val resultado = controller.salvaUsuario(tipo, usuario)
 
         assertEquals(201, resultado.statusCode.value())
@@ -132,7 +122,7 @@ class UsuarioControllerTest {
 
         `when`(usuarioRepository.existsById(anyInt())).then{true}
         `when`(usuarioRepository.findById(anyInt())).then{Optional.of(usuarioAntigo)}
-        `when`(usuarioService.validaNivelAcesso(anyInt(), eq(NivelAcessoNome.ALUNO))).then{}
+        `when`(nivelAcessoService.validaPermissao(anyInt(), anyString())).then{true}
         `when`(usuarioService.editaUsuario(usuarioNovo)).thenReturn(usuarioResponse)
         val resultado = controller.editaUsuario(tipo, id, usuarioNovo)
 

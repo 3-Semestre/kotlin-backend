@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
+import grupo9.eduinovatte.domain.service.impl.UsuarioNichoServiceImpl
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/usuario-nicho")
 class UsuarioNichoController(
-    val usuarioNichoService: UsuarioNichoService
+    val usuarioNichoService: UsuarioNichoServiceImpl
 ) {
 
     @Operation(summary = "Salve um usuario nicho", description = "Salve um usuario nicho com as informações dele.")

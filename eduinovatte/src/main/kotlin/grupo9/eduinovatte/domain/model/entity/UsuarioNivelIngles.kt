@@ -1,22 +1,24 @@
-package grupo9.eduinovatte.domain.model
+package grupo9.eduinovatte.domain.model.entity
 
-import grupo9.eduinovatte.model.NivelIngles
-import grupo9.eduinovatte.model.Usuario
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 class UsuarioNivelIngles (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int? = null,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     val usuario: Usuario?,
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     val nivelIngles: NivelIngles
 )

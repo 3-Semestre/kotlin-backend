@@ -1,52 +1,16 @@
-package grupo9.eduinovatte.controller
+package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.model.Usuario
-import grupo9.eduinovatte.model.UsuarioNicho
-import grupo9.eduinovatte.model.enums.NichoNome
-import grupo9.eduinovatte.model.enums.NivelInglesNome
-import grupo9.eduinovatte.service.UsuarioNichoRepository
-import grupo9.eduinovatte.service.UsuarioRepository
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
-import jakarta.validation.Valid
-import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.*
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 
+interface UsuarioNichoService {
 
-@Service
-class UsuarioNichoService(
-    val usuarioNichoRepository: UsuarioNichoRepository
-) {
+    fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho
 
-    fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho {
-        val usuarioNicho = usuarioNichoRepository.save(novoUsuarioNicho)
+    fun buscaPorNicho(id: Int): List<UsuarioNicho>
 
-        return usuarioNicho
-    }
+    fun buscaUsuariosNichos(): List<UsuarioNicho>
 
-    fun buscaPorNicho(id: Int): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findByNichoId(id)
+    fun buscaPorIdUsuario(id: Int): List<UsuarioNicho>
 
-        return usuarioNichos
-    }
-
-    fun buscaUsuariosNichos(): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findAll()
-
-        return usuarioNichos
-    }
-
-    fun buscaPorIdUsuario(id: Int): List<UsuarioNicho> {
-        val usuarioNichos = usuarioNichoRepository.findByUsuarioId(id)
-
-        return usuarioNichos
-    }
-    fun deleta(id: Int) {
-        usuarioNichoRepository.deleteById(id)
-    }
-
+    fun deleta(id: Int)
 }
-

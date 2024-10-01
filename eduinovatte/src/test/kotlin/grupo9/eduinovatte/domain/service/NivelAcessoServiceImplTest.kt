@@ -1,6 +1,8 @@
 package grupo9.eduinovatte.domain.service
 
 import com.example.demo.builder.NivelAcessoBuilder
+import com.example.demo.builder.SituacaoBuilder
+import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
 import grupo9.eduinovatte.service.NivelAcessoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -10,14 +12,14 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import java.util.*
 
-class NivelAcessoServiceTest {
+class NivelAcessoServiceImplTest {
     lateinit var nivelAcessoRepository: NivelAcessoRepository
-    lateinit var service: NivelAcessoService
+    lateinit var service: NivelAcessoServiceImpl
 
     @BeforeEach
     fun iniciar() {
         nivelAcessoRepository = Mockito.mock(NivelAcessoRepository::class.java)
-        service = NivelAcessoService(nivelAcessoRepository)
+        service = NivelAcessoServiceImpl(nivelAcessoRepository)
     }
 
     @Test
@@ -39,5 +41,27 @@ class NivelAcessoServiceTest {
 
         val resultado = service.buscaPorId(1)
         assertEquals(nivel, resultado)
+    }
+
+    @Test
+    fun `valida permissao deve retornar true quando situacao for igual a condicao`() {
+        val professor = NivelAcessoBuilder().professor()
+
+        `when`(nivelAcessoRepository.findById(anyInt())).thenReturn(Optional.of(professor))
+
+        val resultado = service.validaPermissao(1, "PROFESSOR_AUXILIAR")
+
+        assertEquals(true, resultado)
+    }
+
+    @Test
+    fun `valida permissao deve retornar false quando situacao for diferente da condicao`() {
+        val professor = NivelAcessoBuilder().professor()
+
+        `when`(nivelAcessoRepository.findById(anyInt())).thenReturn(Optional.of(professor))
+
+        val resultado = service.validaPermissao(1, "ALUNO")
+
+        assertEquals(false, resultado)
     }
 }

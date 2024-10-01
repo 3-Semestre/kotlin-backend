@@ -1,18 +1,11 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.model.Situacao
-import grupo9.eduinovatte.service.SituacaoRepository
-import org.springframework.stereotype.Service
+import grupo9.eduinovatte.domain.model.entity.Situacao
 
-@Service
-class SituacaoService(
-    val situacaoRepository: SituacaoRepository
-){
-    fun buscaSituacoes(): List<Situacao>{
-        return situacaoRepository.findAll()
-    }
+interface SituacaoService: PermissaoService {
 
-    fun buscaPorId(id: Int): Situacao{
-        return situacaoRepository.findById(id).get()
-    }
+    override fun validaPermissao(id: Int, condicao: String): Boolean
+    fun buscaSituacoes(): List<Situacao>
+
+    fun buscaPorId(id: Int): Situacao
 }

@@ -1,6 +1,6 @@
 package com.example.demo.builder
 
-import grupo9.eduinovatte.model.Situacao
+import grupo9.eduinovatte.domain.model.entity.Situacao
 import grupo9.eduinovatte.model.enums.SituacaoNome
 
 class SituacaoBuilder {
@@ -20,7 +20,7 @@ class SituacaoBuilder {
     fun withId(id: Int) = apply { this.id = id }
     fun withNome(nome: SituacaoNome?) = apply { this.nome = nome }
 
-    fun build():Situacao{
+    fun build(): Situacao {
         return Situacao(id = id,nome = nome)
     }
 

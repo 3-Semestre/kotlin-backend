@@ -1,8 +1,7 @@
 package grupo9.eduinovatte.application.controller
 
-import grupo9.eduinovatte.domain.model.UsuarioNivelIngles
-import grupo9.eduinovatte.domain.service.UsuarioNivelInglesService
-import grupo9.eduinovatte.model.UsuarioNicho
+import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
+import grupo9.eduinovatte.domain.service.impl.UsuarioNivelInglesServiceImpl
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/usuario-nivel-ingles")
 class UsuarioNivelInglesController (
-    val usuarioNivelInglesService: UsuarioNivelInglesService
+    val usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
 ) {
     @Operation(summary = "Salve um usuario nivel ingles", description = "Salve um nivel ingles com as informações dele.")
     @ApiResponses(value = [
@@ -86,7 +85,6 @@ class UsuarioNivelInglesController (
     ])
     @DeleteMapping("/{id}")
     fun deleta(@PathVariable id: Int): ResponseEntity<List<UsuarioNivelIngles>> {
-
         val usuarios = usuarioNivelInglesService.deleta(id)
         return ResponseEntity.status(204).build()
     }

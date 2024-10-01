@@ -5,6 +5,7 @@ import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 interface UsuarioNichoService {
 
     fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho
+    fun removerPorUsuario(id: Int): Int
 
     fun buscaPorNicho(id: Int): List<UsuarioNicho>
 

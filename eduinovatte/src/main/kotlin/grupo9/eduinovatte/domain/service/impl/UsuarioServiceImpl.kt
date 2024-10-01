@@ -42,6 +42,7 @@ class UsuarioServiceImpl(
 
     override fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse> {
         val usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)
+        if(usuarios == null || usuarios.isEmpty()) throw ResponseStatusException(HttpStatusCode.valueOf(204))
         validarLista(usuarios)
         val usuariosResponse = retornaListaUsuario(usuarios)
         return usuariosResponse

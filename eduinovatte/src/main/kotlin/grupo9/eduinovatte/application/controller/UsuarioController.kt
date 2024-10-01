@@ -3,6 +3,7 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.controller.UsuarioNivelInglesController
 import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.LoginForm
+import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioFiltroResponse
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
@@ -165,6 +166,27 @@ class UsuarioController(
     fun salvaUsuario(
         @PathVariable tipo: String,
         @RequestBody @Valid novoUsuario: Usuario
+    ): ResponseEntity<UsuarioResponse> {
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        val permissao = nivelAcessoService.validaPermissao(novoUsuario.nivelAcesso!!.id, tipoAcesso!!.name)
+        if (permissao == false) throw ResponseStatusException(HttpStatusCode.valueOf(401))
+
+        val usuarioSalvo = usuarioService.salvaUsuario(novoUsuario)
+        return ResponseEntity.status(201).body(usuarioSalvo)
+    }
+
+    @Operation(summary = "Salve um usuario completo", description = "Salve um usuario com o nicho e nivel de inglês dele.")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "201", description = "Criado com sucesso"),
+            ApiResponse(responseCode = "401", description = "Erro no nível de acesso no corpo da requisição")
+        ]
+    )
+    @PostMapping("/salvar/{tipo}")
+    @CrossOrigin
+    fun salvaUsuarioCompleto(
+        @PathVariable tipo: String,
+        @RequestBody @Valid novoUsuario: UsuarioCompletoRequest
     ): ResponseEntity<UsuarioResponse> {
         val tipoAcesso = retornaNivelAcessoNome(tipo)
         val permissao = nivelAcessoService.validaPermissao(novoUsuario.nivelAcesso!!.id, tipoAcesso!!.name)

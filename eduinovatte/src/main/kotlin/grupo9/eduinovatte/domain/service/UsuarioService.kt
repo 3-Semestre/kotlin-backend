@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.FiltroForm
+import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.Situacao
@@ -16,6 +17,7 @@ interface UsuarioService {
     fun desautenticar(id: Int): UsuarioResponse
     fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse>
     fun salvaUsuario(novoUsuario: Usuario): UsuarioResponse
+    fun salvaUsuario(novoUsuario: UsuarioCompletoRequest): UsuarioResponse
     fun editaUsuario(novoUsuario: Usuario): UsuarioResponse
     fun deletaUsuario(id: Int)
     fun desativaUsuario(id: Int): Int

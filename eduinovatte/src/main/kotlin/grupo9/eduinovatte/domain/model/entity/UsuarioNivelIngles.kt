@@ -12,7 +12,7 @@ import org.hibernate.annotations.OnDeleteAction
 class UsuarioNivelIngles (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int? = null,
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne

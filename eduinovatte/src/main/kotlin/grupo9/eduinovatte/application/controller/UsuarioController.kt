@@ -133,7 +133,7 @@ class UsuarioController(
     fun buscaUsuariosPaginados(
         @PathVariable tipo: String,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "7") size: Int,
+        @RequestParam(defaultValue = "6") size: Int,
         @RequestParam(defaultValue = "desc") sortDirection: String
     ): Any {
         // Define a direção do sort (ascendente ou descendente)

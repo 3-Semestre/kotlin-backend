@@ -1,13 +1,10 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.domain.model.entity.NivelAcesso
-import grupo9.eduinovatte.domain.model.entity.Situacao
 import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
 import grupo9.eduinovatte.domain.service.impl.UsuarioServiceImpl
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.model.enums.SituacaoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

@@ -1,6 +1,5 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.application.dto.response.AgendamentoProximosProjection
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.controller.HorarioProfessorService
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
@@ -55,8 +54,9 @@ class UsuarioService(
 
     fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse> {
         val usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)
+        if(usuarios == null || usuarios.isEmpty()) throw ResponseStatusException(HttpStatusCode.valueOf(204))
         validarLista(usuarios)
-        val usuariosResponse = retornaListaUsuario(usuarios)
+        val usuariosResponse = retornaListaUsuario(usuarios!!)
         return usuariosResponse
     }
 

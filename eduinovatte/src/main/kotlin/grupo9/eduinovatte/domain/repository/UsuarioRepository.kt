@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface UsuarioRepository: JpaRepository<Usuario, Int> {
-    fun findByNivelAcessoNome(nome: NivelAcessoNome?): List<Usuario>
+    fun findByNivelAcessoNome(nome: NivelAcessoNome?): List<Usuario>?
 
     fun findByCpf(cpf: String): Usuario
 

@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.application.controller
 
+import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.service.impl.UsuarioNivelInglesServiceImpl
 import io.swagger.v3.oas.annotations.Operation
@@ -88,4 +89,24 @@ class UsuarioNivelInglesController (
         val usuarios = usuarioNivelInglesService.deleta(id)
         return ResponseEntity.status(204).build()
     }
+
+    @Operation(summary = "Edite um usuario nicho", description = "Salve um usuario nicho com as informações dele.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Criado com sucesso"),
+        ApiResponse(responseCode = "500", description = "Usuario inválido")
+    ])
+    @PutMapping("/{id}")
+    @CrossOrigin
+    fun editaUsuarioNivelIngles(
+        @PathVariable id: Int,
+        @RequestBody @Valid novoUsuarioNivelIngles: UsuarioNivelIngles
+    ): ResponseEntity<UsuarioNivelIngles>{
+        val deletado = usuarioNivelInglesService.removerPorUsuario(id)
+        if(deletado > 0){
+            val usuarioNicho = usuarioNivelInglesService.salvar(novoUsuarioNivelIngles)
+            return ResponseEntity.status(201).body(novoUsuarioNivelIngles)
+        }
+        return ResponseEntity.status(403).build()
+    }
+
 }

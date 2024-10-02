@@ -36,16 +36,18 @@ class UsuarioNichoController(
         ApiResponse(responseCode = "201", description = "Criado com sucesso"),
         ApiResponse(responseCode = "500", description = "Usuario inválido")
     ])
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     @CrossOrigin
     fun editaUsuarioNicho(
         @PathVariable id: Int,
         @RequestBody @Valid novoUsuarioNicho: UsuarioNicho
     ): ResponseEntity<UsuarioNicho>{
-        usuarioNichoService.removerPorUsuario(id)
-        val usuarioNicho = usuarioNichoService.salvar(novoUsuarioNicho)
-
-        return ResponseEntity.status(201).body(usuarioNicho)
+        val deletado = usuarioNichoService.removerPorUsuario(id)
+        if(deletado > 0){
+            val usuarioNicho = usuarioNichoService.salvar(novoUsuarioNicho)
+            return ResponseEntity.status(201).body(usuarioNicho)
+        }
+        return ResponseEntity.status(403).build()
     }
 
 
@@ -54,7 +56,7 @@ class UsuarioNichoController(
         ApiResponse(responseCode = "200", description = "Usuarios encontrados encontrados"),
         ApiResponse(responseCode = "204", description = "Nenhum Usuarios encontrado")
     ])
-    @PutMapping()
+    @GetMapping()
     fun buscarUsuarioNicho(): ResponseEntity<List<UsuarioNicho>> {
         val usuarioNichos = usuarioNichoService.buscaUsuariosNichos()
 

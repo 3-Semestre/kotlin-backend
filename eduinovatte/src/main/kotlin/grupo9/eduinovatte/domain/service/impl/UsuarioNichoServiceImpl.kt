@@ -17,7 +17,7 @@ class UsuarioNichoServiceImpl(
     }
 
     override fun removerPorUsuario(id: Int): Int {
-        return usuarioNichoRepository.deleteByUsuarioId(id)
+        return usuarioNichoRepository.deletaUsuarioPeloId(id)
     }
 
     override fun buscaPorNicho(id: Int): List<UsuarioNicho> {

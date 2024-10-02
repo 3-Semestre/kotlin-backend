@@ -16,6 +16,10 @@ class UsuarioNivelInglesServiceImpl (
         return usuarioNivelIngles
     }
 
+    override fun removerPorUsuario(id: Int): Int {
+        return usuarioNivelInglesRepository.deletaUsuarioPeloId(id)
+    }
+
     override fun buscaPorNivelIngles(id: Int): List<UsuarioNivelIngles> {
         val usuarioNivelIngles = usuarioNivelInglesRepository.findByNivelInglesId(id)
 

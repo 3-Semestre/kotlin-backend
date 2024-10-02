@@ -5,6 +5,7 @@ import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 interface UsuarioNivelInglesService {
 
     fun salvar(novoUsuarioNivelIngles: UsuarioNivelIngles): UsuarioNivelIngles
+    fun removerPorUsuario(id: Int): Int
 
     fun buscaPorNivelIngles(id: Int): List<UsuarioNivelIngles>
 

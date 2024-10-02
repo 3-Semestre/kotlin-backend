@@ -51,7 +51,7 @@ class AgendamentoController(
         @PathVariable tipo: Int,
         @PathVariable id: Int,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "7") size: Int,
+        @RequestParam(defaultValue = "5") size: Int,
         @RequestParam(defaultValue = "desc") sortDirection: String
     ): ResponseEntity<Page<AgendamentoListagemResponse>> {
         // Define a direção do sort (ascendente ou descendente)
@@ -87,7 +87,7 @@ class AgendamentoController(
         @PathVariable id: Int,
         @RequestParam tempo: String,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "7") size: Int,
+        @RequestParam(defaultValue = "5") size: Int,
         @RequestParam(defaultValue = "desc") sortDirection: String
     ): ResponseEntity<Page<AgendamentosDetalhesListagemResponse>> {
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC

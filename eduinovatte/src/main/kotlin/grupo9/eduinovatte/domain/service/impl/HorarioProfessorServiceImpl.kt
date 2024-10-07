@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.domain.service.impl
 
+import grupo9.eduinovatte.application.dto.request.HorarioProfessorRequest
 import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
@@ -27,6 +28,21 @@ class HorarioProfessorServiceImpl(
     override fun edita(horario: HorarioProfessor): HorarioProfessor {
         return if (horarioProfessorRepository.existsById(horario.id!!)) {
             horarioProfessorRepository.save(horario)
+        } else {
+            throw ResponseStatusException(HttpStatusCode.valueOf(404), "Horário do professor não encontrado")
+        }
+    }
+
+    override fun edita(horario: HorarioProfessorRequest, id: Int): HorarioProfessor {
+        var horarioAntigo =  horarioProfessorRepository.findByUsuarioId(id);
+
+        horarioAntigo.inicio = horario.inicio;
+        horarioAntigo.fim = horario.fim;
+        horarioAntigo.pausaInicio = horario.pausaInicio;
+        horarioAntigo.pausaFim = horario.pausaFim;
+
+        return if (horarioProfessorRepository.existsById(horarioAntigo.id!!)) {
+            horarioProfessorRepository.save(horarioAntigo)
         } else {
             throw ResponseStatusException(HttpStatusCode.valueOf(404), "Horário do professor não encontrado")
         }

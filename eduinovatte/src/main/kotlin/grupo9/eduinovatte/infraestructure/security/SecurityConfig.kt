@@ -35,7 +35,9 @@ class SecurityConfig{
         "agendamento/**",
         "historico-agendamento/**",
         "status/**",
-        "/status/**"
+        "/status/**",
+        "/status/**",
+        "/horario-professor/**",
     )
 
     @Bean

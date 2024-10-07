@@ -7,6 +7,8 @@ import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.service.NivelAcessoService
 import grupo9.eduinovatte.domain.service.SituacaoService
+import grupo9.eduinovatte.domain.service.impl.UsuarioNichoServiceImpl
+import grupo9.eduinovatte.domain.service.impl.UsuarioNivelInglesServiceImpl
 import grupo9.eduinovatte.infraestructure.security.TokenService
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
@@ -30,6 +32,8 @@ class UsuarioControllerTest {
     lateinit var tokenService: TokenService
     lateinit var situacaoService: SituacaoService
     lateinit var nivelAcessoService: NivelAcessoService
+    lateinit var usuarioNichoService: UsuarioNichoServiceImpl
+    lateinit var usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
     lateinit var controller: UsuarioController
 
     @BeforeEach
@@ -39,7 +43,9 @@ class UsuarioControllerTest {
         tokenService = Mockito.mock(TokenService::class.java)
         situacaoService = Mockito.mock(SituacaoService::class.java)
         nivelAcessoService = Mockito.mock(NivelAcessoService::class.java)
-        controller = UsuarioController(usuarioRepository, usuarioService, tokenService, situacaoService, nivelAcessoService)
+        usuarioNichoService = Mockito.mock(UsuarioNichoServiceImpl::class.java);
+        usuarioNivelInglesService = Mockito.mock(UsuarioNivelInglesServiceImpl::class.java);
+        controller = UsuarioController(usuarioRepository, usuarioService, tokenService, situacaoService, nivelAcessoService, usuarioNichoService, usuarioNivelInglesService)
     }
 
     @Test

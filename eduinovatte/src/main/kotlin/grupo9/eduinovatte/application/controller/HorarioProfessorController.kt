@@ -1,5 +1,6 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.application.dto.request.HorarioProfessorRequest
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
 import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
@@ -52,6 +53,13 @@ class HorarioProfessorController(
     @PutMapping()
     fun editaHorarioProfessor(@RequestBody @Valid novoHorarioProfessor: HorarioProfessor): ResponseEntity<HorarioProfessor> {
         val horarioProfessorEditado = horarioProfessorService.edita(novoHorarioProfessor)
+
+        return ResponseEntity.status(200).body(horarioProfessorEditado)
+    }
+
+    @PutMapping("/{id}")
+    fun editaHorarioProfessor(@PathVariable id: Int, @RequestBody @Valid novoHorarioProfessor: HorarioProfessorRequest): ResponseEntity<HorarioProfessor> {
+        val horarioProfessorEditado = horarioProfessorService.edita(novoHorarioProfessor, id)
 
         return ResponseEntity.status(200).body(horarioProfessorEditado)
     }

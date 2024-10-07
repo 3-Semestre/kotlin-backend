@@ -33,7 +33,11 @@ class SecurityConfig{
         "/v3/api-docs/**",
         "/usuarios/**",
         "agendamento/**",
-        "historico-agendamento/**"
+        "historico-agendamento/**",
+        "status/**",
+        "/status/**",
+        "/status/**",
+        "/horario-professor/**",
     )
 
     @Bean

@@ -138,16 +138,18 @@ class AgendamentoController(
 
 
     @CrossOrigin
-    @PostMapping("/filtro/{tipo}/{id}")
+    @PostMapping("/filtro/{tempo}/{tipo}/{id}")
     fun filtroAgendamento(
         @PathVariable tipo: String,
+        @PathVariable tempo: String,
         @RequestBody filtro: FiltroAgendamentoForm,
         @PathVariable id: Int
     ): ResponseEntity<List<AgendamentoListagemResponse>> {
-        val lista = when (tipo) {
-            "aluno" -> agendamentoService.filtrarAluno(filtro, id)
-            "professor" -> agendamentoService.filtrarProfessor(filtro, id)
-            "professor_auxiliar" -> agendamentoService.filtrarProfessor(filtro, id)
+        val lista = when {
+            tipo == "aluno" && tempo == "passado"-> agendamentoService.filtrarAlunoPassado(filtro, id)
+            tipo == "aluno" && tempo == "futuro"-> agendamentoService.filtrarAlunoFuturo(filtro, id)
+            tipo == "professor" && tempo == "passado"-> agendamentoService.filtrarProfessorPassado(filtro, id)
+            tipo == "professor" && tempo == "futuro"-> agendamentoService.filtrarProfessorFuturo(filtro, id)
             else -> return ResponseEntity.status(401).build()
         }
 

@@ -25,7 +25,9 @@ interface AgendamentoService {
 
     fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro
 
-    fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
-    
-    fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
+    fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
+    fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
+
+    fun filtrarProfessorPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
+    fun filtrarProfessorFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
 }

@@ -12,7 +12,6 @@ import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
 import jakarta.transaction.Transactional
-import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service

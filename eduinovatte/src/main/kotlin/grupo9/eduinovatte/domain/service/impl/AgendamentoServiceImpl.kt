@@ -79,11 +79,19 @@ class AgendamentoServiceImpl(
     }
 
 
-    override fun filtrarAluno(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarAluno(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
+    override fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
+        return agendamentoRepository.filtrarAlunoPassado(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
     }
 
-    override fun filtrarProfessor(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarProfessor(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, filtro.assunto, id)
+    override fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
+        return agendamentoRepository.filtrarAlunoFuturo(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
+    }
+
+    override fun filtrarProfessorPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
+        return agendamentoRepository.filtrarProfessorPassado(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, filtro.assunto, id)
+    }
+
+    override fun filtrarProfessorFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
+        return agendamentoRepository.filtrarProfessorFuturo(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, filtro.assunto, id)
     }
 }

@@ -1,12 +1,15 @@
 package grupo9.eduinovatte.domain.service.impl
 
-import grupo9.eduinovatte.application.dto.request.HorarioProfessorRequest
+import grupo9.eduinovatte.application.dto.requestg.HorarioProfessorRequest
 import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
+import grupo9.eduinovatte.domain.repository.HorarioDisponiveisProjection
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @Service
 class HorarioProfessorServiceImpl(
@@ -34,7 +37,7 @@ class HorarioProfessorServiceImpl(
     }
 
     override fun edita(horario: HorarioProfessorRequest, id: Int): HorarioProfessor {
-        var horarioAntigo =  horarioProfessorRepository.findByUsuarioId(id);
+        var horarioAntigo = horarioProfessorRepository.findByUsuarioId(id);
 
         horarioAntigo.inicio = horario.inicio;
         horarioAntigo.fim = horario.fim;
@@ -50,6 +53,15 @@ class HorarioProfessorServiceImpl(
 
     override fun buscaHorarios(): List<HorarioProfessor> {
         val horarios = horarioProfessorRepository.findAll()
+        if (horarios.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204), "Nenhum horário encontrado")
+        }
+        return horarios
+    }
+
+    @Transactional
+    override fun buscaHorariosDisponiveis(dia: LocalDate, id: Int): List<HorarioDisponiveisProjection> {
+        val horarios = horarioProfessorRepository.findHorariosDisponiveis(dia, id)
         if (horarios.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204), "Nenhum horário encontrado")
         }

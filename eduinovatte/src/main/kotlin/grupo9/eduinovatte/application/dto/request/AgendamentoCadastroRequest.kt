@@ -1,0 +1,35 @@
+package grupo9.eduinovatte.application.dto.request
+
+import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
+import java.time.LocalDate
+import java.time.LocalTime
+
+@Entity
+data class AgendamentoCadastroRequest (
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int? = null,
+
+    var data: LocalDate?,
+
+    var horarioInicio: LocalTime?,
+
+    var horarioFim: LocalTime?,
+
+    var assunto: String,
+
+    @ManyToOne
+    @JoinColumn(name = "fk_professor")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    var professor: Usuario?,
+
+    @ManyToOne
+    @JoinColumn(name = "fk_aluno")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    var aluno: Usuario?,
+
+    @OneToMany(mappedBy = "agendamento")
+    var historico: List<Andamento>?
+)

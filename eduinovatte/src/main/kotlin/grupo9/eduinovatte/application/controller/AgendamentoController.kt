@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
@@ -113,7 +114,7 @@ class AgendamentoController(
         ]
     )
     @PostMapping
-    fun salvaAgendamento(@RequestBody novoAgendamento: Agendamento): ResponseEntity<AgendamentoCadastro> {
+    fun salvaAgendamento(@RequestBody novoAgendamento: AgendamentoCadastroRequest): ResponseEntity<AgendamentoCadastro> {
         val agendamentoSalvo = agendamentoService.salvarAgendamento(novoAgendamento)
 
         return ResponseEntity.status(201).body(agendamentoSalvo)

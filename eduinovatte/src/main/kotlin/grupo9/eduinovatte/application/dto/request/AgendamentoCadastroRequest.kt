@@ -1,35 +1,23 @@
 package grupo9.eduinovatte.application.dto.request
 
-import jakarta.persistence.*
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 import java.time.LocalTime
 
-@Entity
 data class AgendamentoCadastroRequest (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    @NotNull
+    var data: LocalDate,
 
-    var data: LocalDate?,
+    @NotNull
+    var horarioInicio: LocalTime,
 
-    var horarioInicio: LocalTime?,
+    @NotNull
+    var horarioFim: LocalTime,
 
-    var horarioFim: LocalTime?,
+    @NotNull
+    var fk_professor: Int,
 
-    var assunto: String,
-
-    @ManyToOne
-    @JoinColumn(name = "fk_professor")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    var professor: Usuario?,
-
-    @ManyToOne
-    @JoinColumn(name = "fk_aluno")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    var aluno: Usuario?,
-
-    @OneToMany(mappedBy = "agendamento")
-    var historico: List<Andamento>?
+    @NotNull
+    var fk_aluno: Int
 )

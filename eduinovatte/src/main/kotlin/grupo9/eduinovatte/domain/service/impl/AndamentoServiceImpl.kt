@@ -8,7 +8,7 @@ import grupo9.eduinovatte.domain.repository.AndamentoRepository
 import grupo9.eduinovatte.domain.model.entity.Agendamento
 import grupo9.eduinovatte.domain.service.AndamentoService
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Service
 class AndamentoServiceImpl(
@@ -44,9 +44,9 @@ class AndamentoServiceImpl(
 
     override fun salvarHistorico(agendamento: Agendamento): Andamento {
         val novoHistorico = Andamento().apply {
-            dataAtualizacao = LocalDateTime.now()
+            dataAtualizacao = LocalDate.now()
             this.agendamento = agendamento
-            status = Status(id = 2, nome = StatusNome.PENDENTE)
+            status = Status(id = 1, nome = StatusNome.PENDENTE)
         }
 
         return andamentoRepository.save(novoHistorico)
@@ -57,7 +57,7 @@ class AndamentoServiceImpl(
             ?: throw IllegalArgumentException("Histórico não encontrado para o agendamento com id ${novoHistoricoRequest.novoAgendamento.id}")
 
         val novoHistorico = Andamento().apply {
-            dataAtualizacao = LocalDateTime.now()
+            dataAtualizacao = LocalDate.now()
             agendamento = novoHistoricoRequest.novoAgendamento
             status = Status(novoHistoricoRequest.status.id, novoHistoricoRequest.status.nome)
         }

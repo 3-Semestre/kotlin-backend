@@ -210,4 +210,44 @@ class AgendamentoService(
         return agendamento
     }
 
+    fun buscaQtdAgendamentosCancelados(id: Int): Int? {
+        val agendamento = agendamentoRepository.buscaQtdAgendamentosCancelados(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaAulasTransferidasPorProfessor(id: Int): Int? {
+        val agendamento = agendamentoRepository.buscaAulasTransferidasPorProfessor(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaTaxaCumprimentoMetas(id: Int): List<TaxaCumprimentoRepository>? {
+        val agendamento = agendamentoRepository.buscaTaxaCumprimentoMetas(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaQtdAlunoPorMes(id: Int): List<AlunosQuantidadeRepository>? {
+        val agendamento = agendamentoRepository.buscaQtdAlunoPorMes(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
 }

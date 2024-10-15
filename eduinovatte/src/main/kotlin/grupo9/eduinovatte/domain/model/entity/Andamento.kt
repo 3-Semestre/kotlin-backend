@@ -3,7 +3,7 @@ package grupo9.eduinovatte.domain.model.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Entity(name = "historico_agendamento")
 data class Andamento (
@@ -11,7 +11,7 @@ data class Andamento (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    var dataAtualizacao: LocalDateTime? = null,
+    var dataAtualizacao: LocalDate? = null,
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne

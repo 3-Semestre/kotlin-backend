@@ -87,6 +87,18 @@ class UsuarioServiceImpl(
     }
 
     override fun editaUsuario(novoUsuario: Usuario): UsuarioResponse {
+        val usuarioExistente = usuarioRepository.findById(novoUsuario.id!!)
+        if (usuarioExistente.isEmpty) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(404)) // Status 404 Not Found
+        }
+        if(novoUsuario.senha == null){
+            novoUsuario.senha = usuarioExistente.get().senha
+        } else if ( novoUsuario.senha != usuarioExistente.get().senha){
+            throw ResponseStatusException(HttpStatusCode.valueOf(401))
+        }
+
+        novoUsuario.autenticado = usuarioExistente.get().autenticado;
+        novoUsuario.dataCadastro = usuarioExistente.get().dataCadastro;
 
         val usuario = usuarioRepository.save(novoUsuario)
         val usuarioResponse = retornaUsuario(usuario)

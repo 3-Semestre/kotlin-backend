@@ -31,15 +31,15 @@ data class Usuario(
     @field:JsonFormat(pattern = "yyyy-MM-dd")
     var dataNascimento: LocalDate?,
 
-    val dataCadastro: LocalDate? = LocalDate.now(),
+    var dataCadastro: LocalDate? = LocalDate.now(),
 
-    val autenticado: Boolean? = false,
+    var autenticado: Boolean? = false,
 
     @field:Email
     @field:NotNull
     val email: String?,
 
-    val senha: String?,
+    var senha: String?,
 
     val profissao: String?,
 

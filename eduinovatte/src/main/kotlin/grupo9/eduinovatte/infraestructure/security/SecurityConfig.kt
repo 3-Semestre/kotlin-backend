@@ -38,6 +38,8 @@ class SecurityConfig{
         "/status/**",
         "/status/**",
         "/horario-professor/**",
+        "/usuario-nicho/**",
+        "/usuario-nivel-ingles/**",
     )
 
     @Bean

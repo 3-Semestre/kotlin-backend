@@ -6,6 +6,7 @@ import grupo9.eduinovatte.service.UsuarioNichoRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @Service
 class UsuarioNichoServiceImpl(
@@ -30,6 +31,10 @@ class UsuarioNichoServiceImpl(
 
     override fun buscaPorIdUsuario(id: Int): List<UsuarioNicho> {
         return usuarioNichoRepository.findByUsuarioId(id)
+    }
+
+    fun buscarNichoPorUsuarioNicho(idUsuario: Int, idNicho: Int): Optional<UsuarioNicho> {
+        return usuarioNichoRepository.findByUsuarioIdAndNichoId(idUsuario, idNicho)
     }
 
     override fun deleta(id: Int) {

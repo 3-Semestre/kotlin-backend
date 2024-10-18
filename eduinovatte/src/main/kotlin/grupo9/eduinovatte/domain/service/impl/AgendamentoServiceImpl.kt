@@ -19,7 +19,7 @@ import java.util.*
 
 @Service
 class AgendamentoServiceImpl(
-    val agendamentoService: AgendamentoRepository,
+    val agendamentoRepository: AgendamentoRepository,
     val andamentoService: AndamentoServiceImpl,
     val usuarioService: UsuarioRepository
 ) : AgendamentoService {
@@ -37,18 +37,18 @@ class AgendamentoServiceImpl(
     }
 
     override fun buscaAgendamentos(): List<Agendamento> {
-        return agendamentoService.findAll()
+        return agendamentoRepository.findAll()
     }
 
     override fun buscaAgendamentoPorId(id: Int): Optional<Agendamento> {
-        return agendamentoService.findById(id)
+        return agendamentoRepository.findById(id)
     }
 
     override fun buscaAgendamentosUsuario(tipo: Int, id: Int, pageable: Pageable): Page<Agendamento> {
         val agendamentos = when (tipo) {
-            1 -> agendamentoService.findAgendamentosByFkAluno(id, pageable)
-            2 -> agendamentoService.findAgendamentosByFkProfessor(id, pageable)
-            3 -> agendamentoService.findAgendamentosByFkProfessor(id, pageable)
+            1 -> agendamentoRepository.findAgendamentosByFkAluno(id, pageable)
+            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id, pageable)
+            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id, pageable)
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 
@@ -61,10 +61,10 @@ class AgendamentoServiceImpl(
         val usuario = usuarioService.findById(id).get()
 
         val agendamentos = when{
-            usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoService.findAgendamentosPassadosByFkAluno(id, pageable)
-            usuario.nivelAcesso.id != 1  && tempo == "passado" -> agendamentoService.findAgendamentosPassadosByFkProfessor(id, pageable)
-            usuario.nivelAcesso.id == 1  && tempo == "futuro" -> agendamentoService.findAgendamentosFuturoByFkAluno(id, pageable)
-            usuario.nivelAcesso.id != 1  && tempo == "futuro" -> agendamentoService.findAgendamentosFuturoByFkProfessor(id, pageable)
+            usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkAluno(id, pageable)
+            usuario.nivelAcesso.id != 1  && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkProfessor(id, pageable)
+            usuario.nivelAcesso.id == 1  && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkAluno(id, pageable)
+            usuario.nivelAcesso.id != 1  && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkProfessor(id, pageable)
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 
@@ -77,7 +77,7 @@ class AgendamentoServiceImpl(
         val professor = usuarioService.findById(novoAgendamento.fk_professor);
         if(aluno.isPresent && professor.isPresent){
             val agendamento_salvo = Agendamento(null,novoAgendamento.data,novoAgendamento.horarioInicio,novoAgendamento.horarioFim,"Aguardando Confirmação", professor.get(), aluno.get());
-            val agendamento = agendamentoService.save(agendamento_salvo)
+            val agendamento = agendamentoRepository.save(agendamento_salvo)
             andamentoService.salvarHistorico(agendamento)
 
             return retornaAgendamento(agendamento)

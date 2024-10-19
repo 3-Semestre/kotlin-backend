@@ -180,7 +180,7 @@ class DashboardController(
 
     @CrossOrigin
     @GetMapping("/listagem-agendamento-aluno")
-    fun buscarListaAgendamentoAluno(): ResponseEntity<List<Andamento>>{
+    fun buscarListaAgendamentoAluno(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.buscarListaAgendamentoAluno()
 
         return ResponseEntity.status(200).body(usuarioNicho)

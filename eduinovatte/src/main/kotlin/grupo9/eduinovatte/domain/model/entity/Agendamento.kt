@@ -31,5 +31,5 @@ data class Agendamento (
     var aluno: Usuario?,
 
     @OneToMany(mappedBy = "agendamento")
-    var historico: List<Andamento>?
+    var historico: List<Andamento>? = null
 )

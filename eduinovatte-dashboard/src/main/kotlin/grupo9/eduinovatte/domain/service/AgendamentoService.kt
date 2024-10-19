@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatusCode
 
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 @Service
 class AgendamentoService(
@@ -190,10 +192,13 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun buscarListaAgendamentoAluno(): List<Andamento>? {
-        val agendamento = agendamentoRepository.buscarListaAgendamentoAluno()
+    fun buscarListaAgendamentoAluno(): Int? {
+        val now = LocalDate.now()
+        val mes = now.monthValue
+        val ano = now.year
+        val agendamento = agendamentoRepository.buscarListaAgendamentoAluno(mes, ano)
 
-        if (agendamento!!.isEmpty()) {
+        if (agendamento == null) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 
@@ -204,6 +209,46 @@ class AgendamentoService(
         val agendamento = agendamentoRepository.listaHistoricoAgendamentoAluno()
 
         if (agendamento!!.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaQtdAgendamentosCancelados(id: Int): Int? {
+        val agendamento = agendamentoRepository.buscaQtdAgendamentosCancelados(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaAulasTransferidasPorProfessor(id: Int): Int? {
+        val agendamento = agendamentoRepository.buscaAulasTransferidasPorProfessor(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaTaxaCumprimentoMetas(id: Int): List<TaxaCumprimentoRepository>? {
+        val agendamento = agendamentoRepository.buscaTaxaCumprimentoMetas(id)
+
+        if (agendamento == null) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        }
+
+        return agendamento
+    }
+
+    fun buscaQtdAlunoPorMes(id: Int): List<AlunosQuantidadeRepository>? {
+        val agendamento = agendamentoRepository.buscaQtdAlunoPorMes(id)
+
+        if (agendamento == null) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
         }
 

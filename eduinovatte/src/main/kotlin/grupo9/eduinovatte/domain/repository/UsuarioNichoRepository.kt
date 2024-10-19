@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import java.util.*
 
 interface UsuarioNichoRepository : JpaRepository <UsuarioNicho, Int> {
     fun findByNichoId(id: Int): List<UsuarioNicho>
@@ -14,4 +15,5 @@ interface UsuarioNichoRepository : JpaRepository <UsuarioNicho, Int> {
     @Transactional
     @Query("DELETE FROM UsuarioNicho u WHERE u.usuario.id = :id")
     fun deletaUsuarioPeloId(id: Int): Int
+    fun findByUsuarioIdAndNichoId(idUsuario: Int, idNicho: Int): Optional<UsuarioNicho>
 }

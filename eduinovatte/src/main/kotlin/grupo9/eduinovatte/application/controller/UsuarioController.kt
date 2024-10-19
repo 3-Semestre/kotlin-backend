@@ -292,7 +292,7 @@ class UsuarioController(
         val perfil = when (tipo) {
             "aluno" -> usuarioService.exibirPerfilAluno(id)
             "professor" -> usuarioService.exibirPerfil(id)
-            "professor-auxiliar" -> usuarioService.exibirPerfil(id)
+            "professor_auxiliar" -> usuarioService.exibirPerfil(id)
             "representante_legal" -> usuarioService.exibirPerfil(id)
             else -> return ResponseEntity.status(401).build()
         }

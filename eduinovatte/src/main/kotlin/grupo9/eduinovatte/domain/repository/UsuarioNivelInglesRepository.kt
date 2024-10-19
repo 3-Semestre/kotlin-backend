@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import java.util.*
 
 interface UsuarioNivelInglesRepository : JpaRepository <UsuarioNivelIngles, Int> {
     fun findByNivelInglesId(id: Int): List<UsuarioNivelIngles>
@@ -13,4 +14,5 @@ interface UsuarioNivelInglesRepository : JpaRepository <UsuarioNivelIngles, Int>
     @Query("DELETE FROM UsuarioNivelIngles u WHERE u.usuario.id = :id")
     fun deletaUsuarioPeloId(id: Int): Int
     fun findByUsuarioId(id: Int): List<UsuarioNivelIngles>
+    fun findByUsuarioIdAndNivelInglesId(id: Int, idNivel: Int): Optional<UsuarioNivelIngles>
 }

@@ -50,10 +50,22 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun buscarVisaoPorMesAluno(id: Int): List<AgendamentoVisaoRepository>?
     @Query(value = "CALL top_tres_meses(:id);", nativeQuery = true)
     fun buscarTop3MesesAluno(id: Int): List<AgendamentoVisaoRepository>?
-    @Query(value = "CALL qtd_agendamento_mes(8, 2024);", nativeQuery = true)
-    fun buscarListaAgendamentoAluno(): List<Andamento>?
+    @Query(value = "CALL qtd_agendamento_mes(:mes, :ano);", nativeQuery = true)
+    fun buscarListaAgendamentoAluno(mes: Int, ano: Int): Int?
     @Query(value = "SELECT * FROM historico_agendamento;", nativeQuery = true)
     fun listaHistoricoAgendamentoAluno(): List<Andamento>?
+
+    @Query(value = "CALL qtd_agendamentos_cancelados(:id);", nativeQuery = true)
+    fun buscaQtdAgendamentosCancelados(id: Int): Int?
+
+    @Query(value = "CALL aulas_transferidas_por_professor(:idProfessor);", nativeQuery = true)
+    fun buscaAulasTransferidasPorProfessor(idProfessor: Int): Int?
+
+    @Query(value = "CALL taxa_cumprimento_metas(:idProfessor);", nativeQuery = true)
+    fun buscaTaxaCumprimentoMetas(idProfessor: Int): List<TaxaCumprimentoRepository>?
+
+    @Query(value = "CALL qtd_aluno_por_mes(:id);", nativeQuery = true)
+    fun buscaQtdAlunoPorMes(id: Int): List<AlunosQuantidadeRepository>?
 }
 
 

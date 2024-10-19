@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
 import org.springframework.data.domain.Page
@@ -22,7 +23,7 @@ interface AgendamentoService {
 
     fun buscaAgendamentosTempoUsuario(usuario: Int, tempo: String, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
 
-    fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro
+    fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro
 
     fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
     fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>

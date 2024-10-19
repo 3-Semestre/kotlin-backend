@@ -1,6 +1,7 @@
 package grupo9.eduinovatte.domain.service.impl
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
+import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
@@ -8,20 +9,19 @@ import grupo9.eduinovatte.domain.repository.AgendamentosDetalhesListagemResponse
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.service.UsuarioRepository
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 
 @Service
 class AgendamentoServiceImpl(
     val agendamentoRepository: AgendamentoRepository,
     val andamentoService: AndamentoServiceImpl,
-    val usuarioRepository: UsuarioRepository
+    val usuarioService: UsuarioRepository
 ) : AgendamentoService {
 
     override fun validaNivelAcesso(novoAgendamento: Agendamento) {
@@ -52,13 +52,13 @@ class AgendamentoServiceImpl(
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 
-        val user = usuarioRepository.findById(id)
+        val user = usuarioService.findById(id)
 
         return agendamentos
     }
 
     override fun buscaAgendamentosTempoUsuario(id: Int, tempo: String, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse> {
-        val usuario = usuarioRepository.findById(id).get()
+        val usuario = usuarioService.findById(id).get()
 
         val agendamentos = when{
             usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkAluno(id, pageable)
@@ -71,11 +71,20 @@ class AgendamentoServiceImpl(
         return agendamentos
     }
 
-    override fun salvarAgendamento(novoAgendamento: Agendamento): AgendamentoCadastro {
-        val agendamento = agendamentoRepository.save(novoAgendamento)
-        andamentoService.salvarHistorico(agendamento)
+    @Transactional
+    override fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro {
+        val aluno = usuarioService.findById(novoAgendamento.fk_aluno);
+        val professor = usuarioService.findById(novoAgendamento.fk_professor);
+        if(aluno.isPresent && professor.isPresent){
+            val agendamento_salvo = Agendamento(null,novoAgendamento.data,novoAgendamento.horarioInicio,novoAgendamento.horarioFim,"Aguardando Confirmação", professor.get(), aluno.get());
+            val agendamento = agendamentoRepository.save(agendamento_salvo)
+            andamentoService.salvarHistorico(agendamento)
 
-        return retornaAgendamento(agendamento)
+            return retornaAgendamento(agendamento)
+        } else{
+            throw ResponseStatusException(HttpStatusCode.valueOf(404))
+        }
+
     }
 
 

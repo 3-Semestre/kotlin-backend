@@ -4,6 +4,7 @@ import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.repository.UsuarioNivelInglesRepository
 import grupo9.eduinovatte.domain.service.UsuarioNivelInglesService
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UsuarioNivelInglesServiceImpl (
@@ -41,4 +42,9 @@ class UsuarioNivelInglesServiceImpl (
         usuarioNivelInglesRepository.deleteById(id)
     }
 
+    fun buscarNivelPorUsuarioNivel(id: Int, idNivel: Int): Optional<UsuarioNivelIngles> {
+        val usuarioNivelIngles = usuarioNivelInglesRepository.findByUsuarioIdAndNivelInglesId(id, idNivel)
+
+        return usuarioNivelIngles
+    }
 }

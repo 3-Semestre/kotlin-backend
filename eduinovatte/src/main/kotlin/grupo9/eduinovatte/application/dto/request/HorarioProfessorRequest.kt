@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.application.dto.request
+package grupo9.eduinovatte.application.dto.requestg
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.validation.constraints.NotNull

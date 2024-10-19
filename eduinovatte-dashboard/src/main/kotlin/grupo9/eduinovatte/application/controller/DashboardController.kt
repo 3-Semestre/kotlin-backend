@@ -180,7 +180,7 @@ class DashboardController(
 
     @CrossOrigin
     @GetMapping("/listagem-agendamento-aluno")
-    fun buscarListaAgendamentoAluno(): ResponseEntity<List<Andamento>>{
+    fun buscarListaAgendamentoAluno(): ResponseEntity<Int>{
         val usuarioNicho = agendamentoService.buscarListaAgendamentoAluno()
 
         return ResponseEntity.status(200).body(usuarioNicho)
@@ -197,6 +197,38 @@ class DashboardController(
     @GetMapping("/taxa-cancelamento-mes")
     fun taxaCancelamentoPorMes(): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{
         val usuarioNicho = agendamentoService.taxaCancelamentoPorMes()
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
+    @GetMapping("/qtd-agendamentos-cancelados/{id}")
+    fun buscaQtdAgendamentosCancelados(@PathVariable id: Int): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.buscaQtdAgendamentosCancelados(id)
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
+    @GetMapping("/aulas-tranferidas-professor/{id}")
+    fun buscaAulasTransferidasPorProfessor(@PathVariable id: Int): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.buscaAulasTransferidasPorProfessor(id)
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
+    @GetMapping("/taxa-cumprimento-metas/{id}")
+    fun buscaTaxaCumprimentoMetas(@PathVariable id: Int): ResponseEntity<List<TaxaCumprimentoRepository>>{
+        val usuarioNicho = agendamentoService.buscaTaxaCumprimentoMetas(id)
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
+    @GetMapping("/qtd-aluno-mes-professor/{id}")
+    fun buscaQtdAlunoPorMes(@PathVariable id: Int): ResponseEntity<List<AlunosQuantidadeRepository>>{
+        val usuarioNicho = agendamentoService.buscaQtdAlunoPorMes(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }

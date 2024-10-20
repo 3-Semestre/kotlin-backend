@@ -302,25 +302,24 @@ class UsuarioController(
 
     @CrossOrigin
     @PostMapping("/filtro/{tipo}")
-    fun filtraUsuario(@PathVariable tipo: String, @RequestBody filtro: FiltroForm): ResponseEntity<List<UsuarioFiltroResponse>> {
+    fun filtraUsuario(
+        @PathVariable tipo: String,
+        @RequestBody filtro: FiltroForm,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "6") size: Int,
+        @RequestParam(defaultValue = "desc") sortDirection: String):
+ResponseEntity<Page<UsuarioPerfilViewProjection>> {
+        val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
+        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
+
         val lista = when (tipo) {
-            "aluno" -> usuarioService.filtrarAluno(filtro)
-            "professor" -> usuarioService.filtrarProfessor(filtro)
-            "professor_auxiliar" -> usuarioService.filtrarProfessor(filtro)
+            "aluno" -> usuarioService.filtrarAluno(pageable, filtro)
+            "professor" -> usuarioService.filtrarProfessor(pageable, filtro)
+            "professor_auxiliar" -> usuarioService.filtrarProfessor(pageable, filtro)
             else -> return ResponseEntity.status(401).build()
         }
 
-        val listaRetorno: MutableList<UsuarioFiltroResponse> = mutableListOf()
-
-        lista?.forEach {
-            if(it.id != null){
-                var nicho = usuarioNichoService.buscaPorIdUsuario(it.id!!)
-                var nivelIngles = usuarioNivelInglesService.buscaPorIdUsuario(it.id!!)
-                listaRetorno.add(UsuarioFiltroResponse.from(it, nicho, nivelIngles))
-            }
-        }
-
-        return ResponseEntity.status(200).body(listaRetorno)
+        return ResponseEntity.status(200).body(lista)
     }
 
 }

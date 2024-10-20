@@ -50,16 +50,22 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
 
     @Query("""
-    SELECT u FROM Usuario u
-    LEFT JOIN UsuarioNicho un ON u.id = un.usuario.id
-    LEFT JOIN Nicho n ON un.nicho.id = n.id
-    LEFT JOIN UsuarioNivelIngles uni ON u.id = uni.usuario.id
-    LEFT JOIN NivelIngles ni ON uni.nivelIngles.id = ni.id
-    WHERE (:nome IS NULL OR u.nomeCompleto LIKE %:nome%)
-      AND (:cpf IS NULL OR u.cpf = :cpf)
-      AND (:nicho IS NULL OR n.nome = :nicho)
-      AND (:nivelIngles IS NULL OR ni.nome = :nivelIngles)
-      AND (u.nivelAcesso.id IN (:nivelAcesso, 3))
-""")
-    fun filtrarUsuario(nome: String?, cpf: String?, nicho: NichoNome?, nivelIngles: NivelInglesNome?, nivelAcesso: Int): List<Usuario>?
+    SELECT * FROM perfil
+    WHERE (:nome IS NULL OR nome_completo LIKE %:nome%)
+      AND (:cpf IS NULL OR cpf = :cpf)
+      AND (:nicho IS NULL OR nichos LIKE %:nicho%)
+      AND (:nivelIngles IS NULL OR niveis_ingles LIKE %:nivelIngles%)
+      AND (:nivelAcesso IS NULL OR nivel_acesso_id = :nivelAcesso)
+""", nativeQuery = true )
+    fun filtrarAluno(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, nivelAcesso: Int): Page<UsuarioPerfilViewProjection>?
+
+    @Query("""    
+    SELECT * FROM perfil_professor
+    WHERE (:nome IS NULL OR nome_completo LIKE CONCAT('%', :nome, '%'))
+      AND (:cpf IS NULL OR cpf = :cpf)
+      AND (:nicho IS NULL OR nichos LIKE CONCAT('%', :nicho, '%'))
+      AND (:nivelIngles IS NULL OR niveis_ingles LIKE CONCAT('%', :nivelIngles, '%'))
+      AND (:nivelAcesso IS NULL OR nivel_acesso_id IN (:nivelAcesso, 3))
+""", nativeQuery = true)
+    fun filtrarProfessor(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, nivelAcesso: Int): Page<UsuarioPerfilViewProjection>?
 }

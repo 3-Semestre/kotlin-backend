@@ -175,11 +175,31 @@ class UsuarioServiceImpl(
         return alunos;
     }
 
-    override fun filtrarAluno(filtro: FiltroForm): List<Usuario>? {
-        return usuarioRepository.filtrarUsuario(filtro.nome, filtro.cpf, filtro.nicho, filtro.nivelIngles, 1)
+    override fun filtrarAluno(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>? {
+        var filtroNichoNome: String? = null
+        var filtroNivelIngles: String? = null
+
+        if(filtro.nicho !== null){
+            filtroNichoNome = filtro.nicho.name
+        }
+        if(filtro.nivelIngles !== null){
+            filtroNivelIngles = filtro.nivelIngles.name
+        }
+
+        return usuarioRepository.filtrarAluno(pageable, filtro.nome, filtro.cpf, filtroNichoNome, filtroNivelIngles, 1)
     }
 
-    override fun filtrarProfessor(filtro: FiltroForm): List<Usuario>? {
-        return usuarioRepository.filtrarUsuario(filtro.nome, filtro.cpf, filtro.nicho, filtro.nivelIngles, 2)
+    override fun filtrarProfessor(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>? {
+        var filtroNichoNome: String? = null
+        var filtroNivelIngles: String? = null
+
+        if(filtro.nicho !== null){
+            filtroNichoNome = filtro.nicho.name
+        }
+        if(filtro.nivelIngles !== null){
+            filtroNivelIngles = filtro.nivelIngles.name
+        }
+
+        return usuarioRepository.filtrarProfessor(pageable, filtro.nome, filtro.cpf, filtroNichoNome, filtroNivelIngles, 2)
     }
 }

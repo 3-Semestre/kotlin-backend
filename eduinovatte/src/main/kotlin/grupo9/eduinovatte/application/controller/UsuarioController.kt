@@ -1,14 +1,11 @@
 package grupo9.eduinovatte.controller
 
-import grupo9.eduinovatte.application.controller.UsuarioNivelInglesController
+
 import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
-import grupo9.eduinovatte.application.dto.response.UsuarioFiltroResponse
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
-import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome

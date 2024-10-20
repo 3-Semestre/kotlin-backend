@@ -28,8 +28,8 @@ interface UsuarioService {
     fun buscaSituacao(id: Int?): Situacao?
     fun exibirPerfil(id: Int): UsuarioPerfilViewProjection?
     fun exibirPerfilAluno(id: Int): UsuarioPerfilAlunoViewProjection?
-    fun filtrarAluno(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>??
-    fun filtrarProfessor(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>??
+    fun filtrarAluno(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>?
+    fun filtrarProfessor(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>?
     fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
     fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?>
 }

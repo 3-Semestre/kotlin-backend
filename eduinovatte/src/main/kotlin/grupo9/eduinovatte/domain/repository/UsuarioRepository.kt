@@ -5,9 +5,7 @@ import org.springframework.data.domain.Pageable
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
 import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.model.enums.NichoNome
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.model.enums.NivelInglesNome
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying

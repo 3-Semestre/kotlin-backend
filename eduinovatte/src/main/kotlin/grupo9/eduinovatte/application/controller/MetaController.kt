@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.controller
+package grupo9.eduinovatte.application.controller
 
 import grupo9.eduinovatte.domain.model.entity.Meta
 import grupo9.eduinovatte.domain.service.MetaService
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/metas")
-class MetasController(
+class MetaController(
     val metaService: MetaService
 ) {
 

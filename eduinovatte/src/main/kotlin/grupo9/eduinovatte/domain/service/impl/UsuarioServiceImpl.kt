@@ -75,12 +75,16 @@ class UsuarioServiceImpl(
             horarioProfessorService.salvar(HorarioProfessor(usuario = usuarioSalvo))
         }
 
-        novoUsuario.listaDeNichos?.forEach { nicho ->
-            usuarioNichoService.salvar(UsuarioNicho(usuario = usuarioSalvo, nicho = nicho))
+        while (novoUsuario.listaDeNichos?.isNotEmpty() == true) {
+            novoUsuario.listaDeNichos.poll()?.let {
+                usuarioNichoService.salvar(UsuarioNicho(usuario = usuarioSalvo, nicho = it))
+            }
         }
 
-        novoUsuario.listaDeNiveis?.forEach { nivelIngles ->
-            usuarioNivelInglesService.salvar(UsuarioNivelIngles(usuario = usuarioSalvo, nivelIngles = nivelIngles))
+        while (novoUsuario.listaDeNiveis?.isNotEmpty() == true) {
+            novoUsuario.listaDeNiveis.poll()?.let {
+                usuarioNivelInglesService.salvar(UsuarioNivelIngles(usuario = usuarioSalvo, nivelIngles = it))
+            }
         }
 
         return retornaUsuario(usuarioSalvo)

@@ -15,6 +15,7 @@ import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.validator.constraints.br.CPF
 import java.time.LocalDate
+import java.util.concurrent.ArrayBlockingQueue
 
 class UsuarioCompletoRequest(
     @field:Id
@@ -59,11 +60,11 @@ class UsuarioCompletoRequest(
 
     @field:NotNull
     @field:Size(min = 1)
-    val listaDeNichos: List<Nicho>? = null,
+    val listaDeNichos: ArrayBlockingQueue<Nicho>? = null,
 
     @field:NotNull
     @field:Size(min = 1)
-    val listaDeNiveis: List<NivelIngles>? = null
+    val listaDeNiveis: ArrayBlockingQueue<NivelIngles>? = null
 ){
     fun convertToUsuario(novoUsuario: UsuarioCompletoRequest): Usuario {
         return Usuario(

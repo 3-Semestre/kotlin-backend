@@ -40,6 +40,7 @@ class SecurityConfig{
         "/horario-professor/**",
         "/usuario-nicho/**",
         "/usuario-nivel-ingles/**",
+        "/metas/**",
     )
 
     @Bean

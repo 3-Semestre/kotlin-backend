@@ -5,4 +5,5 @@ interface UsuarioPerfilViewProjection : UsuarioPerfilAlunoViewProjection{
     fun getFim(): String;
     fun getPausa_inicio(): String;
     fun getPausa_fim(): String;
+    fun getQtd_aula(): Int;
 }

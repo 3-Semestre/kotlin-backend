@@ -25,6 +25,8 @@ interface AgendamentoService {
 
     fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro
 
+    fun atualizaAssuntoAgendamentoPorId(id: Int, novoAssunto: String): Agendamento
+
     fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
     fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?>
 

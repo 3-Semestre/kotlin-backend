@@ -136,6 +136,16 @@ class AgendamentoController(
         }
     }
 
+    @PutMapping("/{id}")
+    fun atualizaAssuntoAgendamentoPorId(
+        @PathVariable id: Int,
+        @RequestBody novoAssunto: String
+    ): ResponseEntity<AgendamentoListagemResponse> {
+        val agendamento = agendamentoService.atualizaAssuntoAgendamentoPorId(id, novoAssunto)
+
+        return ResponseEntity.ok(mapper.map(agendamento, AgendamentoListagemResponse::class.java))
+    }
+
 
     @CrossOrigin
     @PostMapping("/filtro/{tempo}/{tipo}/{id}")

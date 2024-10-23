@@ -84,9 +84,13 @@ class AgendamentoServiceImpl(
         } else{
             throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
-
     }
 
+    override fun atualizaAssuntoAgendamentoPorId(id: Int, novoAssunto: String): Agendamento {
+        val agendamento = agendamentoRepository.findById(id).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
+        agendamento.assunto = novoAssunto
+        return agendamentoRepository.save(agendamento)
+    }
 
     override fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
         return agendamentoRepository.filtrarAlunoPassado(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)

@@ -70,11 +70,10 @@ class AndamentoController(
         ]
     )
     @GetMapping("/{id}")
-    fun buscaHistoricoPorIdAgendamento(@PathVariable id: Int): ResponseEntity<List<AndamentoHistoricoResponse>> {
-        val listaDeHistorico = andamentoService.buscaHistoricoPorIdAgendamento(id)
-        if (listaDeHistorico.isEmpty()) return ResponseEntity.status(204).build()
+    fun buscaHistoricoPorIdAgendamento(@PathVariable id: Int): ResponseEntity<AndamentoHistoricoResponse> {
+        val historico = andamentoService.buscaHistoricoPorIdAgendamento(id)
 
-        val historico = retornaHistorico(listaDeHistorico)
-        return ResponseEntity.status(200).body(historico)
+        val historicoResponse = mapper.map(historico, AndamentoHistoricoResponse::class.java)
+        return ResponseEntity.status(200).body(historicoResponse)
     }
 }

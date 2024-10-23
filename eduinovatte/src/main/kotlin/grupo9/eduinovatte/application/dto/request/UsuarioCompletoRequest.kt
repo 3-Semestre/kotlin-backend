@@ -50,6 +50,8 @@ class UsuarioCompletoRequest(
 
     val profissao: String?,
 
+    val meta: Int? = null,
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @field:ManyToOne
     val nivelAcesso: NivelAcesso?,

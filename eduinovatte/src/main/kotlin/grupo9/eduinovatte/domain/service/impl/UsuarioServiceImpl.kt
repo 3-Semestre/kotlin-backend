@@ -26,7 +26,8 @@ class UsuarioServiceImpl(
     val situacaoService: SituacaoService,
     val horarioProfessorService: HorarioProfessorService,
     private val usuarioNichoService: UsuarioNichoServiceImpl,
-    private val usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
+    private val usuarioNivelInglesService: UsuarioNivelInglesServiceImpl,
+    private val metaService: MetaServiceImpl
 ) : UsuarioService {
     override fun autenticar(id: Int): UsuarioResponse {
         usuarioRepository.autenticar(id)
@@ -85,6 +86,11 @@ class UsuarioServiceImpl(
             novoUsuario.listaDeNiveis.poll()?.let {
                 usuarioNivelInglesService.salvar(UsuarioNivelIngles(usuario = usuarioSalvo, nivelIngles = it))
             }
+        }
+
+        if (usuario.nivelAcesso!!.id != 1) {
+            val meta = Meta(usuario = usuarioSalvo, qtdAula = novoUsuario.meta!!)
+            metaService.salvar(meta);
         }
 
         return retornaUsuario(usuarioSalvo)

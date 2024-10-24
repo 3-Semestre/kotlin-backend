@@ -59,7 +59,7 @@ class AgendamentoController(
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
         // Configura a paginação e a ordenação
-        val pageable: Pageable = PageRequest.of(page, size, direction, "data")
+        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
 
         val paginaDeHistorico = agendamentoService.buscaAgendamentosUsuario(tipo, id, pageable)
 
@@ -67,6 +67,25 @@ class AgendamentoController(
             ResponseEntity.status(HttpStatus.NO_CONTENT).build()
         } else {
             val dto = paginaDeHistorico.map {
+                mapper.map(it, AgendamentoListagemResponse::class.java)
+            }
+            ResponseEntity.ok(dto)
+        }
+    }
+
+    @GetMapping("/{tipo}/{id}/{mes}/{ano}")
+    fun buscaAgendamentosPorUsuarioMes(
+        @PathVariable tipo: Int,
+        @PathVariable id: Int,
+        @PathVariable mes: Int,
+        @PathVariable ano: Int
+    ): ResponseEntity<List<AgendamentoListagemResponse>> {
+        val agendamentos = agendamentoService.buscaAgendamentosUsuarioMes(tipo, id, mes, ano)
+
+        return if (agendamentos.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } else {
+            val dto = agendamentos.map {
                 mapper.map(it, AgendamentoListagemResponse::class.java)
             }
             ResponseEntity.ok(dto)
@@ -94,7 +113,7 @@ class AgendamentoController(
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
         // Configura a paginação e a ordenação
-        val pageable: Pageable = PageRequest.of(page, size, direction, "data")
+        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
 
         val listaDeHistorico = agendamentoService.buscaAgendamentosTempoUsuario(id, tempo, pageable)
 
@@ -156,10 +175,10 @@ class AgendamentoController(
         @PathVariable id: Int
     ): ResponseEntity<List<AgendamentoListagemResponse>> {
         val lista = when {
-            tipo == "aluno" && tempo == "passado"-> agendamentoService.filtrarAlunoPassado(filtro, id)
-            tipo == "aluno" && tempo == "futuro"-> agendamentoService.filtrarAlunoFuturo(filtro, id)
-            tipo == "professor" && tempo == "passado"-> agendamentoService.filtrarProfessorPassado(filtro, id)
-            tipo == "professor" && tempo == "futuro"-> agendamentoService.filtrarProfessorFuturo(filtro, id)
+            tipo == "aluno" && tempo == "passado" -> agendamentoService.filtrarAlunoPassado(filtro, id)
+            tipo == "aluno" && tempo == "futuro" -> agendamentoService.filtrarAlunoFuturo(filtro, id)
+            tipo == "professor" && tempo == "passado" -> agendamentoService.filtrarProfessorPassado(filtro, id)
+            tipo == "professor" && tempo == "futuro" -> agendamentoService.filtrarProfessorFuturo(filtro, id)
             else -> return ResponseEntity.status(401).build()
         }
 

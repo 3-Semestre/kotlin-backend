@@ -21,6 +21,8 @@ interface AgendamentoService {
 
     fun buscaAgendamentosUsuario(tipo: Int, id: Int, pageable: Pageable): Page<Agendamento>
 
+    fun buscaAgendamentosUsuarioMes(tipo: Int, id: Int, mes: Int, ano: Int): List<Agendamento>
+
     fun buscaAgendamentosTempoUsuario(usuario: Int, tempo: String, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
 
     fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro

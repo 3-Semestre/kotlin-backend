@@ -11,7 +11,9 @@ interface MetaService {
 
     fun buscaMetas(): List<Meta>
 
-    fun buscaPorProfessor(id: Int): Optional<List<Meta>>
+    fun buscaPorProfessor(id: Int): Optional<Meta>
 
     fun deleta(id: Int)
+
+    fun atualizarMetaPorIdProfessor(id: Int, meta: Int): Meta?
 }

@@ -26,7 +26,8 @@ class UsuarioServiceImpl(
     val situacaoService: SituacaoService,
     val horarioProfessorService: HorarioProfessorService,
     private val usuarioNichoService: UsuarioNichoServiceImpl,
-    private val usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
+    private val usuarioNivelInglesService: UsuarioNivelInglesServiceImpl,
+    private val metaService: MetaServiceImpl
 ) : UsuarioService {
     override fun autenticar(id: Int): UsuarioResponse {
         usuarioRepository.autenticar(id)
@@ -75,12 +76,21 @@ class UsuarioServiceImpl(
             horarioProfessorService.salvar(HorarioProfessor(usuario = usuarioSalvo))
         }
 
-        novoUsuario.listaDeNichos?.forEach { nicho ->
-            usuarioNichoService.salvar(UsuarioNicho(usuario = usuarioSalvo, nicho = nicho))
+        while (novoUsuario.listaDeNichos?.isNotEmpty() == true) {
+            novoUsuario.listaDeNichos.poll()?.let {
+                usuarioNichoService.salvar(UsuarioNicho(usuario = usuarioSalvo, nicho = it))
+            }
         }
 
-        novoUsuario.listaDeNiveis?.forEach { nivelIngles ->
-            usuarioNivelInglesService.salvar(UsuarioNivelIngles(usuario = usuarioSalvo, nivelIngles = nivelIngles))
+        while (novoUsuario.listaDeNiveis?.isNotEmpty() == true) {
+            novoUsuario.listaDeNiveis.poll()?.let {
+                usuarioNivelInglesService.salvar(UsuarioNivelIngles(usuario = usuarioSalvo, nivelIngles = it))
+            }
+        }
+
+        if (usuario.nivelAcesso!!.id != 1) {
+            val meta = Meta(usuario = usuarioSalvo, qtdAula = novoUsuario.meta!!)
+            metaService.salvar(meta);
         }
 
         return retornaUsuario(usuarioSalvo)

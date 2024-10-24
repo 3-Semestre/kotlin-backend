@@ -57,14 +57,45 @@ class AgendamentoServiceImpl(
         return agendamentos
     }
 
-    override fun buscaAgendamentosTempoUsuario(id: Int, tempo: String, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse> {
+    override fun buscaAgendamentosUsuarioMes(tipo: Int, id: Int, mes: Int, ano: Int): List<Agendamento> {
+        val agendamentos = when (tipo) {
+            1 -> agendamentoRepository.findAgendamentosByFkAluno(id, mes, ano)
+            2 -> agendamentoRepository.findAgendamentosByFkProfessor(id, mes, ano)
+            3 -> agendamentoRepository.findAgendamentosByFkProfessor(id, mes, ano)
+            else -> throw ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo de usuário inválido")
+        }
+
+        return agendamentos
+    }
+
+    override fun buscaAgendamentosTempoUsuario(
+        id: Int,
+        tempo: String,
+        pageable: Pageable
+    ): Page<AgendamentosDetalhesListagemResponse> {
         val usuario = usuarioService.findById(id).get()
 
-        val agendamentos = when{
-            usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkAluno(id, pageable)
-            usuario.nivelAcesso.id != 1  && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkProfessor(id, pageable)
-            usuario.nivelAcesso.id == 1  && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkAluno(id, pageable)
-            usuario.nivelAcesso.id != 1  && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkProfessor(id, pageable)
+        val agendamentos = when {
+            usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkAluno(
+                id,
+                pageable
+            )
+
+            usuario.nivelAcesso.id != 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkProfessor(
+                id,
+                pageable
+            )
+
+            usuario.nivelAcesso.id == 1 && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkAluno(
+                id,
+                pageable
+            )
+
+            usuario.nivelAcesso.id != 1 && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkProfessor(
+                id,
+                pageable
+            )
+
             else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
 
@@ -75,32 +106,75 @@ class AgendamentoServiceImpl(
     override fun salvarAgendamento(novoAgendamento: AgendamentoCadastroRequest): AgendamentoCadastro {
         val aluno = usuarioService.findById(novoAgendamento.fk_aluno);
         val professor = usuarioService.findById(novoAgendamento.fk_professor);
-        if(aluno.isPresent && professor.isPresent){
-            val agendamento_salvo = Agendamento(null,novoAgendamento.data,novoAgendamento.horarioInicio,novoAgendamento.horarioFim,"Aguardando Confirmação", professor.get(), aluno.get());
+        if (aluno.isPresent && professor.isPresent) {
+            val agendamento_salvo = Agendamento(
+                null,
+                novoAgendamento.data,
+                novoAgendamento.horarioInicio,
+                novoAgendamento.horarioFim,
+                "Aguardando Confirmação",
+                professor.get(),
+                aluno.get()
+            );
             val agendamento = agendamentoRepository.save(agendamento_salvo)
             andamentoService.salvarHistorico(agendamento)
 
             return retornaAgendamento(agendamento)
-        } else{
+        } else {
             throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
-
     }
 
+    override fun atualizaAssuntoAgendamentoPorId(id: Int, novoAssunto: String): Agendamento {
+        val agendamento =
+            agendamentoRepository.findById(id).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
+        agendamento.assunto = novoAssunto
+        return agendamentoRepository.save(agendamento)
+    }
 
     override fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarAlunoPassado(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
+        return agendamentoRepository.filtrarAlunoPassado(
+            filtro.nome,
+            filtro.data_inicio,
+            filtro.data_fim,
+            filtro.horario_inicio,
+            filtro.horario_fim,
+            id
+        )
     }
 
     override fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarAlunoFuturo(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, id)
+        return agendamentoRepository.filtrarAlunoFuturo(
+            filtro.nome,
+            filtro.data_inicio,
+            filtro.data_fim,
+            filtro.horario_inicio,
+            filtro.horario_fim,
+            id
+        )
     }
 
     override fun filtrarProfessorPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarProfessorPassado(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, filtro.assunto, id)
+        return agendamentoRepository.filtrarProfessorPassado(
+            filtro.nome,
+            filtro.data_inicio,
+            filtro.data_fim,
+            filtro.horario_inicio,
+            filtro.horario_fim,
+            filtro.assunto,
+            id
+        )
     }
 
     override fun filtrarProfessorFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarProfessorFuturo(filtro.nome, filtro.data_inicio, filtro.data_fim, filtro.horario_inicio, filtro.horario_fim, filtro.assunto, id)
+        return agendamentoRepository.filtrarProfessorFuturo(
+            filtro.nome,
+            filtro.data_inicio,
+            filtro.data_fim,
+            filtro.horario_inicio,
+            filtro.horario_fim,
+            filtro.assunto,
+            id
+        )
     }
 }

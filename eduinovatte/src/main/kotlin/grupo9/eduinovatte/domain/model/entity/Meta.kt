@@ -11,7 +11,7 @@ data class Meta (
     val id: Int? = null,
 
     @Column(name = "qtd_aula")
-    val qtdAula: Int,
+    var qtdAula: Int,
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne

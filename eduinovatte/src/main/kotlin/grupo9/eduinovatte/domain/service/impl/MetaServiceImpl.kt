@@ -17,11 +17,17 @@ class MetaServiceImpl(
         return metaRepository.save(novaMeta)
     }
 
+    override fun atualizarMetaPorIdProfessor(id: Int, novaMeta: Int): Meta {
+        var meta = metaRepository.findByUsuarioId(id)
+        meta.get().qtdAula = novaMeta;
+        return metaRepository.save(meta.get())
+    }
+
     override fun removerPorProfessor(id: Int): Int {
         return metaRepository.deletaUsuarioPeloId(id)
     }
 
-    override fun buscaPorProfessor(id: Int): Optional<List<Meta>> {
+    override fun buscaPorProfessor(id: Int): Optional<Meta> {
         return metaRepository.findByUsuarioId(id)
     }
 

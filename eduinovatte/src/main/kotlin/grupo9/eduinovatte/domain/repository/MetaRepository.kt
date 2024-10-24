@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query
 import java.util.*
 
 interface MetaRepository : JpaRepository <Meta, Int> {
-    fun findByUsuarioId(id: Int): Optional<List<Meta>>
+    fun findByUsuarioId(id: Int): Optional<Meta>
     @Modifying
     @Transactional
     @Query("DELETE FROM Meta u WHERE u.usuario.id = :id")

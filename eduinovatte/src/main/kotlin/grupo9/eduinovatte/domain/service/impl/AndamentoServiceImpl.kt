@@ -23,12 +23,20 @@ class AndamentoServiceImpl(
         val antigoStatus = antigoHistorico.status?.nome
         val novoStatus = novoHistorico.status?.nome
 
-        if (antigoStatus == StatusNome.CANCELADO && novoStatus != StatusNome.CANCELADO) {
+        if (antigoStatus == StatusNome.CANCELADO) {
             throw IllegalStateException("Não é possível mudar um agendamento cancelado para outro status")
         }
 
         if (antigoStatus == StatusNome.CONCLUIDO) {
             throw IllegalStateException("Não é possível mudar um agendamento concluído para outro status")
+        }
+
+        if (antigoStatus == StatusNome.TRANSFERIDO) {
+            throw IllegalStateException("Não é possível mudar um agendamento transferido para outro status")
+        }
+
+        if (antigoStatus == StatusNome.CONFIRMADO && novoStatus == StatusNome.PENDENTE) {
+            throw IllegalStateException("Não é possível mudar um agendamento confirmado para pendente")
         }
     }
 
@@ -53,8 +61,8 @@ class AndamentoServiceImpl(
     }
 
     override fun mudarHistorico(novoHistoricoRequest: AlterarStatus): Andamento {
-        val antigoHistorico = andamentoRepository.findTopByAgendamentoIdOrderByDataAtualizacaoDesc(novoHistoricoRequest.novoAgendamento.id!!)
-            ?: throw IllegalArgumentException("Histórico não encontrado para o agendamento com id ${novoHistoricoRequest.novoAgendamento.id}")
+        val antigoHistorico =
+            andamentoRepository.findTopByAgendamentoIdOrderByDataAtualizacaoDesc(novoHistoricoRequest.novoAgendamento.id!!)
 
         val novoHistorico = Andamento().apply {
             dataAtualizacao = LocalDate.now()

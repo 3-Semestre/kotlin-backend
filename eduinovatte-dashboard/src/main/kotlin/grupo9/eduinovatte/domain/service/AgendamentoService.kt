@@ -4,16 +4,18 @@ import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.response.*
 import grupo9.eduinovatte.domain.model.Andamento
 import grupo9.eduinovatte.domain.repository.AgendamentoCancelamentoPorMesProjection
+import grupo9.eduinovatte.domain.repository.AgendamentoConclusaoMesAtualProjection
+import grupo9.eduinovatte.domain.repository.AgendamentoConclusaoPorMesProjection
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.model.Agendamento
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 @Service
 class AgendamentoService(
@@ -71,15 +73,17 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun qtdAgendamentoMes(): Int {
-        val agendamento = agendamentoRepository.qtdAgendamentoMesProfessor()
+    fun qtdAgendamentoMes(id: Int): Int {
+        val tempoAtual = LocalDate.now()
+        val agendamento = agendamentoRepository.qtdAgendamentoMesProfessor(tempoAtual.monthValue, tempoAtual.year, id)
             ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
 
         return agendamento
     }
 
-    fun tempoConfirmacao(): Int? {
-        val agendamento = agendamentoRepository.qtdAgendamentoMesProfessor()
+    fun tempoConfirmacao(id: Int): Int? {
+        val tempoAtual = LocalDate.now()
+        val agendamento = agendamentoRepository.qtdAgendamentoMesProfessor(tempoAtual.monthValue, tempoAtual.year, id)
             ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
 
         return agendamento
@@ -114,12 +118,12 @@ class AgendamentoService(
         return cancelamento
     }
 
-        fun taxaCancelamentoPorMes(): List<AgendamentoCancelamentoPorMesProjection> {
-            val cancelamento = agendamentoRepository.taxaCancelamentoProfessorPorMes()
-                ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
+    fun taxaCancelamentoPorMes(id: Int): List<AgendamentoCancelamentoPorMesProjection> {
+        val cancelamento = agendamentoRepository.taxaCancelamentoProfessorPorMes(id)
+            ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
 
-            return cancelamento;
-        }
+        return cancelamento;
+    }
 
     fun proximosAgendamentos(id: Int): List<AgendamentoProximosProjection>? {
         val agendamento = agendamentoRepository.proximosAgendamentosProfessor(id)
@@ -254,5 +258,25 @@ class AgendamentoService(
 
         return agendamento
     }
+
+    fun buscaQtdConclusaoProfessor(id: Int): AgendamentoConclusaoMesAtualProjection {
+        val mes = LocalDate.now().monthValue
+        val agendamento = agendamentoRepository.buscaAulasConcluidasPorProfessor(id, mes)
+            ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
+
+        return agendamento
+    }
+
+    fun buscaQtdConclusaoProfessorTodosMeses(id: Int): List<AgendamentoConclusaoPorMesProjection>? {
+        val ano = LocalDate.now().year
+        val agendamentos = agendamentoRepository.buscaAulasConcluidasPorProfessorTodosMeses(id, ano)
+
+        if (agendamentos == null || agendamentos.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.NO_CONTENT)
+        }
+
+        return agendamentos
+    }
+
 
 }

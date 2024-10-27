@@ -22,16 +22,16 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query("SELECT a FROM Agendamento a JOIN FETCH a.historico WHERE a.professor.id = :userId AND MONTH(a.data) = :mes AND YEAR(a.data) = :ano")
     fun findAgendamentosByFkProfessor(userId: Int, mes: Int, ano: Int): List<Agendamento>
 
-    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list)) AND fk_aluno = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list) OR FIND_IN_SET(5, status_list)) AND fk_aluno = :userId", nativeQuery = true)
     fun findAgendamentosPassadosByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
-    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(3, status_list) AND NOT FIND_IN_SET(4, status_list) AND fk_aluno = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(3, status_list) AND NOT FIND_IN_SET(4, status_list) AND NOT FIND_IN_SET(5, status_list) AND fk_aluno = :userId", nativeQuery = true)
     fun findAgendamentosFuturoByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
-    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list)) AND fk_professor = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list) OR FIND_IN_SET(5, status_list)) AND fk_professor = :userId", nativeQuery = true)
     fun findAgendamentosPassadosByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
-    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(4, status_list) AND NOT FIND_IN_SET(3, status_list) AND fk_professor = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(4, status_list) AND NOT FIND_IN_SET(3, status_list) AND NOT FIND_IN_SET(5, status_list) AND fk_professor = :userId", nativeQuery = true)
     fun findAgendamentosFuturoByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
     @Query("""

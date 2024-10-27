@@ -91,7 +91,7 @@ class AgendamentoController(
             val dto = agendamentos.map {
                 mapper.map(it, AgendamentoListagemResponse::class.java)
             }
-            val agendamentosNaoCancelados = dto.filter { it.getStatus() != StatusNome.CANCELADO }
+            val agendamentosNaoCancelados = dto.filter { it.getStatus() != StatusNome.CANCELADO && it.getStatus() != StatusNome.TRANSFERIDO }
             ResponseEntity.ok(agendamentosNaoCancelados)
         }
     }

@@ -130,14 +130,10 @@ class UsuarioNivelInglesController(
     @CrossOrigin
     fun editaUsuarioNivelIngles(
         @PathVariable id: Int,
-        @RequestBody @Valid novoUsuarioNivelIngles: UsuarioNivelIngles
+        @RequestBody idNivelIngles: Int
     ): ResponseEntity<UsuarioNivelIngles> {
-        val deletado = usuarioNivelInglesService.removerPorUsuario(id)
-        if (deletado > 0) {
-            val usuarioNicho = usuarioNivelInglesService.salvar(novoUsuarioNivelIngles)
-            return ResponseEntity.status(201).body(novoUsuarioNivelIngles)
-        }
-        return ResponseEntity.status(403).build()
+        val novoNivel = usuarioNivelInglesService.atualizarNivelUsuario(id, idNivelIngles)
+        return ResponseEntity.status(201).body(novoNivel)
     }
 
     @PostMapping("/professor/{id}")

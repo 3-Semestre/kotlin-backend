@@ -14,4 +14,6 @@ interface UsuarioNivelInglesService {
     fun buscaPorIdUsuario(id: Int): List<UsuarioNivelIngles>
 
     fun deleta(id: Int)
+
+    fun atualizarNivelUsuario(idUsuario: Int, idNivelIngles: Int) : UsuarioNivelIngles
 }

@@ -1,9 +1,7 @@
 package grupo9.eduinovatte.domain.repository
 
 import grupo9.eduinovatte.domain.model.entity.Agendamento
-import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.model.enums.NichoNome
-import grupo9.eduinovatte.model.enums.NivelInglesNome
+import grupo9.eduinovatte.domain.repository.projection.AgendamentosDetalhesListagemProjection
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.domain.Page
@@ -25,16 +23,16 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun findAgendamentosByFkProfessor(userId: Int, mes: Int, ano: Int): List<Agendamento>
 
     @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list)) AND fk_aluno = :userId", nativeQuery = true)
-    fun findAgendamentosPassadosByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+    fun findAgendamentosPassadosByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
     @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(3, status_list) AND NOT FIND_IN_SET(4, status_list) AND fk_aluno = :userId", nativeQuery = true)
-    fun findAgendamentosFuturoByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+    fun findAgendamentosFuturoByFkAluno(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
     @Query(value = "SELECT * FROM agendamentos_detalhes WHERE (FIND_IN_SET(3, status_list) OR FIND_IN_SET(4, status_list)) AND fk_professor = :userId", nativeQuery = true)
-    fun findAgendamentosPassadosByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+    fun findAgendamentosPassadosByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
     @Query(value = "SELECT * FROM agendamentos_detalhes WHERE NOT FIND_IN_SET(4, status_list) AND NOT FIND_IN_SET(3, status_list) AND fk_professor = :userId", nativeQuery = true)
-    fun findAgendamentosFuturoByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemResponse>
+    fun findAgendamentosFuturoByFkProfessor(userId: Int, pageable: Pageable): Page<AgendamentosDetalhesListagemProjection>
 
     @Query("""
     SELECT a FROM Agendamento a

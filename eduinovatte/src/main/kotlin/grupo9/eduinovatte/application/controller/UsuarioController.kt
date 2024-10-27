@@ -6,7 +6,7 @@ import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -318,5 +318,4 @@ ResponseEntity<Page<UsuarioPerfilViewProjection>> {
 
         return ResponseEntity.status(200).body(lista)
     }
-
 }

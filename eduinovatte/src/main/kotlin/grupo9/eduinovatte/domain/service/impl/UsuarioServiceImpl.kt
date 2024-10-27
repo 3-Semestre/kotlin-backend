@@ -4,8 +4,8 @@ import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.*
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilAlunoViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.domain.service.UsuarioService

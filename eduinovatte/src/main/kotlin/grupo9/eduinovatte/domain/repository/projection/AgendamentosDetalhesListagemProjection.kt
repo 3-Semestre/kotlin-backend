@@ -1,6 +1,6 @@
-package grupo9.eduinovatte.domain.repository
+package grupo9.eduinovatte.domain.repository.projection
 
-interface AgendamentosDetalhesListagemResponse {
+interface AgendamentosDetalhesListagemProjection {
     fun getId(): Int;
     fun getData(): String
     fun getHorario_Inicio(): String;

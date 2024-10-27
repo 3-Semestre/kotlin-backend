@@ -1,6 +1,6 @@
-package grupo9.eduinovatte.domain.repository
+package grupo9.eduinovatte.domain.repository.projection
 
-interface UsuarioPerfilViewProjection : UsuarioPerfilAlunoViewProjection{
+interface UsuarioPerfilViewProjection : UsuarioPerfilAlunoViewProjection {
     fun getInicio(): String;
     fun getFim(): String;
     fun getPausa_inicio(): String;

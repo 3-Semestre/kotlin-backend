@@ -16,5 +16,5 @@ data class UsuarioNicho (
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
-    val nicho: Nicho
+    var nicho: Nicho
 )

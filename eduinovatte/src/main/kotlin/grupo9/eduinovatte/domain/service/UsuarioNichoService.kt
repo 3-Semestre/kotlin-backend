@@ -14,4 +14,6 @@ interface UsuarioNichoService {
     fun buscaPorIdUsuario(id: Int): List<UsuarioNicho>
 
     fun deleta(id: Int)
+
+    fun atualizaNicho(id: Int, idNicho: Int): UsuarioNicho
 }

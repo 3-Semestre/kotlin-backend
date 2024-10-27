@@ -6,6 +6,7 @@ import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.model.entity.Agendamento
+import grupo9.eduinovatte.domain.model.enums.StatusNome
 import grupo9.eduinovatte.domain.repository.AgendamentosDetalhesListagemResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -88,7 +89,8 @@ class AgendamentoController(
             val dto = agendamentos.map {
                 mapper.map(it, AgendamentoListagemResponse::class.java)
             }
-            ResponseEntity.ok(dto)
+            val agendamentosNaoCancelados = dto.filter { it.getStatus() != StatusNome.CANCELADO }
+            ResponseEntity.ok(agendamentosNaoCancelados)
         }
     }
 

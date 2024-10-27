@@ -2,6 +2,7 @@ package grupo9.eduinovatte.domain.service.impl
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
+import grupo9.eduinovatte.application.dto.request.AgendamentoTransferenciaRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
@@ -123,6 +124,27 @@ class AgendamentoServiceImpl(
         } else {
             throw ResponseStatusException(HttpStatusCode.valueOf(404))
         }
+    }
+
+    @Transactional
+    override fun transferirAgendamento (agendamento: AgendamentoTransferenciaRequest): AgendamentoCadastro {
+        val agendamentoSalvo = agendamentoRepository.findById(agendamento.idAgendamento).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
+        andamentoService.salvarHistoricoTransferencia(agendamentoSalvo)
+
+        val novoAgendamento = Agendamento(
+            null,
+            agendamentoSalvo.data,
+            agendamentoSalvo.horarioInicio,
+            agendamentoSalvo.horarioFim,
+            "Aguardando Confirmação",
+            usuarioService.findById(agendamento.novoProfessorId).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) },
+            agendamentoSalvo.aluno
+        )
+
+        val agendamento_salvo = agendamentoRepository.save(novoAgendamento)
+        andamentoService.salvarHistorico(novoAgendamento)
+
+        return retornaAgendamento(agendamento_salvo)
     }
 
     override fun atualizaAssuntoAgendamentoPorId(id: Int, novoAssunto: String): Agendamento {

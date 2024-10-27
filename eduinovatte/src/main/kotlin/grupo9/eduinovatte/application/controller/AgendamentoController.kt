@@ -2,6 +2,7 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
+import grupo9.eduinovatte.application.dto.request.AgendamentoTransferenciaRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
@@ -11,6 +12,7 @@ import grupo9.eduinovatte.domain.repository.projection.AgendamentosDetalhesLista
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.validation.Valid
 import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -135,8 +137,17 @@ class AgendamentoController(
         ]
     )
     @PostMapping
-    fun salvaAgendamento(@RequestBody novoAgendamento: AgendamentoCadastroRequest): ResponseEntity<AgendamentoCadastro> {
-        val agendamentoSalvo = agendamentoService.salvarAgendamento(novoAgendamento)
+    fun salvaAgendamento(@RequestBody @Valid agendamento: AgendamentoCadastroRequest): ResponseEntity<AgendamentoCadastro> {
+        val agendamentoSalvo = agendamentoService.salvarAgendamento(agendamento)
+
+        return ResponseEntity.status(201).body(agendamentoSalvo)
+    }
+
+    @PostMapping("/transferir")
+    fun transferirAgendamento(
+        @RequestBody @Valid novoAgendamento: AgendamentoTransferenciaRequest
+    ): ResponseEntity<AgendamentoCadastro> {
+        val agendamentoSalvo = agendamentoService.transferirAgendamento(novoAgendamento)
 
         return ResponseEntity.status(201).body(agendamentoSalvo)
     }
@@ -166,7 +177,6 @@ class AgendamentoController(
 
         return ResponseEntity.ok(mapper.map(agendamento, AgendamentoListagemResponse::class.java))
     }
-
 
     @CrossOrigin
     @PostMapping("/filtro/{tempo}/{tipo}/{id}")

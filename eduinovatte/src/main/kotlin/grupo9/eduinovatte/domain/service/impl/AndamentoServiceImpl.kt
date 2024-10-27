@@ -60,6 +60,16 @@ class AndamentoServiceImpl(
         return andamentoRepository.save(novoHistorico)
     }
 
+    override fun salvarHistoricoTransferencia(agendamento: Agendamento): Andamento {
+        val novoHistorico = Andamento().apply {
+            dataAtualizacao = LocalDate.now()
+            this.agendamento = agendamento
+            status = Status(id = 5, nome = StatusNome.TRANSFERIDO)
+        }
+
+        return andamentoRepository.save(novoHistorico)
+    }
+
     override fun mudarHistorico(novoHistoricoRequest: AlterarStatus): Andamento {
         val antigoHistorico =
             andamentoRepository.findTopByAgendamentoIdOrderByDataAtualizacaoDesc(novoHistoricoRequest.novoAgendamento.id!!)

@@ -17,4 +17,5 @@ interface AndamentoService {
     fun salvarHistorico(agendamento: Agendamento): Andamento
 
     fun mudarHistorico(novoHistoricoRequest: AlterarStatus): Andamento
+    fun salvarHistoricoTransferencia(agendamento: Agendamento): Andamento
 }

@@ -1,4 +1,4 @@
-package grupo9.eduinovatte.domain.repository
+package grupo9.eduinovatte.domain.repository.projection
 
 interface UsuarioPerfilAlunoViewProjection {
     fun getId(): Int;

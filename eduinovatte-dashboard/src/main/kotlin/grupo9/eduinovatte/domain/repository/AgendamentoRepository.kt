@@ -12,8 +12,8 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query(value = "CALL proximos_tres_agendamento_P(:id);", nativeQuery = true)
     fun buscarUltimos3AgendamentosProfessor(id: Int): List<AgendamentoAlunoProjection>?
 
-    @Query(value = "CALL qtd_agendamento_mes(8, 2024);", nativeQuery = true)
-    fun qtdAgendamentoMesProfessor(): Int?
+    @Query(value = "CALL qtd_agendamento_mes(?, ?, ?);", nativeQuery = true)
+    fun qtdAgendamentoMesProfessor(month: Int, year: Int, id: Int): Int?
 
     // TO DO
     @Query(value = "SELECT * FROM qtd_cancelamento_aulas;", nativeQuery = true)
@@ -27,8 +27,8 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun qtdConclusaoProfessor(): List<AgendamentoConclusaoOuNaoProjection>?
     @Query(value = "SELECT * FROM taxa_cancelamento;", nativeQuery = true)
     fun taxaCancelamentoProfessor(): Float?
-    @Query(value = "select * from taxa_cancelamento_mensal;", nativeQuery = true)
-    fun taxaCancelamentoProfessorPorMes(): List<AgendamentoCancelamentoPorMesProjection>?
+    @Query(value = "CALL taxa_cancelamento_mensal(:id);", nativeQuery = true)
+    fun taxaCancelamentoProfessorPorMes(id: Int): List<AgendamentoCancelamentoPorMesProjection>?
     @Query(value = "CALL proximos_agendamentos(:id)", nativeQuery = true)
     fun proximosAgendamentosProfessor(id: Int): List<AgendamentoProximosProjection>?
 
@@ -66,6 +66,12 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
 
     @Query(value = "CALL qtd_aluno_por_mes(:id);", nativeQuery = true)
     fun buscaQtdAlunoPorMes(id: Int): List<AlunosQuantidadeRepository>?
+
+    @Query(value = "CALL aulas_concluidas_professor(?, ?);", nativeQuery = true)
+    fun buscaAulasConcluidasPorProfessor(id: Int, mes: Int): AgendamentoConclusaoMesAtualProjection?
+
+    @Query(value = "CALL aulas_concluidas_todos_meses(:id, :ano);", nativeQuery = true)
+    fun buscaAulasConcluidasPorProfessorTodosMeses(id: Int, ano: Int): List<AgendamentoConclusaoPorMesProjection>?
 }
 
 

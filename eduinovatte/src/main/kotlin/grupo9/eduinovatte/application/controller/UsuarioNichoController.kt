@@ -49,14 +49,11 @@ class UsuarioNichoController(
     @CrossOrigin
     fun editaUsuarioNicho(
         @PathVariable id: Int,
-        @RequestBody @Valid novoUsuarioNicho: UsuarioNicho
+        @RequestBody idNicho: Int
     ): ResponseEntity<UsuarioNicho> {
-        val deletado = usuarioNichoService.removerPorUsuario(id)
-        if (deletado > 0) {
-            val usuarioNicho = usuarioNichoService.salvar(novoUsuarioNicho)
-            return ResponseEntity.status(201).body(usuarioNicho)
-        }
-        return ResponseEntity.status(403).build()
+        val usuarioNicho = usuarioNichoService.atualizaNicho(id, idNicho)
+
+        return ResponseEntity.status(201).body(usuarioNicho)
     }
 
     @PostMapping("/professor/{id}")

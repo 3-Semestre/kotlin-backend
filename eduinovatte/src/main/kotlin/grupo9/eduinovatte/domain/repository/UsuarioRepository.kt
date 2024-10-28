@@ -2,8 +2,8 @@ package grupo9.eduinovatte.service
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilAlunoViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import jakarta.transaction.Transactional

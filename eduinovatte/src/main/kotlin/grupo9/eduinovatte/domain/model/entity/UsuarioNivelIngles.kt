@@ -20,5 +20,5 @@ class UsuarioNivelIngles (
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
-    val nivelIngles: NivelIngles
+    var nivelIngles: NivelIngles
 )

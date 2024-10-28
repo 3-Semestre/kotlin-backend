@@ -1,6 +1,5 @@
-package grupo9.eduinovatte.domain.repository
+package grupo9.eduinovatte.domain.repository.projection
 
-import java.time.LocalDate
 import java.time.LocalTime
 
 interface HorarioDisponiveisProjection {

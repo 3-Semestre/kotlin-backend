@@ -6,8 +6,8 @@ import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.Situacao
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilAlunoViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

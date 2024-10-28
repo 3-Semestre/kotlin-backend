@@ -4,8 +4,8 @@ import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.*
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilAlunoViewProjection
-import grupo9.eduinovatte.domain.repository.UsuarioPerfilViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilAlunoViewProjection
+import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import grupo9.eduinovatte.domain.service.SituacaoService
 import grupo9.eduinovatte.domain.service.UsuarioService
@@ -41,8 +41,14 @@ class UsuarioServiceImpl(
 
 
     override fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse> {
-        val usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)
-        if(usuarios == null || usuarios.isEmpty()) throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        var usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)?.toMutableList() ?: mutableListOf()
+
+        if (tipoAcesso == NivelAcessoNome.PROFESSOR_AUXILIAR) {
+            val representantes = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.REPRESENTANTE_LEGAL)
+            representantes?.let { usuarios.addAll(it) }
+        }
+
+        if (usuarios.isEmpty()) throw ResponseStatusException(HttpStatusCode.valueOf(204))
         validarLista(usuarios)
         val usuariosResponse = retornaListaUsuario(usuarios)
         return usuariosResponse
@@ -101,9 +107,9 @@ class UsuarioServiceImpl(
         if (usuarioExistente.isEmpty) {
             throw ResponseStatusException(HttpStatusCode.valueOf(404)) // Status 404 Not Found
         }
-        if(novoUsuario.senha == null){
+        if (novoUsuario.senha == null) {
             novoUsuario.senha = usuarioExistente.get().senha
-        } else if ( novoUsuario.senha != usuarioExistente.get().senha){
+        } else if (novoUsuario.senha != usuarioExistente.get().senha) {
             throw ResponseStatusException(HttpStatusCode.valueOf(401))
         }
 
@@ -189,10 +195,10 @@ class UsuarioServiceImpl(
         var filtroNichoNome: String? = null
         var filtroNivelIngles: String? = null
 
-        if(filtro.nicho !== null){
+        if (filtro.nicho !== null) {
             filtroNichoNome = filtro.nicho.name
         }
-        if(filtro.nivelIngles !== null){
+        if (filtro.nivelIngles !== null) {
             filtroNivelIngles = filtro.nivelIngles.name
         }
 
@@ -203,13 +209,20 @@ class UsuarioServiceImpl(
         var filtroNichoNome: String? = null
         var filtroNivelIngles: String? = null
 
-        if(filtro.nicho !== null){
+        if (filtro.nicho !== null) {
             filtroNichoNome = filtro.nicho.name
         }
-        if(filtro.nivelIngles !== null){
+        if (filtro.nivelIngles !== null) {
             filtroNivelIngles = filtro.nivelIngles.name
         }
 
-        return usuarioRepository.filtrarProfessor(pageable, filtro.nome, filtro.cpf, filtroNichoNome, filtroNivelIngles, 2)
+        return usuarioRepository.filtrarProfessor(
+            pageable,
+            filtro.nome,
+            filtro.cpf,
+            filtroNichoNome,
+            filtroNivelIngles,
+            2
+        )
     }
 }

@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.controller
 
+import grupo9.eduinovatte.application.dto.request.HorarioTransferenciaRequest
 import grupo9.eduinovatte.application.dto.requestg.HorarioProfessorRequest
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
 import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
-import grupo9.eduinovatte.domain.repository.HorarioDisponiveisProjection
+import grupo9.eduinovatte.domain.repository.projection.HorarioDisponiveisProjection
+import grupo9.eduinovatte.domain.repository.projection.ProfessorDisponivelTransferencia
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -97,6 +99,14 @@ class HorarioProfessorController(
 
         val usuarios = horarioProfessorService.deleta(id)
         return ResponseEntity.status(204).build()
+    }
+
+    @PostMapping("/transferencia")
+    fun buscaHorariosProfessorTransferencia(@RequestBody @Valid agendamento: HorarioTransferenciaRequest): ResponseEntity<List<ProfessorDisponivelTransferencia>> {
+
+        val horarios = horarioProfessorService.buscaProfessoresTransferencia(agendamento)
+
+        return ResponseEntity.status(200).body(horarios)
     }
 
 }

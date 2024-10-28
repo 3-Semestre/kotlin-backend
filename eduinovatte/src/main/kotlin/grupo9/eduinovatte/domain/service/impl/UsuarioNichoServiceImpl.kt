@@ -2,6 +2,7 @@ package grupo9.eduinovatte.domain.service.impl
 
 import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
 import grupo9.eduinovatte.domain.service.UsuarioNichoService
+import grupo9.eduinovatte.service.NichoRepository
 import grupo9.eduinovatte.service.UsuarioNichoRepository
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
@@ -10,7 +11,8 @@ import java.util.*
 
 @Service
 class UsuarioNichoServiceImpl(
-    private val usuarioNichoRepository: UsuarioNichoRepository
+    private val usuarioNichoRepository: UsuarioNichoRepository,
+    private val nichoRepository: NichoRepository
 ) : UsuarioNichoService {
 
     override fun salvar(novoUsuarioNicho: UsuarioNicho): UsuarioNicho {
@@ -42,5 +44,17 @@ class UsuarioNichoServiceImpl(
             throw ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário nicho não encontrado")
         }
         usuarioNichoRepository.deleteById(id)
+    }
+
+    override fun atualizaNicho(id: Int, idNicho: Int): UsuarioNicho {
+        val usuarioNicho = usuarioNichoRepository.findByUsuarioId(id)
+
+        if (usuarioNicho.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário nicho não encontrado")
+        }
+
+        usuarioNicho.get(0).nicho = nichoRepository.findById(idNicho).get()
+
+        return usuarioNichoRepository.save(usuarioNicho.get(0))
     }
 }

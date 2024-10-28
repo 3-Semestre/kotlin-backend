@@ -2,14 +2,17 @@ package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
+import grupo9.eduinovatte.application.dto.request.AgendamentoTransferenciaRequest
 import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.model.entity.Agendamento
-import grupo9.eduinovatte.domain.repository.AgendamentosDetalhesListagemResponse
+import grupo9.eduinovatte.domain.model.enums.StatusNome
+import grupo9.eduinovatte.domain.repository.projection.AgendamentosDetalhesListagemProjection
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.validation.Valid
 import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -88,7 +91,8 @@ class AgendamentoController(
             val dto = agendamentos.map {
                 mapper.map(it, AgendamentoListagemResponse::class.java)
             }
-            ResponseEntity.ok(dto)
+            val agendamentosNaoCancelados = dto.filter { it.getStatus() != StatusNome.CANCELADO && it.getStatus() != StatusNome.TRANSFERIDO }
+            ResponseEntity.ok(agendamentosNaoCancelados)
         }
     }
 
@@ -109,7 +113,7 @@ class AgendamentoController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "5") size: Int,
         @RequestParam(defaultValue = "desc") sortDirection: String
-    ): ResponseEntity<Page<AgendamentosDetalhesListagemResponse>> {
+    ): ResponseEntity<Page<AgendamentosDetalhesListagemProjection>> {
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
         // Configura a paginação e a ordenação
@@ -133,8 +137,17 @@ class AgendamentoController(
         ]
     )
     @PostMapping
-    fun salvaAgendamento(@RequestBody novoAgendamento: AgendamentoCadastroRequest): ResponseEntity<AgendamentoCadastro> {
-        val agendamentoSalvo = agendamentoService.salvarAgendamento(novoAgendamento)
+    fun salvaAgendamento(@RequestBody @Valid agendamento: AgendamentoCadastroRequest): ResponseEntity<AgendamentoCadastro> {
+        val agendamentoSalvo = agendamentoService.salvarAgendamento(agendamento)
+
+        return ResponseEntity.status(201).body(agendamentoSalvo)
+    }
+
+    @PostMapping("/transferir")
+    fun transferirAgendamento(
+        @RequestBody @Valid novoAgendamento: AgendamentoTransferenciaRequest
+    ): ResponseEntity<AgendamentoCadastro> {
+        val agendamentoSalvo = agendamentoService.transferirAgendamento(novoAgendamento)
 
         return ResponseEntity.status(201).body(agendamentoSalvo)
     }
@@ -164,7 +177,6 @@ class AgendamentoController(
 
         return ResponseEntity.ok(mapper.map(agendamento, AgendamentoListagemResponse::class.java))
     }
-
 
     @CrossOrigin
     @PostMapping("/filtro/{tempo}/{tipo}/{id}")

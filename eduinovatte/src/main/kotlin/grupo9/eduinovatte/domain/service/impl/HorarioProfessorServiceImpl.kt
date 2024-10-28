@@ -1,9 +1,11 @@
 package grupo9.eduinovatte.domain.service.impl
 
+import grupo9.eduinovatte.application.dto.request.HorarioTransferenciaRequest
 import grupo9.eduinovatte.application.dto.requestg.HorarioProfessorRequest
-import grupo9.eduinovatte.domain.repository.HorarioProfessorRepository
+import grupo9.eduinovatte.domain.repository.projection.HorarioProfessorRepository
 import grupo9.eduinovatte.domain.model.entity.HorarioProfessor
-import grupo9.eduinovatte.domain.repository.HorarioDisponiveisProjection
+import grupo9.eduinovatte.domain.repository.projection.HorarioDisponiveisProjection
+import grupo9.eduinovatte.domain.repository.projection.ProfessorDisponivelTransferencia
 import grupo9.eduinovatte.domain.service.HorarioProfessorService
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
@@ -74,5 +76,17 @@ class HorarioProfessorServiceImpl(
         } else {
             throw ResponseStatusException(HttpStatusCode.valueOf(404), "Horário do professor não encontrado")
         }
+    }
+
+    override fun buscaProfessoresTransferencia(agendamento: HorarioTransferenciaRequest): List<ProfessorDisponivelTransferencia> {
+        val professores = horarioProfessorRepository.buscaProfessoresDisponiveis(
+            agendamento.data,
+            agendamento.horarioInicio,
+            agendamento.horarioFim
+        )
+        if (professores.isEmpty()) {
+            throw ResponseStatusException(HttpStatusCode.valueOf(204), "Nenhum professor encontrado")
+        }
+        return professores
     }
 }

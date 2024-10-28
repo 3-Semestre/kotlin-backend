@@ -3,6 +3,8 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.dto.response.*
 import grupo9.eduinovatte.domain.model.Andamento
 import grupo9.eduinovatte.domain.repository.AgendamentoCancelamentoPorMesProjection
+import grupo9.eduinovatte.domain.repository.AgendamentoConclusaoMesAtualProjection
+import grupo9.eduinovatte.domain.repository.AgendamentoConclusaoPorMesProjection
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.service.UsuarioService
 import org.springframework.http.ResponseEntity
@@ -55,17 +57,17 @@ class DashboardController(
     }
 
     @CrossOrigin
-    @GetMapping("/qtd-agendamento-mes-professor")
-    fun qtdAgendamentoMes(): ResponseEntity<Int>{
-        val usuarioNicho = agendamentoService.qtdAgendamentoMes()
+    @GetMapping("/qtd-agendamento-mes-professor/{id}")
+    fun qtdAgendamentoMes(@PathVariable id: Int): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.qtdAgendamentoMes(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
     @CrossOrigin
-    @GetMapping("/tempo-confirmacao")
-    fun tempoConfirmacao(): ResponseEntity<Int>{
-        val usuarioNicho = agendamentoService.tempoConfirmacao()
+    @GetMapping("/tempo-confirmacao/{id}")
+    fun tempoConfirmacao(@PathVariable id: Int): ResponseEntity<Int>{
+        val usuarioNicho = agendamentoService.tempoConfirmacao(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
@@ -194,9 +196,9 @@ class DashboardController(
     }
 
     @CrossOrigin
-    @GetMapping("/taxa-cancelamento-mes")
-    fun taxaCancelamentoPorMes(): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{
-        val usuarioNicho = agendamentoService.taxaCancelamentoPorMes()
+    @GetMapping("/taxa-cancelamento-mes/{id}")
+    fun taxaCancelamentoPorMes(@PathVariable id: Int): ResponseEntity<List<AgendamentoCancelamentoPorMesProjection>>{
+        val usuarioNicho = agendamentoService.taxaCancelamentoPorMes(id)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
@@ -233,5 +235,20 @@ class DashboardController(
         return ResponseEntity.status(200).body(usuarioNicho)
     }
 
+    @CrossOrigin
+    @GetMapping("/aulas-concluidas-professor/{id}")
+    fun buscaQtdConclusaoProfessor(@PathVariable id: Int): ResponseEntity<AgendamentoConclusaoMesAtualProjection> {
+        val quantidadeConcluido = agendamentoService.buscaQtdConclusaoProfessor(id)
+
+        return ResponseEntity.status(200).body(quantidadeConcluido)
+    }
+
+    @CrossOrigin
+    @GetMapping("/aulas-concluidas-todos-meses/{id}")
+    fun buscaQtdConclusaoProfessorTodosMeses(@PathVariable("id") id: Int): ResponseEntity<List<AgendamentoConclusaoPorMesProjection>> {
+        val quantidadeConcluido = agendamentoService.buscaQtdConclusaoProfessorTodosMeses(id)
+
+        return ResponseEntity.status(200).body(quantidadeConcluido)
+    }
 }
 

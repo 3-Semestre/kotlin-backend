@@ -1,10 +1,7 @@
 package grupo9.eduinovatte.domain.service
 
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
-import grupo9.eduinovatte.domain.service.impl.NivelAcessoServiceImpl
-import grupo9.eduinovatte.domain.service.impl.UsuarioNichoServiceImpl
-import grupo9.eduinovatte.domain.service.impl.UsuarioNivelInglesServiceImpl
-import grupo9.eduinovatte.domain.service.impl.UsuarioServiceImpl
+import grupo9.eduinovatte.domain.service.impl.*
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -24,6 +21,7 @@ class UsuarioServiceImplTest {
     lateinit var horarioProfessorService: HorarioProfessorService
     lateinit var usuarioNichoService: UsuarioNichoServiceImpl
     lateinit var usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
+    lateinit var metaService: MetaServiceImpl
     lateinit var service: UsuarioService
 
     @BeforeEach
@@ -32,7 +30,10 @@ class UsuarioServiceImplTest {
         nivelAcessoService = mock(NivelAcessoServiceImpl::class.java)
         situacaoService = mock(SituacaoService::class.java)
         horarioProfessorService = mock(HorarioProfessorService::class.java)
-        service = UsuarioServiceImpl(usuarioRepository, nivelAcessoService, situacaoService, horarioProfessorService, usuarioNichoService, usuarioNivelInglesService)
+        usuarioNichoService = mock(UsuarioNichoServiceImpl::class.java)
+        usuarioNivelInglesService = mock(UsuarioNivelInglesServiceImpl::class.java)
+        metaService = mock(MetaServiceImpl::class.java)
+        service = UsuarioServiceImpl(usuarioRepository, nivelAcessoService, situacaoService, horarioProfessorService, usuarioNichoService, usuarioNivelInglesService, metaService)
     }
     @Test
     fun `return user when authenticate`(){

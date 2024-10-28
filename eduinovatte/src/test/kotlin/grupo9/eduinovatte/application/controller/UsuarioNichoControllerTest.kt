@@ -5,6 +5,8 @@ import grupo9.eduinovatte.controller.UsuarioNichoController
 import grupo9.eduinovatte.domain.service.impl.UsuarioNichoServiceImpl
 import grupo9.eduinovatte.model.UsuarioBuilder
 import grupo9.eduinovatte.domain.model.entity.UsuarioNicho
+import grupo9.eduinovatte.domain.service.impl.UsuarioServiceImpl
+import grupo9.eduinovatte.service.NichoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -18,12 +20,16 @@ import org.springframework.http.HttpStatus
 class UsuarioNichoControllerTest {
 
     lateinit var usuarioNichoService: UsuarioNichoServiceImpl
+    lateinit var usuarioService: UsuarioServiceImpl
+    lateinit var nichoRepository: NichoRepository
     lateinit var controller: UsuarioNichoController
 
     @BeforeEach
     fun iniciar() {
         usuarioNichoService = Mockito.mock(UsuarioNichoServiceImpl::class.java)
-        controller = UsuarioNichoController(usuarioNichoService)
+        usuarioService = Mockito.mock(UsuarioServiceImpl::class.java)
+        nichoRepository = Mockito.mock(NichoRepository::class.java)
+        controller = UsuarioNichoController(usuarioNichoService, usuarioService, nichoRepository)
     }
 
     @Test

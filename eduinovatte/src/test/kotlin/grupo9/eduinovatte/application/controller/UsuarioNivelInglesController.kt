@@ -2,8 +2,11 @@ package grupo9.eduinovatte.application.controller
 
 import com.example.demo.builder.NivelInglesBuilder
 import grupo9.eduinovatte.domain.model.entity.UsuarioNivelIngles
+import grupo9.eduinovatte.domain.repository.NivelInglesRepository
 import grupo9.eduinovatte.domain.service.impl.UsuarioNivelInglesServiceImpl
+import grupo9.eduinovatte.domain.service.impl.UsuarioServiceImpl
 import grupo9.eduinovatte.model.UsuarioBuilder
+import grupo9.eduinovatte.service.NichoRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -17,12 +20,16 @@ import org.springframework.http.HttpStatus
 class UsuarioNivelInglesControllerTest {
 
     lateinit var usuarioNivelInglesService: UsuarioNivelInglesServiceImpl
+    lateinit var usuarioService: UsuarioServiceImpl
+    lateinit var nivelInglesRepository: NivelInglesRepository
     lateinit var controller: UsuarioNivelInglesController
 
     @BeforeEach
     fun iniciar() {
         usuarioNivelInglesService = Mockito.mock(UsuarioNivelInglesServiceImpl::class.java)
-        controller = UsuarioNivelInglesController(usuarioNivelInglesService)
+        usuarioService = Mockito.mock(UsuarioServiceImpl::class.java)
+        nivelInglesRepository = Mockito.mock(NivelInglesRepository::class.java)
+        controller = UsuarioNivelInglesController(usuarioNivelInglesService, usuarioService, nivelInglesRepository)
     }
 
     @Test

@@ -117,7 +117,8 @@ class AgendamentoController(
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
         // Configura a paginação e a ordenação
-        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
+        val sort: Sort = Sort.by(direction, "data").and(Sort.by(direction, "horario_Inicio"))
+        val pageable: Pageable = PageRequest.of(page, size, sort)
 
         val listaDeHistorico = agendamentoService.buscaAgendamentosTempoUsuario(id, tempo, pageable)
 

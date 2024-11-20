@@ -3,7 +3,6 @@ package grupo9.eduinovatte.domain.service.impl
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
 import grupo9.eduinovatte.application.dto.request.AgendamentoTransferenciaRequest
-import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.domain.model.entity.Agendamento
 import grupo9.eduinovatte.domain.repository.AgendamentoRepository
 import grupo9.eduinovatte.domain.repository.projection.AgendamentosDetalhesListagemProjection
@@ -13,9 +12,12 @@ import grupo9.eduinovatte.service.UsuarioRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 @Service
@@ -72,32 +74,35 @@ class AgendamentoServiceImpl(
     override fun buscaAgendamentosTempoUsuario(
         id: Int,
         tempo: String,
-        pageable: Pageable
+        pageable: Pageable,
+        nome: String?,
+        dataInicio: LocalDate?,
+        dataFim: LocalDate?,
+        horarioInicio: LocalTime?,
+        horarioFim: LocalTime?
     ): Page<AgendamentosDetalhesListagemProjection> {
-        val usuario = usuarioService.findById(id).get()
+        val usuario = usuarioService.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+        }
 
         val agendamentos = when {
             usuario.nivelAcesso!!.id == 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkAluno(
-                id,
-                pageable
+                id, nome, dataInicio, dataFim, horarioInicio, horarioFim, pageable
             )
 
             usuario.nivelAcesso.id != 1 && tempo == "passado" -> agendamentoRepository.findAgendamentosPassadosByFkProfessor(
-                id,
-                pageable
+                id, nome, dataInicio, dataFim, horarioInicio, horarioFim, pageable
             )
 
             usuario.nivelAcesso.id == 1 && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkAluno(
-                id,
-                pageable
+                id, nome, dataInicio, dataFim, horarioInicio, horarioFim, pageable
             )
 
             usuario.nivelAcesso.id != 1 && tempo == "futuro" -> agendamentoRepository.findAgendamentosFuturoByFkProfessor(
-                id,
-                pageable
+                id, nome, dataInicio, dataFim, horarioInicio, horarioFim, pageable
             )
 
-            else -> throw ResponseStatusException(HttpStatusCode.valueOf(404))
+            else -> throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
 
         return agendamentos
@@ -127,8 +132,9 @@ class AgendamentoServiceImpl(
     }
 
     @Transactional
-    override fun transferirAgendamento (agendamento: AgendamentoTransferenciaRequest): AgendamentoCadastro {
-        val agendamentoSalvo = agendamentoRepository.findById(agendamento.idAgendamento).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
+    override fun transferirAgendamento(agendamento: AgendamentoTransferenciaRequest): AgendamentoCadastro {
+        val agendamentoSalvo = agendamentoRepository.findById(agendamento.idAgendamento)
+            .orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
         andamentoService.salvarHistoricoTransferencia(agendamentoSalvo)
 
         val novoAgendamento = Agendamento(
@@ -137,7 +143,8 @@ class AgendamentoServiceImpl(
             agendamentoSalvo.horarioInicio,
             agendamentoSalvo.horarioFim,
             "Aguardando Confirmação",
-            usuarioService.findById(agendamento.novoProfessorId).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) },
+            usuarioService.findById(agendamento.novoProfessorId)
+                .orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) },
             agendamentoSalvo.aluno
         )
 
@@ -152,51 +159,5 @@ class AgendamentoServiceImpl(
             agendamentoRepository.findById(id).orElseThrow { ResponseStatusException(HttpStatusCode.valueOf(404)) }
         agendamento.assunto = novoAssunto
         return agendamentoRepository.save(agendamento)
-    }
-
-    override fun filtrarAlunoPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarAlunoPassado(
-            filtro.nome,
-            filtro.data_inicio,
-            filtro.data_fim,
-            filtro.horario_inicio,
-            filtro.horario_fim,
-            id
-        )
-    }
-
-    override fun filtrarAlunoFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarAlunoFuturo(
-            filtro.nome,
-            filtro.data_inicio,
-            filtro.data_fim,
-            filtro.horario_inicio,
-            filtro.horario_fim,
-            id
-        )
-    }
-
-    override fun filtrarProfessorPassado(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarProfessorPassado(
-            filtro.nome,
-            filtro.data_inicio,
-            filtro.data_fim,
-            filtro.horario_inicio,
-            filtro.horario_fim,
-            filtro.assunto,
-            id
-        )
-    }
-
-    override fun filtrarProfessorFuturo(filtro: FiltroAgendamentoForm, id: Int): List<Agendamento?> {
-        return agendamentoRepository.filtrarProfessorFuturo(
-            filtro.nome,
-            filtro.data_inicio,
-            filtro.data_fim,
-            filtro.horario_inicio,
-            filtro.horario_fim,
-            filtro.assunto,
-            id
-        )
     }
 }

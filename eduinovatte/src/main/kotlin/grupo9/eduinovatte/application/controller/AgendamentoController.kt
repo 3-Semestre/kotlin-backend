@@ -3,7 +3,6 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastro
 import grupo9.eduinovatte.application.dto.request.AgendamentoCadastroRequest
 import grupo9.eduinovatte.application.dto.request.AgendamentoTransferenciaRequest
-import grupo9.eduinovatte.application.dto.request.FiltroAgendamentoForm
 import grupo9.eduinovatte.application.dto.response.AgendamentoListagemResponse
 import grupo9.eduinovatte.domain.service.AgendamentoService
 import grupo9.eduinovatte.domain.model.entity.Agendamento
@@ -22,6 +21,8 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 @RestController
@@ -91,7 +92,8 @@ class AgendamentoController(
             val dto = agendamentos.map {
                 mapper.map(it, AgendamentoListagemResponse::class.java)
             }
-            val agendamentosNaoCancelados = dto.filter { it.getStatus() != StatusNome.CANCELADO && it.getStatus() != StatusNome.TRANSFERIDO }
+            val agendamentosNaoCancelados =
+                dto.filter { it.getStatus() != StatusNome.CANCELADO && it.getStatus() != StatusNome.TRANSFERIDO }
             ResponseEntity.ok(agendamentosNaoCancelados)
         }
     }
@@ -112,7 +114,12 @@ class AgendamentoController(
         @RequestParam tempo: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "5") size: Int,
-        @RequestParam(defaultValue = "desc") sortDirection: String
+        @RequestParam(defaultValue = "desc") sortDirection: String,
+        @RequestParam(required = false) nome: String?,
+        @RequestParam(required = false) dataInicio: LocalDate?,
+        @RequestParam(required = false) dataFim: LocalDate?,
+        @RequestParam(required = false) horarioInicio: LocalTime?,
+        @RequestParam(required = false) horarioFim: LocalTime?
     ): ResponseEntity<Page<AgendamentosDetalhesListagemProjection>> {
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
@@ -120,7 +127,7 @@ class AgendamentoController(
         val sort: Sort = Sort.by(direction, "data").and(Sort.by(direction, "horario_Inicio"))
         val pageable: Pageable = PageRequest.of(page, size, sort)
 
-        val listaDeHistorico = agendamentoService.buscaAgendamentosTempoUsuario(id, tempo, pageable)
+        val listaDeHistorico = agendamentoService.buscaAgendamentosTempoUsuario(id, tempo, pageable, nome, dataInicio, dataFim, horarioInicio, horarioFim)
 
         if (listaDeHistorico.isEmpty) throw ResponseStatusException(
             HttpStatus.NO_CONTENT,
@@ -178,26 +185,4 @@ class AgendamentoController(
 
         return ResponseEntity.ok(mapper.map(agendamento, AgendamentoListagemResponse::class.java))
     }
-
-    @CrossOrigin
-    @PostMapping("/filtro/{tempo}/{tipo}/{id}")
-    fun filtroAgendamento(
-        @PathVariable tipo: String,
-        @PathVariable tempo: String,
-        @RequestBody filtro: FiltroAgendamentoForm,
-        @PathVariable id: Int
-    ): ResponseEntity<List<AgendamentoListagemResponse>> {
-        val lista = when {
-            tipo == "aluno" && tempo == "passado" -> agendamentoService.filtrarAlunoPassado(filtro, id)
-            tipo == "aluno" && tempo == "futuro" -> agendamentoService.filtrarAlunoFuturo(filtro, id)
-            tipo == "professor" && tempo == "passado" -> agendamentoService.filtrarProfessorPassado(filtro, id)
-            tipo == "professor" && tempo == "futuro" -> agendamentoService.filtrarProfessorFuturo(filtro, id)
-            else -> return ResponseEntity.status(401).build()
-        }
-
-        var listaAgendamentos = retornaAgendamentos(lista)
-
-        return ResponseEntity.status(200).body(listaAgendamentos)
-    }
-
 }

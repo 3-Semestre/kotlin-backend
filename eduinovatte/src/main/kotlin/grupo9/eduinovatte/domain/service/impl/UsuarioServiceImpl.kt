@@ -1,6 +1,5 @@
 package grupo9.eduinovatte.domain.service.impl
 
-import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.*
@@ -179,50 +178,25 @@ class UsuarioServiceImpl(
         return perfil;
     }
 
-    override fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?> {
-        val professores = usuarioRepository.exibirProfessores(pageable);
-
-        return professores;
+    override fun exibirAlunos(
+        pageable: Pageable,
+        nome: String?,
+        cpf: String?,
+        nicho: String?,
+        nivelIngles: String?,
+        situacao: String?
+    ): Page<UsuarioPerfilAlunoViewProjection> {
+        return usuarioRepository.exibirAlunos(pageable, nome, cpf, nicho, nivelIngles, situacao)
     }
 
-    override fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?> {
-        val alunos = usuarioRepository.exibirAlunos(pageable);
-
-        return alunos;
-    }
-
-    override fun filtrarAluno(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>? {
-        var filtroNichoNome: String? = null
-        var filtroNivelIngles: String? = null
-
-        if (filtro.nicho !== null) {
-            filtroNichoNome = filtro.nicho.name
-        }
-        if (filtro.nivelIngles !== null) {
-            filtroNivelIngles = filtro.nivelIngles.name
-        }
-
-        return usuarioRepository.filtrarAluno(pageable, filtro.nome, filtro.cpf, filtroNichoNome, filtroNivelIngles, 1)
-    }
-
-    override fun filtrarProfessor(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>? {
-        var filtroNichoNome: String? = null
-        var filtroNivelIngles: String? = null
-
-        if (filtro.nicho !== null) {
-            filtroNichoNome = filtro.nicho.name
-        }
-        if (filtro.nivelIngles !== null) {
-            filtroNivelIngles = filtro.nivelIngles.name
-        }
-
-        return usuarioRepository.filtrarProfessor(
-            pageable,
-            filtro.nome,
-            filtro.cpf,
-            filtroNichoNome,
-            filtroNivelIngles,
-            2
-        )
+    override fun exibirProfessores(
+        pageable: Pageable,
+        nome: String?,
+        cpf: String?,
+        nicho: String?,
+        nivelIngles: String?,
+        situacao: String?
+    ): Page<UsuarioPerfilViewProjection> {
+        return usuarioRepository.exibirProfessores(pageable, nome, cpf, nicho, nivelIngles, situacao)
     }
 }

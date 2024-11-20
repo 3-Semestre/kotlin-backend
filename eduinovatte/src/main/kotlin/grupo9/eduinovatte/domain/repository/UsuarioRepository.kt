@@ -13,13 +13,14 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
 
-interface UsuarioRepository: JpaRepository<Usuario, Int> {
+interface UsuarioRepository : JpaRepository<Usuario, Int> {
     fun findByNivelAcessoNome(nome: NivelAcessoNome?): List<Usuario>?
 
     fun findByCpf(cpf: String): Optional<Usuario>
 
     @Query("SELECT u FROM Usuario u WHERE (u.email = :email OR u.cpf = :cpf) AND u.senha = :senha")
     fun findByEmailOrCpfAndSenha(email: String?, cpf: String?, senha: String?): Usuario
+
     @Transactional
     @Modifying
     @Query("update Usuario u set u.autenticado = true where u.id = :id")
@@ -41,29 +42,45 @@ interface UsuarioRepository: JpaRepository<Usuario, Int> {
     @Query(value = "SELECT * FROM perfil WHERE id = :id", nativeQuery = true)
     fun exibirPerfilAluno(@Param("id") id: Int): UsuarioPerfilAlunoViewProjection?
 
-    @Query(value = "SELECT * FROM perfil_professor", nativeQuery = true)
-    fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?>
+    @Query(
+        value = """
+        SELECT * 
+        FROM perfil_professor
+        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT(:nomeCompleto, '%')))
+          AND (:cpf IS NULL OR cpf = :cpf)
+          AND (:nicho IS NULL OR nichos LIKE LOWER(CONCAT('%', :nicho, '%')))
+          AND (:nivel IS NULL OR niveis_ingles LIKE LOWER(CONCAT('%', :nivel, '%')))
+          AND (:situacao IS NULL OR status = :situacao)
+    """,
+        nativeQuery = true
+    )
+    fun exibirProfessores(
+        pageable: Pageable,
+        @Param("nomeCompleto") nome: String?,
+        @Param("cpf") cpf: String?,
+        @Param("nicho") nicho: String?,
+        @Param("nivel") nivelIngles: String?,
+        @Param("situacao") situacao: String?
+    ): Page<UsuarioPerfilViewProjection>
 
-    @Query(value = "SELECT * FROM perfil", nativeQuery = true)
-    fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
-
-    @Query("""
-    SELECT * FROM perfil
-    WHERE (:nome IS NULL OR nome_completo LIKE %:nome%)
-      AND (:cpf IS NULL OR cpf = :cpf)
-      AND (:nicho IS NULL OR nichos LIKE %:nicho%)
-      AND (:nivelIngles IS NULL OR niveis_ingles LIKE %:nivelIngles%)
-      AND (:nivelAcesso IS NULL OR nivel_acesso_id = :nivelAcesso)
-""", nativeQuery = true )
-    fun filtrarAluno(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, nivelAcesso: Int): Page<UsuarioPerfilViewProjection>?
-
-    @Query("""    
-    SELECT * FROM perfil_professor
-    WHERE (:nome IS NULL OR nome_completo LIKE CONCAT('%', :nome, '%'))
-      AND (:cpf IS NULL OR cpf = :cpf)
-      AND (:nicho IS NULL OR nichos LIKE CONCAT('%', :nicho, '%'))
-      AND (:nivelIngles IS NULL OR niveis_ingles LIKE CONCAT('%', :nivelIngles, '%'))
-      AND (:nivelAcesso IS NULL OR nivel_acesso_id IN (:nivelAcesso, 3))
-""", nativeQuery = true)
-    fun filtrarProfessor(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, nivelAcesso: Int): Page<UsuarioPerfilViewProjection>?
+    @Query(
+        value = """
+        SELECT * 
+        FROM perfil 
+        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT(:nomeCompleto, '%')))
+          AND (:cpf IS NULL OR cpf = :cpf)
+          AND (:nicho IS NULL OR nichos LIKE LOWER(CONCAT('%', :nicho, '%')))
+          AND (:nivel IS NULL OR niveis_ingles LIKE LOWER(CONCAT('%', :nivel, '%')))
+          AND (:situacao IS NULL OR status = :situacao)
+    """,
+        nativeQuery = true
+    )
+    fun exibirAlunos(
+        pageable: Pageable,
+        @Param("nomeCompleto") nome: String?,
+        @Param("cpf") cpf: String?,
+        @Param("nicho") nicho: String?,
+        @Param("nivel") nivelIngles: String?,
+        @Param("situacao") situacao: String?
+    ): Page<UsuarioPerfilAlunoViewProjection>
 }

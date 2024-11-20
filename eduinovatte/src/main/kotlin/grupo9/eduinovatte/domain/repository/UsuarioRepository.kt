@@ -46,7 +46,7 @@ interface UsuarioRepository : JpaRepository<Usuario, Int> {
         value = """
         SELECT * 
         FROM perfil_professor
-        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT('%', :nomeCompleto, '%')))
+        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT(:nomeCompleto, '%')))
           AND (:cpf IS NULL OR cpf = :cpf)
           AND (:nicho IS NULL OR nichos LIKE LOWER(CONCAT('%', :nicho, '%')))
           AND (:nivel IS NULL OR niveis_ingles LIKE LOWER(CONCAT('%', :nivel, '%')))
@@ -67,7 +67,7 @@ interface UsuarioRepository : JpaRepository<Usuario, Int> {
         value = """
         SELECT * 
         FROM perfil 
-        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT('%', :nomeCompleto, '%')))
+        WHERE (:nomeCompleto IS NULL OR LOWER(nome_completo) LIKE LOWER(CONCAT(:nomeCompleto, '%')))
           AND (:cpf IS NULL OR cpf = :cpf)
           AND (:nicho IS NULL OR nichos LIKE LOWER(CONCAT('%', :nicho, '%')))
           AND (:nivel IS NULL OR niveis_ingles LIKE LOWER(CONCAT('%', :nivel, '%')))

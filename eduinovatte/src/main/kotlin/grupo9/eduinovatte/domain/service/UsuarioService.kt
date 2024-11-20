@@ -1,6 +1,5 @@
 package grupo9.eduinovatte.domain.service
 
-import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
@@ -28,8 +27,6 @@ interface UsuarioService {
     fun buscaSituacao(id: Int?): Situacao?
     fun exibirPerfil(id: Int): UsuarioPerfilViewProjection?
     fun exibirPerfilAluno(id: Int): UsuarioPerfilAlunoViewProjection?
-    fun filtrarAluno(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>?
-    fun filtrarProfessor(pageable: Pageable, filtro: FiltroForm): Page<UsuarioPerfilViewProjection>?
-    fun exibirAlunos(pageable: Pageable): Page<UsuarioPerfilAlunoViewProjection?>
-    fun exibirProfessores(pageable: Pageable): Page<UsuarioPerfilViewProjection?>
+    fun exibirAlunos(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, situacao: String?): Page<UsuarioPerfilAlunoViewProjection>
+    fun exibirProfessores(pageable: Pageable, nome: String?, cpf: String?, nicho: String?, nivelIngles: String?, situacao: String?): Page<UsuarioPerfilViewProjection>
 }

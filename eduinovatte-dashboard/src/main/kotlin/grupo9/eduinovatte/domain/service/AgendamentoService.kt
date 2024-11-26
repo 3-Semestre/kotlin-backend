@@ -267,9 +267,13 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun buscaQtdConclusaoProfessorTodosMeses(id: Int): List<AgendamentoConclusaoPorMesProjection>? {
-        val ano = LocalDate.now().year
+    fun buscaQtdConclusaoProfessorTodosMeses(
+        id: Int,
+        mes: String,
+        ano: Int
+    ): List<AgendamentoConclusaoPorMesProjection>? {
         val agendamentos = agendamentoRepository.buscaAulasConcluidasPorProfessorTodosMeses(id, ano)
+            ?.filter { it.getMes() == mes }
 
         if (agendamentos == null || agendamentos.isEmpty()) {
             throw ResponseStatusException(HttpStatus.NO_CONTENT)

@@ -245,8 +245,8 @@ class DashboardController(
 
     @CrossOrigin
     @GetMapping("/aulas-concluidas-todos-meses/{id}")
-    fun buscaQtdConclusaoProfessorTodosMeses(@PathVariable("id") id: Int): ResponseEntity<List<AgendamentoConclusaoPorMesProjection>> {
-        val quantidadeConcluido = agendamentoService.buscaQtdConclusaoProfessorTodosMeses(id)
+    fun buscaQtdConclusaoProfessorTodosMeses(@PathVariable("id") id: Int, @RequestParam(required = true) mes: String, @RequestParam(required = true) ano: Int): ResponseEntity<List<AgendamentoConclusaoPorMesProjection>> {
+        val quantidadeConcluido = agendamentoService.buscaQtdConclusaoProfessorTodosMeses(id, mes, ano)
 
         return ResponseEntity.status(200).body(quantidadeConcluido)
     }

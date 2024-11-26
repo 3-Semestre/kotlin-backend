@@ -118,11 +118,11 @@ class AgendamentoService(
         return cancelamento
     }
 
-    fun taxaCancelamentoPorMes(id: Int): List<AgendamentoCancelamentoPorMesProjection> {
+    fun taxaCancelamentoPorMes(id: Int, ano: String): List<AgendamentoCancelamentoPorMesProjection> {
         val cancelamento = agendamentoRepository.taxaCancelamentoProfessorPorMes(id)
             ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
 
-        return cancelamento;
+        return cancelamento.filter { it.getMes_Ano().contains(ano) }
     }
 
     fun proximosAgendamentos(id: Int): List<AgendamentoProximosProjection>? {

@@ -33,8 +33,8 @@ interface UsuarioRepository : JpaRepository<Usuario, Int> {
 
     @Transactional
     @Modifying
-    @Query("update Usuario u set u.situacao.id = 2 where u.id = :id")
-    fun desativar(id: Int?): Int
+    @Query("UPDATE Usuario u SET u.situacao.id = :status WHERE u.id = :id")
+    fun atualizarStatusUsuario(@Param("id") id: Int, @Param("status") status: Int): Int
 
     @Query(value = "SELECT * FROM perfil_professor WHERE id = :id", nativeQuery = true)
     fun exibirPerfil(@Param("id") id: Int): UsuarioPerfilViewProjection?

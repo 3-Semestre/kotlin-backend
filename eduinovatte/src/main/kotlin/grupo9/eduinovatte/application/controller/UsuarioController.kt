@@ -5,7 +5,6 @@ import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -249,25 +247,18 @@ class UsuarioController(
         return ResponseEntity.status(404).build()
     }
 
-
-    @Operation(summary = "Desative um usuário", description = "Desative um usuário pelo ID.")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Usuario desativado"),
-            ApiResponse(responseCode = "404", description = "Usuario não existe")
-        ]
-    )
     @PutMapping("/desativar/{id}")
-    fun desativaAluno(
-        @PathVariable id: Int
-    ):
-            ResponseEntity<Int> {
-
-        if (usuarioRepository.existsById(id)) {
-            val retorno = usuarioService.desativaUsuario(id)
-            return ResponseEntity.status(200).body(retorno)
+    fun atualizaAluno(@PathVariable id: Int, @RequestBody status: Int): ResponseEntity<String> {
+        if (!usuarioRepository.existsById(id)) {
+            return ResponseEntity.status(404).body("Usuário não encontrado.")
         }
-        return ResponseEntity.status(404).build()
+
+        if (status != 1 && status != 2) {
+            return ResponseEntity.status(400).body("Status inválido.")
+        }
+
+        usuarioService.atualizaStatusUsuario(id, status)
+        return ResponseEntity.status(200).body("Status atualizado com sucesso.")
     }
 
     fun retornaNivelAcessoNome(tipo: String): NivelAcessoNome? {

@@ -124,9 +124,11 @@ class UsuarioServiceImpl(
         usuarioRepository.deleteById(id)
     }
 
-    override fun desativaUsuario(id: Int): Int {
-        return usuarioRepository.desativar(id)
+    override fun atualizaStatusUsuario(id: Int, status: Int): Int {
+        require(status == 1 || status == 2) { "Status inválido." }
+        return usuarioRepository.atualizarStatusUsuario(id, status)
     }
+
 
 
     override fun retornaListaUsuario(usuarios: List<Usuario>): List<UsuarioResponse> {

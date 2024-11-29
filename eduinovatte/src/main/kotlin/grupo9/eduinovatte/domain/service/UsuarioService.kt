@@ -19,7 +19,7 @@ interface UsuarioService {
     fun salvaUsuario(novoUsuario: UsuarioCompletoRequest): UsuarioResponse
     fun editaUsuario(novoUsuario: Usuario): UsuarioResponse
     fun deletaUsuario(id: Int)
-    fun desativaUsuario(id: Int): Int
+    fun atualizaStatusUsuario(id: Int, status: Int): Int
     fun retornaListaUsuario(usuarios: List<Usuario>): List<UsuarioResponse>
     fun retornaUsuario(usuario: Usuario): UsuarioResponse
     fun validarLista(lista: List<*>)

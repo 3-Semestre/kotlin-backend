@@ -3,7 +3,7 @@ package grupo9.eduinovatte.controller
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.domain.model.entity.Nicho
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
-import grupo9.eduinovatte.domain.model.entity.Usuario
+import grupo9.eduinovatte.domain.model.entity.NivelIngles
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NichoRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -24,7 +24,8 @@ import java.util.concurrent.ArrayBlockingQueue
 @RequestMapping("/import")
 class ArchiveController (
     val nichoRepository: NichoRepository,
-    val usuarioController: UsuarioController
+    val usuarioController: UsuarioController,
+    val nivelInglesController: NivelInglesController,
     val nichoController: NichoController
 ){
     @Operation(summary = "Busque os nichos", description = "Busque todos os nichos dos professores e alunos.")
@@ -45,20 +46,15 @@ class ArchiveController (
         ApiResponse(responseCode = "200", description = "Nichos encontrados"),
         ApiResponse(responseCode = "204", description = "Nenhum nicho encontrado")
     ])
-    @PostMapping("/txt/usuarios/:tipo")
+    @PostMapping("/txt/usuarios")
     @CrossOrigin
-    fun importaUsuarios(@RequestParam("file") file: MultipartFile, @PathVariable tipo: String): Any? {
-        val tipoAcesso = retornaNivelAcessoNome(tipo)
+    fun importaUsuarios(@RequestParam("file") file: MultipartFile): Any? {
         val inputStream = file.inputStream
 
-        if(tipoAcesso == NivelAcessoNome.ALUNO){
-            lerTxtAluno(inputStream)
-        } else if(tipoAcesso == NivelAcessoNome.PROFESSOR_AUXILIAR){
-        } else {
-            return ResponseEntity.status(400).body("Tipo de usuário inválido")
-        }
+        lerTxtUsuario(inputStream)
 
-        return ResponseEntity.status(200)
+
+        return ResponseEntity.status(200).body(file)
     }
 
     private fun gravarCsv(nome: String): File{
@@ -96,7 +92,7 @@ class ArchiveController (
         leitor.close()
         arquivo.close()
     }
-    fun lerTxtAluno(input: InputStream){
+    fun lerTxtUsuario(input: InputStream){
         val leitor = Scanner(BufferedReader(InputStreamReader(input)))
 
         val listaAlunos = mutableListOf<UsuarioCompletoRequest>()
@@ -107,8 +103,8 @@ class ArchiveController (
             val registro = linha.substring(0, 2)
 
             if (registro == "00") {
-                val conteudo = linha.substring(2, 7)
-                val versao = linha.substring(7, 9)
+                val conteudo = linha.substring(2, 9)
+                val versao = linha.substring(9, 12)
 
                 println("Conteúdo do arquivo: $conteudo")
                 println("Versão: $versao")
@@ -119,10 +115,12 @@ class ArchiveController (
                 val telefone = linha.substring(36, 50).trim()
                 val dataNascimentoStr = linha.substring(50, 60).trim()
                 val email = linha.substring(60, 90).trim()
-                val profissao = linha.substring(90, 100).trim()
-                val senha = linha.substring(100, 108).trim()
-                val nivelIngles = linha.substring(108, 110).trim()
-                val nicho = linha.substring(110, 130).trim()
+                val profissao = linha.substring(90, 120).trim()
+                val senha = linha.substring(120, 128).trim()
+                val nivelIngles = linha.substring(128, 130).trim()
+                val nicho = linha.substring(130, 151).trim()
+                val nivelAcesso = linha.substring(151, 152).toInt()
+                val metas = linha.substring(152, 154).trim().toInt()
 
                 val dataNascimento: LocalDate = LocalDate.parse(dataNascimentoStr, formatterDate)
 
@@ -136,14 +134,20 @@ class ArchiveController (
                 println("Senha: $senha")
                 println("Nível de Inglês: $nivelIngles")
                 println("Nicho: $nicho")
+                println("Nível de Acesso: $nivelAcesso")
+                println("Metas: $metas")
 
                 val nichos = nichoController.buscaNichos()
-
                 val nichoEscolhido = nichos.body?.find { it.nome!!.name == nicho }
                 val filaNicho = ArrayBlockingQueue<Nicho>(1)
-                filaNicho.put(nichoEscolhido)
+                nichoEscolhido?.let { filaNicho.put(it) }
 
-                val usuario = UsuarioCompletoRequest(
+                val niveis = nivelInglesController.buscaNiveis()
+                val nivelEscolhido = niveis.body?.find { it.nome!!.name == nicho }
+                val filaNivel = ArrayBlockingQueue<NivelIngles>(1)
+                nivelEscolhido?.let { filaNivel.put(it) }
+
+                 val usuario = UsuarioCompletoRequest(
                     nomeCompleto = nomeCompleto,
                     cpf = cpf,
                     telefone = telefone,
@@ -153,11 +157,20 @@ class ArchiveController (
                     senha = senha,
                     nivelAcesso = NivelAcesso(id = 1, NivelAcessoNome.ALUNO),
                     listaDeNichos = filaNicho,
-
+                    listaDeNiveis = filaNivel
                 )
-                listaAlunos.add(usuario)
-                val usuarioSalvo = usuarioController.salvaUsuarioCompleto("aluno", usuario)
+                val nivelAcessoNome: String
 
+                if(nivelAcesso == 1){
+                    nivelAcessoNome = "aluno"
+                } else if(nivelAcesso == 2) {
+                    nivelAcessoNome = "professor"
+                } else {
+                    throw ResponseStatusException(HttpStatusCode.valueOf(400))
+                }
+                val usuarioSalvo = usuarioController.salvaUsuarioCompleto(nivelAcessoNome, usuario)
+
+                listaAlunos.add(usuario)
                 if(usuarioSalvo.statusCode !== HttpStatusCode.valueOf(201)) {
                     throw ResponseStatusException(HttpStatusCode.valueOf(400))
                 }

@@ -94,8 +94,8 @@ class UsuarioServiceImpl(
             }
         }
 
-        if (usuario.nivelAcesso!!.id != 1) {
-            val meta = Meta(usuario = usuarioSalvo, qtdAula = novoUsuario.meta!!)
+        if (usuario.nivelAcesso!!.id != 1 && novoUsuario.meta != null) {
+            val meta = Meta(usuario = usuarioSalvo, qtdAula = novoUsuario.meta)
             metaService.salvar(meta);
         }
 

@@ -49,12 +49,12 @@ class ArchiveController (
     ])
     @PostMapping("/txt/usuarios")
     @CrossOrigin
-    fun importaUsuarios(@RequestParam("file") file: MultipartFile): Any? {
+    fun importaUsuarios(@RequestParam("file") file: MultipartFile): ResponseEntity<Any?> {
         val inputStream = file.inputStream
 
         lerTxtUsuario(inputStream)
 
-        return ResponseEntity.status(200)
+        return ResponseEntity.status(200).build()
     }
 
     private fun gravarCsv(nome: String): File{
@@ -64,7 +64,6 @@ class ArchiveController (
 
         saida.format("%d;%s;%s;%.2f\n", 2,
                 "Almir", "Grande", 100.0)
-
 
         saida.close()
         arquivo.close()

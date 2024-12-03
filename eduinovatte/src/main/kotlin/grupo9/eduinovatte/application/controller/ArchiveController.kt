@@ -4,6 +4,7 @@ import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.domain.model.entity.Nicho
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.NivelIngles
+import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NichoRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -24,7 +25,7 @@ import java.util.concurrent.ArrayBlockingQueue
 @RequestMapping("/import")
 class ArchiveController (
     val nichoRepository: NichoRepository,
-    val usuarioController: UsuarioController,
+    val usuarioService: UsuarioService,
     val nivelInglesController: NivelInglesController,
     val nichoController: NichoController
 ){
@@ -53,8 +54,7 @@ class ArchiveController (
 
         lerTxtUsuario(inputStream)
 
-
-        return ResponseEntity.status(200).body(file)
+        return ResponseEntity.status(200)
     }
 
     private fun gravarCsv(nome: String): File{
@@ -95,7 +95,7 @@ class ArchiveController (
     fun lerTxtUsuario(input: InputStream){
         val leitor = Scanner(BufferedReader(InputStreamReader(input)))
 
-        val listaAlunos = mutableListOf<UsuarioCompletoRequest>()
+        val listaUsuarios = mutableListOf<UsuarioCompletoRequest>()
 
         val formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         while (leitor.hasNext()) {
@@ -104,7 +104,7 @@ class ArchiveController (
 
             if (registro == "00") {
                 val conteudo = linha.substring(2, 9)
-                val versao = linha.substring(9, 12)
+                val versao = linha.substring(9, 11)
 
                 println("Conteúdo do arquivo: $conteudo")
                 println("Versão: $versao")
@@ -138,14 +138,24 @@ class ArchiveController (
                 println("Metas: $metas")
 
                 val nichos = nichoController.buscaNichos()
-                val nichoEscolhido = nichos.body?.find { it.nome!!.name == nicho }
+                val nichoEscolhido = nichos.body?.find { it.nome!!.name.uppercase() == nicho.uppercase() }
                 val filaNicho = ArrayBlockingQueue<Nicho>(1)
                 nichoEscolhido?.let { filaNicho.put(it) }
 
                 val niveis = nivelInglesController.buscaNiveis()
-                val nivelEscolhido = niveis.body?.find { it.nome!!.name == nicho }
+                val nivelEscolhido = niveis.body?.find { it.nome!!.name.uppercase() == nivelIngles.uppercase() }
                 val filaNivel = ArrayBlockingQueue<NivelIngles>(1)
                 nivelEscolhido?.let { filaNivel.put(it) }
+                val nivelAcessoNome: NivelAcesso
+
+                if(nivelAcesso == 1){
+                    nivelAcessoNome = NivelAcesso(id = 1, NivelAcessoNome.ALUNO)
+                } else if(nivelAcesso == 2) {
+                    nivelAcessoNome = NivelAcesso(id = 2, NivelAcessoNome.PROFESSOR_AUXILIAR)
+                } else {
+                    throw ResponseStatusException(HttpStatusCode.valueOf(400))
+                }
+
 
                  val usuario = UsuarioCompletoRequest(
                     nomeCompleto = nomeCompleto,
@@ -155,30 +165,23 @@ class ArchiveController (
                     email = email,
                     profissao = profissao,
                     senha = senha,
-                    nivelAcesso = NivelAcesso(id = 1, NivelAcessoNome.ALUNO),
+                    nivelAcesso = nivelAcessoNome,
                     listaDeNichos = filaNicho,
                     listaDeNiveis = filaNivel
                 )
-                val nivelAcessoNome: String
 
-                if(nivelAcesso == 1){
-                    nivelAcessoNome = "aluno"
-                } else if(nivelAcesso == 2) {
-                    nivelAcessoNome = "professor"
-                } else {
+                try {
+                    val usuarioSalvo = usuarioService.salvaUsuario(usuario)
+                } catch (e: Exception) {
                     throw ResponseStatusException(HttpStatusCode.valueOf(400))
                 }
-                val usuarioSalvo = usuarioController.salvaUsuarioCompleto(nivelAcessoNome, usuario)
 
-                listaAlunos.add(usuario)
-                if(usuarioSalvo.statusCode !== HttpStatusCode.valueOf(201)) {
-                    throw ResponseStatusException(HttpStatusCode.valueOf(400))
-                }
+                listaUsuarios.add(usuario)
 
             } else if (registro == "01") {
-                val qtdRegistros = linha.substring(2, 12).toInt()
+                val qtdRegistros = linha.substring(2, 4).toInt()
 
-                if (qtdRegistros == listaAlunos.size) {
+                if (qtdRegistros == listaUsuarios.size) {
                     println("Quantidade de registros " +
                             "corresponde ao valor informado")
                 } else {
@@ -189,18 +192,5 @@ class ArchiveController (
         }
 
         leitor.close()
-
-        for (aluno in listaAlunos) {
-            println(aluno)
-        }
     }
-    private fun retornaNivelAcessoNome(tipo: String): NivelAcessoNome? {
-        val tipoAcesso = when (tipo) {
-            "aluno" -> NivelAcessoNome.ALUNO
-            "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR
-            else -> null
-        }
-        return tipoAcesso
-    }
-
 }

@@ -54,6 +54,20 @@ class UsuarioServiceImpl(
         return usuariosResponse
     }
 
+    override fun buscaUsuariosPorAcesso(tipoAcesso: NivelAcessoNome?): List<Usuario> {
+        var usuarios = usuarioRepository.findByNivelAcessoNome(tipoAcesso)?.toMutableList() ?: mutableListOf()
+
+        if (tipoAcesso == NivelAcessoNome.PROFESSOR_AUXILIAR) {
+            val representantes = usuarioRepository.findByNivelAcessoNome(NivelAcessoNome.REPRESENTANTE_LEGAL)
+            representantes?.let { usuarios.addAll(it) }
+        }
+
+        if (usuarios.isEmpty()) throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        validarLista(usuarios)
+
+        return usuarios
+    }
+
     override fun salvaUsuario(novoUsuario: Usuario): UsuarioResponse {
         val usuarioExistente = usuarioRepository.findByCpf(novoUsuario.cpf!!).isPresent
         if (usuarioExistente) {

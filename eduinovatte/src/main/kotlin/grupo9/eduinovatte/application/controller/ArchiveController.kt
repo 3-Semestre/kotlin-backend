@@ -1,15 +1,18 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
+import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Nicho
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.NivelIngles
+import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.NichoRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,7 +25,7 @@ import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
 @RestController
-@RequestMapping("/import")
+@RequestMapping("/archive")
 class ArchiveController (
     val nichoRepository: NichoRepository,
     val usuarioService: UsuarioService,
@@ -57,20 +60,56 @@ class ArchiveController (
         return ResponseEntity.status(200).build()
     }
 
-    private fun gravarCsv(nome: String): File{
-        val arquivo = FileWriter(nome)
+    @Operation(summary = "Exporta os usuarios", description = "Exporta os usuários pelo tipo.")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Exporta usuarios"),
+        ApiResponse(responseCode = "204", description = "Nenhum usuario encontrado")
+    ])
+    @GetMapping("/csv/usuarios/{tipo}")
+    @CrossOrigin
+    fun exportaUsuarios(@PathVariable tipo: String): ResponseEntity<Any?> {
+        val tipoAcesso = retornaNivelAcessoNome(tipo)
+        val listaUsuarios = usuarioService.buscaUsuariosPorAcesso(tipoAcesso)
+
+        if (listaUsuarios.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.NO_CONTENT)
+        }
+        val arquivo = gravarCsvUsuario(listaUsuarios)
+
+        return ResponseEntity.status(200).body(arquivo)
+    }
+
+    private fun gravarCsvUsuario(listaUsuario: List<Usuario>): File{
+        val arquivo = FileWriter("usuarios.csv")
         val saida = Formatter(arquivo)
 
 
-        saida.format("%d;%s;%s;%.2f\n", 2,
-                "Almir", "Grande", 100.0)
+        saida.format("ID;Nome;CPF;Telefone;Data de Nascimento;Email;Profissão;Senha;Nível de Inglês;Nicho;Nível de Acesso;Metas\n")
+
+        for (usuario in listaUsuario) {
+            saida.format(
+                "%d;%s;%s;%s;%s;%s;%s;%s\n",
+                usuario.id,
+                usuario.nomeCompleto,
+                usuario.cpf,
+                usuario.telefone,
+                usuario.dataNascimento,
+                usuario.email,
+                usuario.profissao,
+                usuario.senha,
+                //usuario.nivelIngles?.name,
+                //usuario.nicho?.name,
+                usuario.nivelAcesso?.nome?.name,
+                //usuario.metas
+            )
+        }
 
         saida.close()
         arquivo.close()
 
         println(arquivo)
         println(saida)
-        return File(nome)
+        return File("usuarios.csv")
     }
 
     fun lerCsv(nome: String){
@@ -191,5 +230,15 @@ class ArchiveController (
         }
 
         leitor.close()
+    }
+
+    fun retornaNivelAcessoNome(tipo: String): NivelAcessoNome? {
+        val tipoAcesso = when (tipo) {
+            "aluno" -> NivelAcessoNome.ALUNO
+            "professor" -> NivelAcessoNome.PROFESSOR_AUXILIAR
+            "representante-legal" -> NivelAcessoNome.REPRESENTANTE_LEGAL
+            else -> null
+        }
+        return tipoAcesso
     }
 }

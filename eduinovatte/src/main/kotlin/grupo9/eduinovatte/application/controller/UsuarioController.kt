@@ -1,12 +1,10 @@
 package grupo9.eduinovatte.controller
 
 
-import grupo9.eduinovatte.application.dto.request.FiltroForm
 import grupo9.eduinovatte.application.dto.request.LoginForm
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
 import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Usuario
-import grupo9.eduinovatte.domain.repository.projection.UsuarioPerfilViewProjection
 import grupo9.eduinovatte.domain.service.*
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
 import grupo9.eduinovatte.service.UsuarioRepository
@@ -22,7 +20,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -89,7 +86,8 @@ class UsuarioController(
         if (usuarioRepository.existsById(id)) {
             val usuarioDesautenticado = usuarioRepository.findById(id).get()
             val tipoAcesso = retornaNivelAcessoNome(tipo)
-            val permissao = nivelAcessoService.validaPermissao(usuarioDesautenticado.nivelAcesso!!.id, tipoAcesso!!.name)
+            val permissao =
+                nivelAcessoService.validaPermissao(usuarioDesautenticado.nivelAcesso!!.id, tipoAcesso!!.name)
             if (!permissao) throw ResponseStatusException(HttpStatusCode.valueOf(401))
 
             usuarioService.desautenticar(usuarioDesautenticado.id!!)
@@ -131,25 +129,29 @@ class UsuarioController(
         @PathVariable tipo: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "6") size: Int,
-        @RequestParam(defaultValue = "desc") sortDirection: String
-    ): Any {
+        @RequestParam(defaultValue = "asc") sortDirection: String,
+        @RequestParam(required = false) nome: String?,
+        @RequestParam(required = false) cpf: String?,
+        @RequestParam(required = false) nicho: String?,
+        @RequestParam(required = false) nivelIngles: String?,
+        @RequestParam(required = false) situacao: String?
+    ): ResponseEntity<Any> {
         // Define a direção do sort (ascendente ou descendente)
         val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
 
         // Configura a paginação e a ordenação
-        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
+        val pageable: Pageable = PageRequest.of(page, size, direction, "nome_completo")
 
-        val perfil = when (tipo) {
-            "aluno" -> usuarioService.exibirAlunos(pageable)
-            "professor" -> usuarioService.exibirProfessores(pageable)
-            "professor-auxiliar" -> usuarioService.exibirProfessores(pageable)
-            "representante_legal" -> usuarioService.exibirProfessores(pageable)
-            else -> throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        val perfil = when (tipo.lowercase()) {
+            "aluno" -> usuarioService.exibirAlunos(pageable, nome, cpf, nicho, nivelIngles, situacao)
+            "professor", "professor-auxiliar", "representante_legal" ->
+                usuarioService.exibirProfessores(pageable, nome, cpf, nicho, nivelIngles, situacao)
+
+            else -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de usuário não encontrado")
         }
 
-        return ResponseEntity.status(200).body(perfil)
+        return ResponseEntity.ok(perfil)
     }
-
 
     @Operation(summary = "Salve um aluno", description = "Salve um aluno com as informações dele.")
     @ApiResponses(
@@ -172,7 +174,10 @@ class UsuarioController(
         return ResponseEntity.status(201).body(usuarioSalvo)
     }
 
-    @Operation(summary = "Salve um usuario completo", description = "Salve um usuario com o nicho e nivel de inglês dele.")
+    @Operation(
+        summary = "Salve um usuario completo",
+        description = "Salve um usuario com o nicho e nivel de inglês dele."
+    )
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "201", description = "Criado com sucesso"),
@@ -242,25 +247,18 @@ class UsuarioController(
         return ResponseEntity.status(404).build()
     }
 
-
-    @Operation(summary = "Desative um usuário", description = "Desative um usuário pelo ID.")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Usuario desativado"),
-            ApiResponse(responseCode = "404", description = "Usuario não existe")
-        ]
-    )
     @PutMapping("/desativar/{id}")
-    fun desativaAluno(
-        @PathVariable id: Int
-    ):
-            ResponseEntity<Int> {
-
-        if (usuarioRepository.existsById(id)) {
-            val retorno = usuarioService.desativaUsuario(id)
-            return ResponseEntity.status(200).body(retorno)
+    fun atualizaAluno(@PathVariable id: Int, @RequestBody status: Int): ResponseEntity<String> {
+        if (!usuarioRepository.existsById(id)) {
+            return ResponseEntity.status(404).body("Usuário não encontrado.")
         }
-        return ResponseEntity.status(404).build()
+
+        if (status != 1 && status != 2) {
+            return ResponseEntity.status(400).body("Status inválido.")
+        }
+
+        usuarioService.atualizaStatusUsuario(id, status)
+        return ResponseEntity.status(200).body("Status atualizado com sucesso.")
     }
 
     fun retornaNivelAcessoNome(tipo: String): NivelAcessoNome? {
@@ -295,27 +293,5 @@ class UsuarioController(
         }
 
         return ResponseEntity.status(200).body(perfil)
-    }
-
-    @CrossOrigin
-    @PostMapping("/filtro/{tipo}")
-    fun filtraUsuario(
-        @PathVariable tipo: String,
-        @RequestBody filtro: FiltroForm,
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "6") size: Int,
-        @RequestParam(defaultValue = "desc") sortDirection: String):
-ResponseEntity<Page<UsuarioPerfilViewProjection>> {
-        val direction = if (sortDirection.equals("asc", ignoreCase = true)) Sort.Direction.ASC else Sort.Direction.DESC
-        val pageable: Pageable = PageRequest.of(page, size, direction, "id")
-
-        val lista = when (tipo) {
-            "aluno" -> usuarioService.filtrarAluno(pageable, filtro)
-            "professor" -> usuarioService.filtrarProfessor(pageable, filtro)
-            "professor_auxiliar" -> usuarioService.filtrarProfessor(pageable, filtro)
-            else -> return ResponseEntity.status(401).build()
-        }
-
-        return ResponseEntity.status(200).body(lista)
     }
 }

@@ -12,4 +12,5 @@ interface UsuarioPerfilAlunoViewProjection {
     fun getNivel_acesso_id(): Long;
     fun getNichos(): String;
     fun getNiveis_Ingles(): String;
+    fun getStatus(): String;
 }

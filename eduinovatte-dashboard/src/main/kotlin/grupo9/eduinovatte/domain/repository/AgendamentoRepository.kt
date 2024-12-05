@@ -46,8 +46,8 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     fun todos_alunos(): List<AgendamentoAlunoProjection>?
     @Query(value = "CALL proximos_tres_agendamentos(:id);", nativeQuery = true)
     fun buscarUltimos3AgendamentosAluno(id: Int): List<AgendamentoAlunoProjection>?
-    @Query(value = "CALL visao_por_mes(:id);", nativeQuery = true)
-    fun buscarVisaoPorMesAluno(id: Int): List<AgendamentoVisaoRepository>?
+    @Query(value = "CALL visao_por_mes(:id, :ano);", nativeQuery = true)
+    fun buscarVisaoPorMesAluno(id: Int, ano: Int): List<AgendamentoVisaoRepository>?
     @Query(value = "CALL top_tres_meses(:id);", nativeQuery = true)
     fun buscarTop3MesesAluno(id: Int): List<AgendamentoVisaoRepository>?
     @Query(value = "CALL qtd_agendamento_mes(:mes, :ano);", nativeQuery = true)
@@ -61,8 +61,8 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query(value = "CALL aulas_transferidas_por_professor(:idProfessor);", nativeQuery = true)
     fun buscaAulasTransferidasPorProfessor(idProfessor: Int): Int?
 
-    @Query(value = "CALL taxa_cumprimento_metas(:idProfessor);", nativeQuery = true)
-    fun buscaTaxaCumprimentoMetas(idProfessor: Int): List<TaxaCumprimentoRepository>?
+    @Query(value = "CALL taxa_cumprimento_metas(:idProfessor, :ano, :mes_int);", nativeQuery = true)
+    fun buscaTaxaCumprimentoMetas(idProfessor: Int, ano: Int, mes_int: Int): List<TaxaCumprimentoRepository>?
 
     @Query(value = "CALL qtd_aluno_por_mes(:id);", nativeQuery = true)
     fun buscaQtdAlunoPorMes(id: Int): List<AlunosQuantidadeRepository>?

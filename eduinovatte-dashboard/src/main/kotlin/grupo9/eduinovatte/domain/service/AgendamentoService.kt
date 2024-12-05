@@ -175,8 +175,8 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun visaoPorMesAluno(id: Int): List<AgendamentoVisaoRepository>? {
-        val agendamento = agendamentoRepository.buscarVisaoPorMesAluno(id)
+    fun visaoPorMesAluno(id: Int, ano: Int): List<AgendamentoVisaoRepository>? {
+        val agendamento = agendamentoRepository.buscarVisaoPorMesAluno(id, ano)
 
         if (agendamento!!.isEmpty()) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))
@@ -239,8 +239,23 @@ class AgendamentoService(
         return agendamento
     }
 
-    fun buscaTaxaCumprimentoMetas(id: Int): List<TaxaCumprimentoRepository>? {
-        val agendamento = agendamentoRepository.buscaTaxaCumprimentoMetas(id)
+    fun buscaTaxaCumprimentoMetas(id: Int, ano: Int, mes: String): List<TaxaCumprimentoRepository>? {
+        val mes_int = when(mes){
+            "Janeiro" -> 1
+            "Fevereiro" -> 2
+            "Março" -> 3
+            "Abril" -> 4
+            "Maio" -> 5
+            "Junho" -> 6
+            "Julho" -> 7
+            "Agosto" -> 8
+            "Setembro" -> 9
+            "Outubro" -> 10
+            "Novembro" -> 11
+            "Dezembro" -> 12
+            else -> 0
+        }
+        val agendamento = agendamentoRepository.buscaTaxaCumprimentoMetas(id, ano, mes_int)
 
         if (agendamento == null) {
             throw ResponseStatusException(HttpStatusCode.valueOf(204))

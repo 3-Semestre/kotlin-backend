@@ -172,8 +172,8 @@ class DashboardController(
 
     @CrossOrigin
     @GetMapping("/visao-mes-aluno/{id}")
-    fun visaoPorMes(@PathVariable id: Int): ResponseEntity<List<AgendamentoVisaoRepository>> {
-        val usuarioNicho = agendamentoService.visaoPorMesAluno(id)
+    fun visaoPorMes(@PathVariable id: Int, @RequestParam(required = true) ano: Int): ResponseEntity<List<AgendamentoVisaoRepository>> {
+        val usuarioNicho = agendamentoService.visaoPorMesAluno(id, ano)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }
@@ -231,8 +231,8 @@ class DashboardController(
 
     @CrossOrigin
     @GetMapping("/taxa-cumprimento-metas/{id}")
-    fun buscaTaxaCumprimentoMetas(@PathVariable id: Int): ResponseEntity<List<TaxaCumprimentoRepository>> {
-        val usuarioNicho = agendamentoService.buscaTaxaCumprimentoMetas(id)
+    fun buscaTaxaCumprimentoMetas(@PathVariable id: Int, @RequestParam(required = true) ano: Int, @RequestParam(required = true) mes: String): ResponseEntity<List<TaxaCumprimentoRepository>> {
+        val usuarioNicho = agendamentoService.buscaTaxaCumprimentoMetas(id, ano, mes)
 
         return ResponseEntity.status(200).body(usuarioNicho)
     }

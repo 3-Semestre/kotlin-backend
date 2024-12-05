@@ -15,6 +15,7 @@ interface UsuarioService {
     fun autenticar(id: Int): UsuarioResponse
     fun desautenticar(id: Int): UsuarioResponse
     fun buscaUsuarios(tipoAcesso: NivelAcessoNome?): List<UsuarioResponse>
+    fun buscaUsuariosPorAcesso(tipoAcesso: NivelAcessoNome?): List<Usuario>
     fun salvaUsuario(novoUsuario: Usuario): UsuarioResponse
     fun salvaUsuario(novoUsuario: UsuarioCompletoRequest): UsuarioResponse
     fun editaUsuario(novoUsuario: Usuario): UsuarioResponse

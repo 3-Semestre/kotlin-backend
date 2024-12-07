@@ -15,6 +15,9 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
     @Query(value = "CALL qtd_agendamento_mes(?, ?, ?);", nativeQuery = true)
     fun qtdAgendamentoMesProfessor(month: Int, year: Int, id: Int): Int?
 
+    @Query(value = "CALL qtd_aulas_confirmadas_mes(?, ?, ?);", nativeQuery = true)
+    fun qtdAgendamentoConfirmadoMesProfessor(id: Int, mes: Int, ano: Int): Int?
+
     // TO DO
     @Query(value = "SELECT * FROM qtd_cancelamento_aulas;", nativeQuery = true)
     fun tempoConfirmacaoAgendamentoProfessor(): List<AgendamentoAlunoProjection>?

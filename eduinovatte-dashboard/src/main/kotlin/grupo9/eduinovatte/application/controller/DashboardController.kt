@@ -67,6 +67,14 @@ class DashboardController(
     }
 
     @CrossOrigin
+    @GetMapping("/qtd-agendamento-confirmado-mes-professor/{id}")
+    fun qtdAgendamentoConfirmadoMes(@PathVariable id: Int): ResponseEntity<Int> {
+        val usuarioNicho = agendamentoService.qtdAgendamentoConfirmadoMes(id)
+
+        return ResponseEntity.status(200).body(usuarioNicho)
+    }
+
+    @CrossOrigin
     @GetMapping("/tempo-confirmacao/{id}")
     fun tempoConfirmacao(@PathVariable id: Int): ResponseEntity<Int> {
         val usuarioNicho = agendamentoService.tempoConfirmacao(id)

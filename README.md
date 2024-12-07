@@ -42,3 +42,11 @@ Esta API é responsável pela lógica de exibição de dashboards. Ela oferece v
 
 - **Java 17**: Amazon Corretto JDK 17.
 - **Maven**: Utilizado para gerenciar as dependências do projeto.
+
+### Variaveis de Ambiente
+
+**Exemplos com banco de dados local -**
+
+- **SPRING_DATASOURCE_URL**: jdbc:mysql://localhost:3306/english4ever
+- **SPRING_DATASOURCE_PASSWORD**: senha_da_conexao
+- **SPRING_DATASOURCE_USERNAME**: nome_da_conexao

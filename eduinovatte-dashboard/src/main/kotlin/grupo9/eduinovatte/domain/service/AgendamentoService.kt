@@ -77,7 +77,13 @@ class AgendamentoService(
         val tempoAtual = LocalDate.now()
         val agendamento = agendamentoRepository.qtdAgendamentoMesProfessor(tempoAtual.monthValue, tempoAtual.year, id)
             ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
+        return agendamento
+    }
 
+    fun qtdAgendamentoConfirmadoMes(id: Int): Int {
+        val tempoAtual = LocalDate.now()
+        val agendamento = agendamentoRepository.qtdAgendamentoConfirmadoMesProfessor(id, tempoAtual.monthValue, tempoAtual.year)
+            ?: throw ResponseStatusException(HttpStatusCode.valueOf(204))
         return agendamento
     }
 

@@ -1,20 +1,16 @@
 package grupo9.eduinovatte.controller
 
 import grupo9.eduinovatte.application.dto.request.UsuarioCompletoRequest
-import grupo9.eduinovatte.application.dto.response.UsuarioResponse
 import grupo9.eduinovatte.domain.model.entity.Nicho
 import grupo9.eduinovatte.domain.model.entity.NivelAcesso
 import grupo9.eduinovatte.domain.model.entity.NivelIngles
 import grupo9.eduinovatte.domain.model.entity.Usuario
 import grupo9.eduinovatte.domain.service.UsuarioService
 import grupo9.eduinovatte.model.enums.NivelAcessoNome
-import grupo9.eduinovatte.service.NichoRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
@@ -27,24 +23,10 @@ import java.util.concurrent.ArrayBlockingQueue
 @RestController
 @RequestMapping("/archive")
 class ArchiveController (
-    val nichoRepository: NichoRepository,
     val usuarioService: UsuarioService,
     val nivelInglesController: NivelInglesController,
     val nichoController: NichoController
 ){
-    @Operation(summary = "Busque os nichos", description = "Busque todos os nichos dos professores e alunos.")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Nichos encontrados"),
-        ApiResponse(responseCode = "204", description = "Nenhum nicho encontrado")
-    ])
-    @PostMapping("/dashboard/exportar")
-    @CrossOrigin
-    fun exportaDashboard(): ResponseEntity<List<Nicho>> {
-        val nichos = nichoRepository.findAll()
-        if(nichos.isEmpty()) return ResponseEntity.status(204).build()
-        return ResponseEntity.status(200).body(nichos)
-    }
-
     @Operation(summary = "Importa um usuario", description = "Importe um usuário por meio de um CSV.")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Nichos encontrados"),
@@ -74,62 +56,44 @@ class ArchiveController (
         if (listaUsuarios.isEmpty()) {
             throw ResponseStatusException(HttpStatus.NO_CONTENT)
         }
-        val arquivo = gravarCsvUsuario(listaUsuarios)
 
-        return ResponseEntity.status(200).body(arquivo)
+        val conteudoCsv = gravarCsvUsuario(listaUsuarios)
+
+        val headers = HttpHeaders().apply {
+            contentType = MediaType.parseMediaType("text/csv")
+            set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"usuarios.csv\"")
+        }
+
+        return ResponseEntity.ok()
+            .headers(headers)
+            .body(conteudoCsv)
     }
 
-    private fun gravarCsvUsuario(listaUsuario: List<Usuario>): File{
-        val arquivo = FileWriter("usuarios.csv")
-        val saida = Formatter(arquivo)
 
+    private fun gravarCsvUsuario(listaUsuario: List<Usuario>): ByteArray {
+        val outputStream = ByteArrayOutputStream()
+        val saida = Formatter(outputStream.writer())
 
-        saida.format("ID;Nome;CPF;Telefone;Data de Nascimento;Email;Profissão;Senha;Nível de Inglês;Nicho;Nível de Acesso;Metas\n")
+        saida.format(
+            "username;email;firstname;idnumber;password\n"
+        )
 
         for (usuario in listaUsuario) {
             saida.format(
-                "%d;%s;%s;%s;%s;%s;%s;%s\n",
-                usuario.id,
-                usuario.nomeCompleto,
-                usuario.cpf,
-                usuario.telefone,
-                usuario.dataNascimento,
+                "%s;%s;%s;%s;%s;\n",
+                "usuario_${usuario.id}",
                 usuario.email,
-                usuario.profissao,
-                usuario.senha,
-                //usuario.nivelIngles?.name,
-                //usuario.nicho?.name,
-                usuario.nivelAcesso?.nome?.name,
-                //usuario.metas
+                usuario.nomeCompleto?.replace("[^\\p{ASCII}]".toRegex(), "") ?: "Desconhecido",
+                usuario.id.toString(),
+                usuario.senha ?: "Senha123",
             )
         }
 
         saida.close()
-        arquivo.close()
 
-        println(arquivo)
-        println(saida)
-        return File("usuarios.csv")
+        return outputStream.toByteArray()
     }
 
-    fun lerCsv(nome: String){
-        val arquivo = FileReader(nome)
-        val leitor = Scanner(arquivo).useDelimiter(";|\\n")
-
-        println(String.format("%-5S %-10S %-10S %-10S", "ID", "NOME", "PORTE", "PESO"))
-
-        while(leitor.hasNext()){
-            val id = leitor.nextInt()
-            val nome = leitor.next()
-            val porte = leitor.next()
-            val peso = leitor.nextDouble()
-
-            println(String.format("%05d %-10.10s %-10s %5.2f", id, nome, porte, peso))
-        }
-
-        leitor.close()
-        arquivo.close()
-    }
     fun lerTxtUsuario(input: InputStream){
         val leitor = Scanner(BufferedReader(InputStreamReader(input)))
 
@@ -209,7 +173,7 @@ class ArchiveController (
                 )
 
                 try {
-                    val usuarioSalvo = usuarioService.salvaUsuario(usuario)
+                    usuarioService.salvaUsuario(usuario)
                 } catch (e: Exception) {
                     throw ResponseStatusException(HttpStatusCode.valueOf(400))
                 }

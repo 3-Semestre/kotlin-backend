@@ -113,5 +113,28 @@ interface AgendamentoRepository : JpaRepository<Agendamento, Int> {
         horarioFim: LocalTime?,
         pageable: Pageable
     ): Page<AgendamentosDetalhesListagemProjection>
+    @Query("""
+    SELECT a FROM Agendamento a
+    JOIN Usuario u ON a.professor.id = :id
+    JOIN historico_agendamento h ON h.agendamento.id = a.id
+    WHERE (:nome IS NULL OR u.nomeCompleto LIKE %:nome%)
+      AND (:data_inicio IS NULL OR :data_fim IS NULL OR a.data BETWEEN :data_inicio AND :data_fim)
+      AND (:horario_inicio IS NULL OR :horario_fim IS NULL OR (a.horarioInicio >= :horario_inicio AND a.horarioFim <= :horario_fim))
+      AND (:assunto IS NULL OR a.assunto LIKE %:assunto%)
+      AND h.status.id IN (3, 4)
+""")
+    fun     filtrarProfessorFuturo(nome: String?, data_inicio: LocalDate?, data_fim: LocalDate?, horario_inicio: LocalTime?, horario_fim: LocalTime?, assunto: String?, id: Int): List<Agendamento?>
+
+    @Query("""
+    SELECT a FROM Agendamento a
+    JOIN Usuario u ON a.professor.id = :id
+    JOIN historico_agendamento h ON h.agendamento.id = a.id
+    WHERE (:nome IS NULL OR u.nomeCompleto LIKE %:nome%)
+      AND (:data_inicio IS NULL OR :data_fim IS NULL OR a.data BETWEEN :data_inicio AND :data_fim)
+      AND (:horario_inicio IS NULL OR :horario_fim IS NULL OR (a.horarioInicio >= :horario_inicio AND a.horarioFim <= :horario_fim))
+      AND (:assunto IS NULL OR a.assunto LIKE %:assunto%)
+      AND h.status.id IN (1, 2)
+""")
+    fun filtrarProfessorPassado(nome: String?, data_inicio: LocalDate?, data_fim: LocalDate?, horario_inicio: LocalTime?, horario_fim: LocalTime?, assunto: String?, id: Int): List<Agendamento?>
 }
 
